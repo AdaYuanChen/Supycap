@@ -1,0 +1,9 @@
+To run the library, the following libraries need to be pre-installed:
+
+scipy, 
+matplotlib, 
+numpy,
+IPython, 
+glob, 
+functools,
+datetime.
