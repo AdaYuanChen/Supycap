@@ -26,9 +26,10 @@
 <br>
 <br>
 
-In this library, the capacitance is calculated via linear fitting the second half of the discharging slope in each charging/discharging cycle. For gravimetric capacitance ($`F g^{-1}`$):
+In this library, the capacitance is calculated via linear fitting the second half of the discharging slope in each charging/discharging cycle. For gravimetric capacitance (F g^-1):
 
-<center>$`C_g = (m_1 + m_2)/{m_1 m_2} \times I \times dV`$</center>
+$$C_g = (m_1 + m_2)/{m_1 m_2} \times I \times dV$$
+
 
 For non-gravimetric capacitance ($`F`$):
 
