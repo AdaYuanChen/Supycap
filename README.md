@@ -28,20 +28,21 @@
 
 In this library, the capacitance is calculated via linear fitting the second half of the discharging slope in each charging/discharging cycle. For <b>gravimetric capacitance (F g^-1)</b>:
 
-<center>C_g = (m_1 + m_2)/{m_1 m_2} * I * dV </center>
+C_g = (m_1 + m_2)/{m_1 m_2} * I * dV 
 
 <br>
+
 
 For <b>non-gravimetric capacitance (F)</b>:
 
-
-<center> C = I * dV </center>
+C = I * dV 
 
 <br>
 
+
 The <b>ESR (Ω)</b> is calculated using the voltage drop:
 
-<center>ESR = V_drop / (2I) </center>
+ESR = V_drop / (2I) 
 
 <br>
 <br>
