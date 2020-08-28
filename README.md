@@ -498,14 +498,14 @@ Visualising the second derivative and the charge/discharge curve of a specified 
 Of which cycle would you like to see the second derivative? enter a number between 0 and 9
 >>>0
 ```
-![.Show_dV2() example](Supercap_pic/Show_dV2_1.png '.Show_dV2() example 1')
+![.Show_dV2() example](https://user-images.githubusercontent.com/70351473/91521198-095ae100-e8ef-11ea-94f5-1381dd325cbb.png '.Show_dV2() example 1')
 ```python
 Are you happy with the cut off point? (yes/no)
 >>>no
 Please input the value of desired cut off second derivative.
 >>>1
 ```
-![.Show_dV2() example](Supercap_pic/Show_dV2_2.png '.Show_dV2() example 2')
+![.Show_dV2() example](https://user-images.githubusercontent.com/70351473/91521234-22639200-e8ef-11ea-9cfc-accae0456220.png'.Show_dV2() example 2')
 ```python
 Are you happy with the cut off point? (yes/no)
 >>>yes
@@ -560,7 +560,7 @@ Please input the line width for the figure:
 Please input the line colour for the figure:
 >>>'black'
 ```
-![.Cap_vs_cycles() example](Supercap_pic/Cap_vs_cycles.png '.Cap_vs_cycles() example')
+![.Cap_vs_cycles() example](https://user-images.githubusercontent.com/70351473/91521000-9f423c00-e8ee-11ea-84f8-264f85f4d3c4.png '.Cap_vs_cycles() example')
 
 </div>
 
@@ -670,6 +670,6 @@ A plot of the charge/discharge curve with liniearly fitted slope and voltage dro
 ```python
 >>>Supercap1.Check_analysis(begin = 0, end = 4, save_fig = False)
 ```
-![.Check_analysis() example](Supercap_pic/Check_analysis.png '.Check_analysis() example')
+![.Check_analysis() example](https://user-images.githubusercontent.com/70351473/91521296-3f986080-e8ef-11ea-9b9f-0b04737ad9c8.png'.Check_analysis() example')
 
 </div>
