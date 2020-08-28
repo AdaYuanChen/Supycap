@@ -67,7 +67,14 @@ An illustration of how the GCD data is analysed is shown below:
         <a href="#TOC">Installation</a>
     </h2>
     <p>
-        Please follow the instruction as shown on the front of the page using command prompt. 
+        Please follow the instruction under the 'code' tab.
+         
+         
+        Alternatively, use 
+        ```python
+        pip install -i https://test.pypi.org/simple/ Supercap-analysis==0.2
+        ```
+        
     </p>
 </div>
 
