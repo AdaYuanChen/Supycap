@@ -30,11 +30,14 @@ In this library, the capacitance is calculated via linear fitting the second hal
 
 <center>C_g = (m_1 + m_2)/{m_1 m_2} * I * dV </center>
 
+<br>
 
 For <b>non-gravimetric capacitance (F)</b>:
 
+
 <center> C = I * dV </center>
 
+<br>
 
 The <b>ESR (Ω)</b> is calculated using the voltage drop:
 
