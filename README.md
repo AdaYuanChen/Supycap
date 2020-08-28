@@ -55,7 +55,7 @@ ESR = V_drop / (2I)
 
 An illustration of how the GCD data is analysed is shown below: 
 
-![An analysed GCD curve using the library](Supercap_pic/Example_analysis.png 'An analysed GCD curve using the library')
+![An analysed GCD curve using the library](https://user-images.githubusercontent.com/70351473/91520899-64400880-e8ee-11ea-9758-75c1b7496c2e.png 'An analysed GCD curve using the library')
     </p>
 
 
