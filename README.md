@@ -676,6 +676,6 @@ A plot of the charge/discharge curve with liniearly fitted slope and voltage dro
 ```python
 >>>Supercap1.Check_analysis(begin = 0, end = 4, save_fig = False)
 ```
-![.Check_analysis() example](https://user-images.githubusercontent.com/70351473/91521296-3f986080-e8ef-11ea-9b9f-0b04737ad9c8.png'.Check_analysis() example')
+![.Check_analysis() example](https://user-images.githubusercontent.com/70351473/91521296-3f986080-e8ef-11ea-9b9f-0b04737ad9c8.png  '.Check_analysis() example')
 
 </div>
