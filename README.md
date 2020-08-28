@@ -68,14 +68,13 @@ An illustration of how the GCD data is analysed is shown below:
     </h2>
     <p>
         Please follow the instruction under the 'code' tab.
-         
-         
-        Alternatively, use 
-        ```python
-        pip install -i https://test.pypi.org/simple/ Supercap-analysis==0.2
-        ```
+                  
+ Alternatively, use:
+ ```python
+ pip install -i https://test.pypi.org/simple/ Supercap-analysis==0.2
+ ```
         
-    </p>
+   </p>
 </div>
 
 -----
