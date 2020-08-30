@@ -55,7 +55,7 @@ ESR = V_drop / (2I)
 
 An illustration of how the GCD data is analysed is shown below: 
 
-![An analysed GCD curve using the library](https://user-images.githubusercontent.com/70351473/91520899-64400880-e8ee-11ea-9758-75c1b7496c2e.png 'An analysed GCD curve using the library')
+![An analysed GCD curve using the library](https://user-images.githubusercontent.com/70351473/91648574-27e0e980-ea61-11ea-91dd-cde6a7d64cc3.png 'An analysed GCD curve using the library')
     </p>
 
 
@@ -676,6 +676,6 @@ A plot of the charge/discharge curve with liniearly fitted slope and voltage dro
 ```python
 >>>Supercap1.Check_analysis(begin = 0, end = 4, save_fig = False)
 ```
-![.Check_analysis() example](https://user-images.githubusercontent.com/70351473/91521296-3f986080-e8ef-11ea-9b9f-0b04737ad9c8.png  '.Check_analysis() example')
+![.Check_analysis() example](https://user-images.githubusercontent.com/70351473/91648574-27e0e980-ea61-11ea-91dd-cde6a7d64cc3.png  '.Check_analysis() example')
 
 </div>
