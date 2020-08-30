@@ -511,7 +511,7 @@ Are you happy with the cut off point? (yes/no)
 Please input the value of desired cut off second derivative.
 >>>1
 ```
-![.Show_dV2() example](https://user-images.githubusercontent.com/70351473/91521234-22639200-e8ef-11ea-9cfc-accae0456220.png'  .Show_dV2() example 2')
+![.Show_dV2() example](https://user-images.githubusercontent.com/70351473/91521234-22639200-e8ef-11ea-9cfc-accae0456220.png  '.Show_dV2() example 2')
 ```python
 Are you happy with the cut off point? (yes/no)
 >>>yes
