@@ -278,7 +278,7 @@ class Supercap():
             label.set_fontsize(label_size)
         
         plot(range(1, self.cycle_n+1), self.cap_ls, color= clr , linewidth = lw)
-        xlabel('number of cycles', fontsize = label_size)
+        xlabel('Number of cycles', fontsize = label_size)
         ylabel('Capacitance $F g^{-1}$', fontsize = label_size)
         savefig(str(self.current)+'mA_cap_vs_cycles_'+'{0:%d%m}_{0:%I_%M}'.format(datetime.datetime.now())+'.png', transparent = True)
     
@@ -376,7 +376,7 @@ class Supercap():
             plot( itroughx, self.V_ls[troughi], linestyle='', marker='+', ms=35, mew=11, color='r')
     
         plot(self.t_ls[self.peaks[begin]:troughi], self.V_ls[self.peaks[begin]:troughi], label=str(self.current)+' mA', linewidth=7, c='black')
-        xlabel('Cycle number', fontsize=45)
+        xlabel('Time (s)', fontsize=45)
         ylabel('Capacitance $F g^{-1}$', fontsize=45)
         legend(fontsize = 45)
         
