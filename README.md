@@ -657,7 +657,14 @@ Plotting the charge/discharge curve and visualising how the data is analysed (in
 
    
 
-3. <b>save_fig : <i>string, optional</i></b><br>
+3. <b>set_fig : <i>bool, optional</i></b><br>
+   If <code>set_fig = True</code>, the user will be prompted to change the setting of the figure.
+   
+   
+   
+   
+   
+4. <b>save_fig : <i>string, optional</i></b><br>
 
    For <code>save_fig=False</code>, the plot will not be saved.
 
