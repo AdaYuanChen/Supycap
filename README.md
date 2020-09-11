@@ -26,7 +26,7 @@
 <br>
 <br>
 
-In this library, the capacitance is calculated via linear fitting the second half of the discharging slope in each charging/discharging cycle. For <b>gravimetric capacitance (F <img src="https://render.githubusercontent.com/render/math?math=g^{-1}">)</b>:
+In this library, the capacitance is calculated via linear fitting the second half of the discharging slope in each charging/discharging cycle. For <b>gravimetric capacitance (<img src="https://render.githubusercontent.com/render/math?math=F%20g^{-1}">)</b>:
 
 <p align="center">
 <img src="https://render.githubusercontent.com/render/math?math=C_g=%20\frac{(m_1%2Bm_2)%20\times%20I%20\times%20dt}{(m_1%20\times%20m_2)%20\times%20dV}">
