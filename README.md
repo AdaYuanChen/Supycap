@@ -92,7 +92,8 @@ An illustration of how the GCD data is analysed is shown below:
 <br>
 
 <div id="sub_TOC">
-    
+
+## Table of Contents
 #### <b>Loading data</b>
  * <a href="#Load_capacitor">__Load_capacitor__</a>
  * <a href="#Glob_analysis">__Glob_analysis__</a>
