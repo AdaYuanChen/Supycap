@@ -25,7 +25,7 @@
 
 <br>
 <br>
-
+test <img src="https://render.githubusercontent.com/render/math?math=e^{i \pi} = -1">
 In this library, the capacitance is calculated via linear fitting the second half of the discharging slope in each charging/discharging cycle. For <b>gravimetric capacitance (F g^-1)</b>:
 
 <p align="center">
