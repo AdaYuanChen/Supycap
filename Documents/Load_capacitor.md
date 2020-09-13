@@ -1,4 +1,5 @@
-## <a href="#sub_TOC"><b>Load_capacitor</b><i>(pathway, t_set = False, V_set = False, mass_ls = False, current = False, row_skip = False, ESR_method = True, setting = False, cap_norm = False)</i></a> 
+[Go Back to Documentations](../README.md)
+## <b>Load_capacitor</b><i>(pathway, t_set = False, V_set = False, mass_ls = False, current = False, row_skip = False, ESR_method = True, setting = False, cap_norm = False)</i>
 This function loads the text file specified on the pathway into the <b>Supercap</b> class ,where capacitance and ESR analysis will be carried out. All relevant information can be extracted from the init function.
 
 
@@ -89,5 +90,7 @@ Please specify a cut-off derivative (the default value is 0.01)
 <Class_Supercap: 3.0 mA, 1.0 V, 5 cycles, ESR method 2>
 ```
 
-</div>
+[Next](Glob_analysis.md)
 
+
+[Go Back to Documentations](../README.md)
