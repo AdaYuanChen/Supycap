@@ -95,7 +95,6 @@ An illustration of how the GCD data is analysed is shown below:
 
 #### <b>Loading data</b>
  * <a href="#Load_capacitor">__Load_capacitor__</a>
- [what is this?](otherfile.md)
  * <a href="#Glob_analysis">__Glob_analysis__</a>
 #### <b>Supercap class</b>
  * <a href="#__init__">__init__</a>
