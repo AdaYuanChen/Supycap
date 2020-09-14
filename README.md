@@ -70,7 +70,7 @@ An illustration of how the GCD data is analysed is shown below:
     <p>
         Please follow the instruction under the 'code' tab.
                   
- Alternatively, use:
+ Alternatively, use(https://pypi.org/project/Supercap-analysis/):
  ```python
  pip install Supercap-analysis
  ```
