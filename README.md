@@ -72,7 +72,7 @@ An illustration of how the GCD data is analysed is shown below:
                   
  Alternatively, use:
  ```python
- pip install -i https://test.pypi.org/simple/ Supercap-analysis==0.2
+ pip install Supercap-analysis
  ```
         
    </p>
