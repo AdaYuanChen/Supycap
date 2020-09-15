@@ -7,4 +7,4 @@ from .cccap import *
 from .utilities import*
 
 
-__version__ ='19.08.2020'
+__version__ ='14.09.2020'

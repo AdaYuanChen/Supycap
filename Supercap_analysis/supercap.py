@@ -310,7 +310,7 @@ class Supercap():
     
     
     #To check whether the code is running correctly by visualising a small section of the analysis
-    def Check_analysis(self, begin = False, end = False, save_fig = False):
+    def Check_analysis(self, begin = False, end = False, set_fig = False, save_fig = False):
         """
         Initialize from a :class:`.Supercap`.
         
@@ -325,18 +325,21 @@ class Supercap():
             
         end : :class:`int`, optional
             The last cycle to be visualised
-        
+
+        set_fig : :class:`bool`, optional
+            Changing the setting of the figure
+
         save_fig : :class:`string`, optional
             save_fig = False, the plot will not be saved 
             save_fig = True, the plot will be saved as 'Check_analysis_[datetime].png'
-        
-
+            
         Return 
         ------
         A plot of the charge/discharge curve with liniearly fitted slope and voltage drop
         
         """
         
+        print('updated!3')
         if begin is False or end is False:
             print('Please enter the first cycle number for the check, the cycle number should be an interger between 0 and '+ str(self.cycle_n))
 
@@ -345,16 +348,34 @@ class Supercap():
         else:
             pass
         
+        
         if end is False:
             end = int(input('Please enter the last cycle number for the check'))
         else:
             pass 
         
-        figure(figsize(60, 20))
+        if set_fig ==True:
+            length = float(input('Please input length for the figure:'))
+            width = float(input('Please input width for the figure:'))
+            label_size = float(input('Please input the font size for the figure:'))
+            lw = float(input('Please input the line width for the figure:'))
+            ms = float(input('Please input the marker size for the figure:'))
+            mew = float(input('Please input the marker weight for the figure:'))
+        else: 
+            length = 30
+            width = 20
+            label_size = 60
+            lw = 8
+            ms = 50
+            mew = 10
+        
+        
+        figure(figsize(length, width))
         ax = gca()
         for label in ax.get_xticklabels() + ax.get_yticklabels():
-                label.set_fontsize(47)
-               
+                label.set_fontsize(label_size)
+        
+        plot(self.t_ls[self.peaks[begin]:self.troughs[end-1]], self.V_ls[self.peaks[begin]:self.troughs[end-1]], label=str(self.current)+' mA', linewidth=lw, c='black')       
         for i in range(begin, end):
             peaki = self.peaks[i]
             troughi = self.troughs[i]
@@ -368,17 +389,16 @@ class Supercap():
             fitx = linspace(itroughx-line_adj,itroughx,20)
             fity = fitx*fit[0][0]+fit[0][1]  
                             
-            plot(fitx, fity, linewidth=11, linestyle='--', color='red')
-            plot([ipeakx + (itroughx-ipeakx)*(end-begin)*0.01]*100, linspace(self.V_ls[peaki], self.V_ls[peaki]-self.esr_ls[i]*2*self.current*10**(-3), 100), color='b', linewidth=8, linestyle='--')
-            plot(ipeakx, self.V_ls[peaki]-self.esr_ls[i]*2*self.current*10**(-3), linestyle='', marker=1, ms=40, mew=9, color='b')
-            plot(ipeakx, self.V_ls[peaki], linestyle='', marker=1, ms=40, mew=9, color='b')
-            plot(self.t_ls[ind_mid], self.V_ls[ind_mid], linestyle='', marker='+', ms=35, mew=11, color='r')
-            plot( itroughx, self.V_ls[troughi], linestyle='', marker='+', ms=35, mew=11, color='r')
+            plot(fitx, fity, linewidth=lw, linestyle='--', color='red')
+            plot([ipeakx + (itroughx-ipeakx)*(end-begin)*0.03]*100, linspace(self.V_ls[peaki], self.V_ls[peaki]-self.esr_ls[i]*2*self.current*10**(-3), 100), color='b', linewidth=lw, linestyle=':')
+            plot(ipeakx, self.V_ls[peaki]-self.esr_ls[i]*2*self.current*10**(-3), linestyle='', marker=1, ms=ms, mew=mew, color='b')
+            plot(ipeakx, self.V_ls[peaki], linestyle='', marker=1, ms=ms, mew=mew, color='b')
+            plot(self.t_ls[ind_mid], self.V_ls[ind_mid], linestyle='', marker='+', ms=ms, mew=mew, color='r')
+            plot( itroughx, self.V_ls[troughi], linestyle='', marker='+', ms=ms, mew=mew, color='r')
     
-        plot(self.t_ls[self.peaks[begin]:troughi], self.V_ls[self.peaks[begin]:troughi], label=str(self.current)+' mA', linewidth=7, c='black')
-        xlabel('Time (s)', fontsize=45)
-        ylabel('Capacitance $F g^{-1}$', fontsize=45)
-        legend(fontsize = 45)
+        xlabel('Time (s)', fontsize=label_size)
+        ylabel('Capacitance $F g^{-1}$', fontsize=label_size)
+        legend(fontsize = label_size)
         
         if save_fig == True: 
             savefig('Check_analysis_'+'{0:%d%m}_{0:%I_%M}_'.format(datetime.datetime.now())+'.png', transparent=True)

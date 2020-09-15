@@ -13,7 +13,7 @@ from .load_capacitor import Load_capacitor
 #Analyse one supercapacitor under different currents (use multiple supercap()) with error bars
 #path is directed to the folder which contains all relevant txt files for the analysis
 #m1, m2 are recived in unit of mg 
-def Glob_analysis(path, mass_ls = False, row_skip = False, ESR_method = True, setting = False, plotting = True):
+def Glob_analysis(path, t_set = False, V_set = False, delimiter = False, mass_ls = False, row_skip = False, ESR_method = True, setting = False, plotting = True):
     """
         Loading all text files in the folder as specified in path. Good for analysing how capacitance changes with current density. 
         
@@ -32,6 +32,17 @@ def Glob_analysis(path, mass_ls = False, row_skip = False, ESR_method = True, se
             The current of each file has to be specified and seperated by either '/' or '_' and followed by '_mA' at the end
             Example: './folder_x/0.1_mA_GCD_sample_A.txt'
             
+       t_set : :class:`int`, optional
+            Specify the coloumn index for the time(s) data, coloumn 0 being the first coloumn starting from the left
+            t_set = False (t_set = 0)
+                    True (The prompt will ask for the column index to be entered)
+                    : :class: `int` (specify the coloumn which will be used as time)
+        
+        V_set : :class:`int`, optional
+            Specify the coloumn index for the Volatge(V) data, coloumn 0 being the first coloumn starting from the left
+            V_set = False (V_set = 0)
+                    True (The prompt will ask for the column index to be entered)
+                    : :class: `int` (specify the coloumn which will be used as time)
         mass_ls : :class:`list`
             Measurements of the mass of each electrode. mass_ls will result in non-gravimetric capacitance being calculated. 
             mass_ls = False (calculate non-gravimetric capacitance)
@@ -91,7 +102,7 @@ def Glob_analysis(path, mass_ls = False, row_skip = False, ESR_method = True, se
     Glob_set = glob.glob(path)
     
     #loading data into the Supercap file 
-    supc_ls = [Load_capacitor(i, mass_ls = mass_ls, row_skip = row_skip, ESR_method = ESR_method, setting = setting) for i in Glob_set]
+    supc_ls = [Load_capacitor(i, t_set = t_set, V_set = V_set, delimiter = delimiter, mass_ls = mass_ls, row_skip = row_skip, ESR_method = ESR_method, setting = setting) for i in Glob_set]
         
     #Analyze each set of data
     Cap_ls_g = [mean(i.cap_ls) for i in supc_ls]

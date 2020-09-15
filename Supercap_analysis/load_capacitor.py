@@ -8,7 +8,7 @@ from .supercap import*
 #mass_ls is a list of two lists of the mass of each electrode
 #if current is not entered, it is going to be generated from the filename (the file name has to include the current in mA, seperated by '/' or '_' and followed by '_mA')
 #recieve mass and current in mg and mA respectively, output as mg and mA
-def Load_capacitor(pathway, mass_ls = False, current = False, row_skip = False, ESR_method = True, setting = False, cap_norm = False):
+def Load_capacitor(pathway, t_set = False, V_set = False, delimiter = False, mass_ls = False, current = False, row_skip = False, ESR_method = True, setting = False, cap_norm = False):
     """
         Loading all relevant information of the measured supercapacitor the of the specified text file
         
@@ -18,7 +18,19 @@ def Load_capacitor(pathway, mass_ls = False, current = False, row_skip = False, 
             The path in which the data files are located. 
             The current of each file has to be specified and seperated by either '/' or '_' and followed by '_mA' at the end
             Example: './folder_x/0.1_mA_GCD_sample_A.txt'
-            
+        
+        t_set : :class:`int`, optional
+            Specify the coloumn index for the time(s) data, coloumn 0 being the first coloumn starting from the left
+            t_set = False (t_set = 0)
+                    True (The prompt will ask for the column index to be entered)
+                    : :class: `int` (specify the coloumn which will be used as time)
+        
+        V_set : :class:`int`, optional
+            Specify the coloumn index for the Volatge(V) data, coloumn 0 being the first coloumn starting from the left
+            V_set = False (V_set = 0)
+                    True (The prompt will ask for the column index to be entered)
+                    : :class: `int` (specify the coloumn which will be used as time)
+                    
         mass_ls : :class:`list`
             Measurements of the mass of each electrode. mass_ls will result in non-gravimetric capacitance being calculated. 
             mass_ls = False (calculate non-gravimetric capacitance)
@@ -55,11 +67,13 @@ def Load_capacitor(pathway, mass_ls = False, current = False, row_skip = False, 
         pass
     
     if row_skip is False:
+        row_skip = 1
+    elif row_skip is True:
         row_skip = int(input('Please enter the number of header row(s) in this file:'))
     else:
         pass
     
-    GDC = Fast_load(pathway, skip_header = row_skip)
+    GDC = Fast_load(pathway, skip_header = row_skip, t_set = t_set, V_set = V_set, delimiter = delimiter)
     GDC_t = GDC[0]
     GDC_V = GDC[1]
     

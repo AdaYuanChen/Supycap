@@ -1,13 +1,67 @@
 from numpy import*
+from pandas import*
 
-def Fast_load(path, skip_header = False):
-    with open (path, 'r') as f:
-        file = [i.split() for i in f][skip_header:]
-        xset = [float(i[0]) for i in file]
-        xset = array(xset)
-        yset = [float(i[1]) for i in file]
-        yset = array(yset)
+def Fast_load(path, skip_header, t_set = False, V_set = False, delimiter = False):
+    if t_set is False:
+        t_set = 0
+    elif t_set is True:
+        t_set = input('Please eneter the index of the coloumn (staring from zero) or the name of the coloumn (for csv files only):')
+    else:
+        pass
+    
+    if V_set is False:
+        V_set = 1
+    elif V_set is True:
+        V_set = input('Please eneter the index of the coloumn for time(s) (staring from zero) or the name of the coloumn (for csv files only):')
+    else:
+        pass
+        
+    
+    if '.txt' in path:
+        if delimiter == False:
+            delimiter = None
+        elif delimiter == True:
+            delimiter = input('Please enter the delimiter')
+        else:
+            pass
+        
+        try:
+            t_set = int(t_set)
+            V_set = int(V_set)
+        except:
+            print('The indices for the time and voltage coloumns have to be integers!')
+            t_set = int(input('Please eneter the index of the time(s) coloumn (an INTEGER staring from zero)'))
+            V_set = int(input('Please eneter the index of the voltage(V) coloumn (an INTEGER staring from zero)'))
+        with open (path, 'r') as f:
+            file = [i.split(delimiter) for i in f][skip_header:]
+            xset = [float(i[t_set]) for i in file]
+            xset = array(xset)
+            yset = [float(i[V_set]) for i in file]
+            yset = array(yset)
+
+    elif '.csv' in path:
+        if delimiter == False:
+            delimiter = ','
+        elif delimiter == True:
+            delimiter = input('Please enter the delimiter')
+        else:
+            pass
+       
+        file = read_csv(path, skiprows = skip_header-1, delimiter = delimiter)
+        try:
+            indices = [int(t_set), int(V_set)]
+            xset = file.iloc[:, indices[0]].to_numpy()
+            yset = file.iloc[:,indices[1]].to_numpy()
+        except:
+            indices = [t_set, V_set]
+            xset = file[indices[0]].to_numpy()
+            yset = file[indices[1]].to_numpy()
+        
+    else:
+        print('Unsupported format. The program only supports documents in txt and csv formats.')
+               
     return xset, yset
+
 
 #Read the current value in a file name.
 #In the filename, the current is stated at the very front of the file 
