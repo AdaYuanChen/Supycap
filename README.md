@@ -56,7 +56,7 @@ The <b>ESR (Ω)</b> is calculated using the voltage drop:
 
 An illustration of how the GCD data is analysed is shown below: 
 
-![An analysed GCD curve using the library](https://user-images.githubusercontent.com/70351473/92956867-89408980-f45f-11ea-8b4e-33f67e46078b.png 'Illustartion of GCD analysis')
+![An analysed GCD curve using the library](https://user-images.githubusercontent.com/70351473/94346269-5aabdc80-0023-11eb-8486-377e821e86d5.png 'Illustartion of GCD analysis')
     </p>
 
 
@@ -706,6 +706,6 @@ A plot of the charge/discharge curve with liniearly fitted slope and voltage dro
 ```python
 >>>Supercap1.Check_analysis(begin = 0, end = 4, save_fig = False)
 ```
-![.Check_analysis() example](https://user-images.githubusercontent.com/70351473/92956867-89408980-f45f-11ea-8b4e-33f67e46078b.png  '.Check_analysis() example')
+![.Check_analysis() example](https://user-images.githubusercontent.com/70351473/94346269-5aabdc80-0023-11eb-8486-377e821e86d5.png  '.Check_analysis() example')
 
 </div>
