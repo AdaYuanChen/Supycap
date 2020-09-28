@@ -39,7 +39,7 @@ In this library, the capacitance is calculated via linear fitting the second hal
 For <b>non-gravimetric capacitance (F)</b>:
 
 <p align="center">
-<img src="https://render.githubusercontent.com/render/math?math=C_{non}_{grav}=%20I%20\times%20dV/dt">
+<img src="https://render.githubusercontent.com/render/math?math=C_{non}_{grav}=%20I%20\times%20\frac{dV}%20{dt}">
 </p>
 
 <br>
