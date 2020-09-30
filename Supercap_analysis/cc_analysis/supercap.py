@@ -345,7 +345,7 @@ class Supercap():
         """
         
         if begin is False or end is False:
-            print('Please enter the first cycle number for the check, the cycle number should be an interger between 0 and '+ str(self.cycle_n))
+            print('Please enter the first cycle number for the check, the cycle number should be an interger between 1 and '+ str(self.cycle_n))
 
         if begin is False:
             begin = int(input('Please enter the first cycle number for the check'))
@@ -365,6 +365,7 @@ class Supercap():
             lw = float(input('Please input the line width for the figure:'))
             ms = float(input('Please input the marker size for the figure:'))
             mew = float(input('Please input the marker weight for the figure:'))
+            degrees = float(input('Please input the rotation degrees for the x ticks:'))
         else: 
             length = 30
             width = 20
@@ -372,6 +373,7 @@ class Supercap():
             lw = 8
             ms = 50
             mew = 10
+            degrees = 0
         
         
         figure(figsize(length, width))
@@ -379,7 +381,7 @@ class Supercap():
         for label in ax.get_xticklabels() + ax.get_yticklabels():
                 label.set_fontsize(label_size)
         
-        plot(self.t_ls[self.peaks[begin]:self.troughs[end-1]], self.V_ls[self.peaks[begin]:self.troughs[end-1]], label=str(self.current)+' mA', linewidth=lw, c='black')       
+        plot(self.t_ls[self.peaks[begin-1]:self.troughs[end-1]], self.V_ls[self.peaks[begin-1]:self.troughs[end-1]], label=str(self.current)+' mA', linewidth=lw, c='black')       
         for i in range(begin, end):
             peaki = self.peaks[i]
             troughi = self.troughs[i]
@@ -400,6 +402,7 @@ class Supercap():
             plot(self.t_ls[ind_mid], self.V_ls[ind_mid], linestyle='', marker='+', ms=ms, mew=mew, color='r')
             plot( itroughx, self.V_ls[troughi], linestyle='', marker='+', ms=ms, mew=mew, color='r')
     
+        xticks(rotation = degrees)
         xlabel('Time (s)', fontsize=label_size)
         ylabel('Voltage (V)', fontsize=label_size)
         legend(fontsize = label_size)
