@@ -5,14 +5,14 @@ def Fast_load(path, skip_header, t_set = False, V_set = False, delimiter = False
     if t_set is False:
         t_set = 0
     elif t_set is True:
-        t_set = input('Please eneter the index of the coloumn (staring from zero) or the name of the coloumn (for csv files only):')
+        t_set = input('Please eneter the index of the coloumn for x values (staring from zero) or the name of the coloumn (for csv files only):')
     else:
         pass
     
     if V_set is False:
         V_set = 1
     elif V_set is True:
-        V_set = input('Please eneter the index of the coloumn for time(s) (staring from zero) or the name of the coloumn (for csv files only):')
+        V_set = input('Please eneter the index of the coloumn for y values (staring from zero) or the name of the coloumn (for csv files only):')
     else:
         pass
         
@@ -29,9 +29,9 @@ def Fast_load(path, skip_header, t_set = False, V_set = False, delimiter = False
             t_set = int(t_set)
             V_set = int(V_set)
         except:
-            print('The indices for the time and voltage coloumns have to be integers!')
-            t_set = int(input('Please eneter the index of the time(s) coloumn (an INTEGER staring from zero)'))
-            V_set = int(input('Please eneter the index of the voltage(V) coloumn (an INTEGER staring from zero)'))
+            print('The indices for the x and y coloumns have to be integers!')
+            t_set = int(input('Please eneter the index of the x coloumn (an INTEGER staring from zero)'))
+            V_set = int(input('Please eneter the index of the y coloumn (an INTEGER staring from zero)'))
         with open (path, 'r') as f:
             file = [i.split(delimiter) for i in f][skip_header:]
             xset = [float(i[t_set]) for i in file]

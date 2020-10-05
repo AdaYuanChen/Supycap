@@ -3,6 +3,19 @@ from sklearn.metrics import auc
 from scipy.signal import find_peaks
 from numpy import*
 
+#Read the scan rate in a file name.
+#In the filename, the scan rate is stated at the very front of the file, OR
+#the scan rate seperated from other elements of the filename and/or seperated by '_' and/or '/'
+#current needs to end with '_mvs'
+def Read_scan_r(filename):
+    for i in range(len(filename)-2):
+        if filename[i:i+2] == 'mvs':
+            k = i-2
+            while filename[k] != '_' and filename[k] != '/' and filename[k] != '\\' and k >= 0:
+                k -= 1
+            return float(filename[k+1:i-1])
+
+
 def Pos_split(x, y):
 
     x_split1=[]

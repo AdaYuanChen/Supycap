@@ -14,7 +14,7 @@ def Load_capacitor(pathway, t_set = False, V_set = False, delimiter = False, mas
         
         Parameters
         ----------
-        path : :class:`str`
+        pathway : :class:`str`
             The path in which the data files are located. 
             The current of each file has to be specified and seperated by either '/' or '_' and followed by '_mA' at the end
             Example: './folder_x/0.1_mA_GCD_sample_A.txt'
@@ -26,20 +26,26 @@ def Load_capacitor(pathway, t_set = False, V_set = False, delimiter = False, mas
                     : :class: `int` (specify the coloumn which will be used as time)
         
         V_set : :class:`int`, optional
-            Specify the coloumn index for the Volatge(V) data, coloumn 0 being the first coloumn starting from the left
+            Specify the coloumn index for the volatge(V) data, coloumn 0 being the first coloumn starting from the left
             V_set = False (V_set = 0)
                     True (The prompt will ask for the column index to be entered)
-                    : :class: `int` (specify the coloumn which will be used as time)
+                    : :class: `int` (specify the coloumn which will be used as voltage)
+                    
+        delimiter : :class:`str`, optional
+            The symbol which seperates one data coloumn from the other. If delimiter = False, the delimiter is assumed to be space ''.
                     
         mass_ls : :class:`list`
             Measurements of the mass of each electrode. mass_ls will result in non-gravimetric capacitance being calculated. 
             mass_ls = False (calculate non-gravimetric capacitance)
                     = [[List of mass measurements for electrode 1], [List of mass measurements for electrode 2]]    
-                          (calculate gravimetric capacitance)                    
+                          (calculate gravimetric capacitance)  
         
-        row_skip : :class:`int`
+        current : :class:`float`, optional
+            The current for the GCD analysis. If current = False, the program will attempt to extract the current value from the file name.
+        
+        row_skip : :class:`int`, optional
             The number of rows of headers to skip in the text files.
-            row_skip = False (The prompt will ask for rows to skip for the file)
+            row_skip = False (row_skip = 1)
                      = : :class:`int` (The specified number of rows will be skipped for all files in the path)
         
         ESR_method : :class:`int`, optional
@@ -61,7 +67,7 @@ def Load_capacitor(pathway, t_set = False, V_set = False, delimiter = False, mas
                 
             
     """
-    if current == False:
+    if current is False:
         try:
             current = Readcurrent(pathway)
         except:

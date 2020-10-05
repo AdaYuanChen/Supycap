@@ -276,6 +276,8 @@ class Supercap():
         ax = gca()
         for label in ax.get_xticklabels() + ax.get_yticklabels():
             label.set_fontsize(label_size)
+        tx = ax.xaxis.get_offset_text()
+        tx.set_fontsize(label_size)
         
         xlabel('Number of cycles', fontsize = label_size)        
         if self.masses[0][0] is False:
@@ -334,9 +336,11 @@ class Supercap():
         set_fig : :class:`bool`, optional
             Changing the setting of the figure
 
-        save_fig : :class:`string`, optional
+        save_fig : :class:`bool` or `str`, optional
             save_fig = False, the plot will not be saved 
             save_fig = True, the plot will be saved as 'Check_analysis_[datetime].png'
+            save_fig = class:`str` , the plot will be saved as 'the input string.png'
+            
             
         Return 
         ------
@@ -379,10 +383,15 @@ class Supercap():
         figure(figsize(length, width))
         ax = gca()
         for label in ax.get_xticklabels() + ax.get_yticklabels():
-                label.set_fontsize(label_size)
+                label.set_fontsize(label_size)        
+        tx = ax.xaxis.get_offset_text()
+        tx.set_fontsize(label_size)
         
-        plot(self.t_ls[self.peaks[begin-1]:self.troughs[end-1]], self.V_ls[self.peaks[begin-1]:self.troughs[end-1]], label=str(self.current)+' mA', linewidth=lw, c='black')       
-        for i in range(begin, end):
+        if begin is 1:
+            plot(self.t_ls[0:self.troughs[end-1]], self.V_ls[0:self.troughs[end-1]], label=str(self.current)+' mA', linewidth=lw, c='black') 
+        else:
+            plot(self.t_ls[self.troughs[begin-2]:self.troughs[end-1]], self.V_ls[self.troughs[begin-2]:self.troughs[end-1]], label=str(self.current)+' mA', linewidth=lw, c='black')       
+        for i in range(begin-1, end):
             peaki = self.peaks[i]
             troughi = self.troughs[i]
             ipeakx = self.t_ls[peaki]
@@ -396,7 +405,7 @@ class Supercap():
             fity = fitx*fit[0][0]+fit[0][1]  
                             
             plot(fitx, fity, linewidth=lw, linestyle='--', color='red')
-            plot([ipeakx + (itroughx-ipeakx)*(end-begin)*0.03]*100, linspace(self.V_ls[peaki], self.V_ls[peaki]-self.esr_ls[i]*2*self.current*10**(-3), 100), color='b', linewidth=lw, linestyle=':')
+            plot([ipeakx + 0.08*(itroughx-ipeakx)]*(end-begin+1)*100, linspace(self.V_ls[peaki], self.V_ls[peaki]-self.esr_ls[i]*2*self.current*10**(-3), 100), color='b', linewidth=lw, linestyle=':')
             plot(ipeakx, self.V_ls[peaki]-self.esr_ls[i]*2*self.current*10**(-3), linestyle='', marker=1, ms=ms, mew=mew, color='b')
             plot(ipeakx, self.V_ls[peaki], linestyle='', marker=1, ms=ms, mew=mew, color='b')
             plot(self.t_ls[ind_mid], self.V_ls[ind_mid], linestyle='', marker='+', ms=ms, mew=mew, color='r')
@@ -409,7 +418,8 @@ class Supercap():
         
         if save_fig == True: 
             savefig('Check_analysis_'+'{0:%d%m}_{0:%I_%M}_'.format(datetime.datetime.now())+'.png', transparent=True)
-            
+        elif save_fig == False:
+            pass   
         else:
-            pass
+             savefig(str(save_fig)+'.png', transparent=True)
 

@@ -1,59 +1,81 @@
-from .utilities import*
+from ..cc_analysis.utilities import Fast_load
+from .cv_calc import*
 
+def CV_analysis(pathway, m1, m2, scan_r = False, row_skip = False, x_name = False, y_name = False, delimiter = False, int_method = False):
+    """
+        Calculate the gravimetric capacitance from every cycle of CV scans and output a list of calculated capacitance (F g^-1) for all cycles.
+        
+        Notes
+        -----
+        UNITS: current(mA), voltage (V), scan rate (mV/s), mass of the electrodes (mg), and capacitance (F g^-1). 
+        The scan rate (mV/s) will be directly read from the filename (i.e. the fielname has to include the current followed by '_mvs' and seperated by '_', '/' or it is the first component of the filename).
+        
+        Parameters
+        ----------
+        pathway : :class:`str`
+            The path in which the data files are located. 
+            The scan rate of each file has to be specified and seperated by either '/' or '_' and followed by '_mvs' at the end, otherwise the scan rate needs to be input as scan_r
+            Example: './CV_folder/1_mvs_0.8_V_CV.txt'
 
-###y in mA, voltage in V, scan rate in mv/s!!!
-#int_method = 1 or 2. 
-## 1 (default) = Trapezoidal
-## 2 = Simpson's
-#area_method = 1 or 2. 
-## 1 (default) = positive side and negative side calculated seperately
-## 2 = positive side and negatiive side calculated in reversed manner 
-#first cycle and last cycle are omitted as long as they are incomplete
+        m1 : :class:`float`
+            The mass of electrode 1 of the supercapacitor. The mass is in mg.
 
-def CV_analysis(x, y, m1, m2, scan_r, int_method = False):
-    if int_method is False:
-        int_method = 1
-    elif int_method is True:
-        int_method = int(input('Please select the method for integration (1 or 2):'))
+        m2 : :class:`float`
+            The mass of electrode 2 of the supercapacitor. The mass is in mg.
+
+        scan_r : :class:`float`, optional
+            The scan rate for the CV measurement in mV/s. If scan_r = False, the program will attempt to extract the scan rate from the file name, given that 
+            
+        delimiter : :class:`str`, optional
+            The symbol which seperates one data coloumn from the other. If delimiter = False, the delimiter is assumed to be space ''.
+        
+        row_skip : :class:`int`, optional
+            The number of rows of headers to skip in the text files.
+            row_skip = False (row_skip = 1)
+                     = : :class:`int` (The specified number of rows will be skipped for all files in the path)
+                     
+        x_name : :class:`int`, optional
+            Specify the coloumn index for the voltage(V) data, coloumn 0 being the first coloumn starting from the left
+            x_name = False (t_set = 0)
+                    True (The prompt will ask for the column index to be entered)
+                    : :class: `int` (specify the coloumn which will be used as current)
+        
+        y_name : :class:`int`, optional
+            Specify the coloumn index for the current(mA) data, coloumn 0 being the first coloumn starting from the left
+            y_name = False (V_set = 0)
+                    True (The prompt will ask for the column index to be entered)
+                    : :class: `int` (specify the coloumn which will be used as voltage)
+
+        
+        int_method : :class:`int`, optional
+            The method for integration for the enclosed area.
+            int_method = 1 or False (integration using trapezoidal rule) 
+                       = 2 (integration using Simpson's rule)
+
+                       
+        returns
+        -------
+        : :class:`list
+            A list of capacitance calculated from each CV cycle.
+    """
+    
+    if scan_r is False:
+        try:
+            scan_r = Read_scan_r(pathway)
+        except:
+            print('Missing scan rate value. Please enter the scan rate for the CV analysis in mV/s:')
     else:
         pass
-
-    y = array(y)/1000
-    cycles = Load_cycle(x,y)
-    potential_r = (max(x)-min(x))
-    x_pos, y_pos, x_neg, y_neg, cycle_n = Pn_slice(cycles[0], cycles[1], cycles[2])
-    print(cycle_n, ' CV cycles are being analysed using integration method', int_method)
     
-    area_ls = []
-    sta = 0
-    if int_method is False or int_method is 1:
-        for i in range(cycle_n):
-            pox1, poy1, pox2, poy2 = Pos_split(x_pos[i], y_pos[i])
-            nex1, ney1, nex2, ney2 = Neg_split(x_neg[i], y_neg[i])
-            a2, sta2 = Trapz_area(pox1, poy1, pox2, poy2)
-            a1, sta1 = Trapz_area(nex1, ney1, nex2, ney2)
-            area_ls += [a2-a1]
-            sta += sta2 + sta1
-            
-        if sta != 0:
-            print('slicing of x values has been unccessful for', sta/2, ' out of the total', cycle_n, 'cycles')
-            print('x values are assumed to be evenly spaced from minimum to maximum voltage for those cycles')
-            
-        else:
-            pass
-            
-    elif int_method is 2:
-        for i in range(sliced_data[4]):
-            pox1, poy1, pox2, poy2 = Pos_split(x_pos, y_pos)
-            nex1, ney1, nex2, ney2 = Neg_split(x_neg, y_neg)
-            a2 = Simps_area(pox1, poy1, pox2, poy2)
-            a1 = Simps_area(nex1, ney1, nex2, ney2)
-            area_ls += [a2-a1]
-    
+    if row_skip is False:
+        row_skip = 1
+    elif row_skip is True:
+        row_skip = int(input('Please enter the number of header row(s) in this file:'))
     else:
-        method = int(input('''Integration method has to be either 1 (trapezoidal) or 2 (Simpson's)'''))
-        CV_analysis(x,y,method = method)
-
-    CV_ls = [CV_cap_cal(i, m1, m2, scan_r, potential_r) for i in area_ls]
+        pass
     
-    return CV_ls  
+    CV_raw = Fast_load(pathway, skip_header = row_skip, t_set = x_name, V_set = y_name, delimiter = delimiter)
+    x = CV_raw[0]
+    y = CV_raw[1]
+    
+    return CV_calc(x, y, m1, m2, scan_r, int_method = False) 
