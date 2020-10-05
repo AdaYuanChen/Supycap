@@ -21,12 +21,12 @@
         <a href="#TOC">Introduction</a>
     </h2>
     <p>
-        This is a Python library for analysis for the Galvanostatic Charge Discharge <b>(GCD)</b> curves of two-electrode, symmetrical supercapacitors. It provides an easy and standardised way to quickly extract useful information from the GCD data, especially the <b>capacitance</b> and the <b>ESR </b>of the supercapacitor and how they evolve over time, with multiple options offered to suit the need of scientific investigations of supercapacitors. 
+        This is a Python library for analysis for the Galvanostatic Charge Discharge <b>(GCD)</b> curves as well as the Cyclic Voltammetry <b>(CV)</b> curves of two-electrode, symmetrical supercapacitors. It provides an easy and standardised way to quickly extract useful information from the GCD and CV data, including the <b>capacitance</b> and the <b>ESR </b>of the supercapacitor and how they evolve over cycles, with multiple options offered to suit the need of scientific investigations of supercapacitors. 
 
 <br>
 <br>
 
-In this library, the capacitance is calculated via linear fitting the second half of the discharging slope in each charging/discharging cycle. For <b>gravimetric capacitance (<img src="https://render.githubusercontent.com/render/math?math=F%20g^{-1}">)</b>:
+For <b>GCD</b> analysis, the capacitance is calculated via linear fitting the second half of the discharging slope in each charging/discharging cycle. For <b>gravimetric capacitance (<img src="https://render.githubusercontent.com/render/math?math=F%20g^{-1}">)</b>:
 
 <p align="center">
 <img src="https://render.githubusercontent.com/render/math?math=C_g=%20\frac{(m_1%2Bm_2)%20\times%20I%20\times%20dt}{(m_1%20\times%20m_2)%20\times%20dV}">
@@ -59,6 +59,15 @@ An illustration of how the GCD data is analysed is shown below:
 ![An analysed GCD curve using the library](https://user-images.githubusercontent.com/70351473/94346269-5aabdc80-0023-11eb-8486-377e821e86d5.png 'Illustartion of GCD analysis')
     </p>
 
+
+For <b>CV</b> analysis, the capacitance is calculated via integration of the area enclosed by current as the voltage scanned across the potential window. For <b>gravimetric capacitance (<img src="https://render.githubusercontent.com/render/math?math=F%20g^{-1}">)</b>:
+
+<p align="center">
+<img src="https://render.githubusercontent.com/render/math?math=\frac{(m_1%20%2B%20m_2)\times%20\int%20I%20dV}{(m_1%20\times%20m_2)\times%20scan%20\space%20\space%20rate%20\times%20potential\space%20window}">
+</p>
+
+An illustration of how the CV data is analysed is shown below:
+<b>image to be added</b>
 
 </div>
 
@@ -93,6 +102,7 @@ An illustration of how the GCD data is analysed is shown below:
 
 <div id="sub_TOC">
 
+### GCD analysis
 #### <b>Loading data</b>
  * <a href="#Load_capacitor">__Load_capacitor__</a>
  * <a href="#Glob_analysis">__Glob_analysis__</a>
@@ -106,7 +116,8 @@ An illustration of how the GCD data is analysed is shown below:
  * <a href="#Check_analysis">__Check_analysis__</a>
  
 
-
+### CV analysis
+ * <a href="#CV_analysis">__CV_analysis__</a>
 
 
 <br>
@@ -158,7 +169,7 @@ This function supports electrochemical data in either txt or csv format. In a tx
 
 
 7. <b>row_skip : <i>int, optional</i></b><br>
-   Number of the rows of headers to skip in the txt files. If <b><code>row_skip = False</code></b>, a prompt will ask for rows to skip for the file. Enter <code>row_skip = 0</code> if no rows need to be skipped. 
+   Number of the rows of headers to skip in the txt files. If <b><code>row_skip = False</code></b>, row_skip = 1; if <b><code>row_skip = True</code></b>, a prompt will ask for rows to skip for the file. Enter <code>row_skip = 0</code> if no rows need to be skipped. 
 
 <div id="ESR_para"></div>
 
@@ -264,7 +275,7 @@ Loading all text files in the folder as specified in path. Good for analysing ho
 
 
 6. <b>row_skip : <i>int, optional</i></b><br>
-   Number of the rows of headers to skip in the txt files. If <b><code>row_skip = False</code></b>, a prompt will ask for rows to skip for the file. Enter <code>row_skip = 0</code> if no rows need to be skipped. 
+   Number of the rows of headers to skip in the txt files. If <b><code>row_skip = False</code></b>, row_skip = 1; if <b><code>row_skip = True</code></b>, a prompt will ask for rows to skip for the file. Enter <code>row_skip = 0</code> if no rows need to be skipped. 
 
 <div id="ESR_para"></div>
 
@@ -709,3 +720,16 @@ A plot of the charge/discharge curve with liniearly fitted slope and voltage dro
 ![.Check_analysis() example](https://user-images.githubusercontent.com/70351473/94346269-5aabdc80-0023-11eb-8486-377e821e86d5.png  '.Check_analysis() example')
 
 </div>
+
+
+<br>
+<br>
+
+---
+---
+
+
+<div id="CV_analysis">
+    
+## <a href="#sub_TOC"><b>CV_analysis</b><i>(pathway, m1, m2, scan_r = False, row_skip = False, x_name = False, y_name = False, delimiter = False, int_method = False)</i></a>
+Under construction...coming soon!
