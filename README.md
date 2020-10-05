@@ -66,10 +66,17 @@ For <b>CV</b> analysis, the capacitance is calculated via integration of the are
 <img src="https://render.githubusercontent.com/render/math?math=\frac{(m_1%20%2B%20m_2)\times%20\int%20I%20dV}{(m_1%20\times%20m_2)\times%20scan%20\space%20\space%20rate%20\times%20potential\space%20window}">
 </p>
 
+<br>
+<br>
+
 An illustration of how the CV data is analysed is shown below:
+
+<br>
+
 <b>image to be added</b>
 
 </div>
+
 
 ----
 <div id="Installation">
