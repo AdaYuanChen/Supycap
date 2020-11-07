@@ -137,7 +137,7 @@ An illustration of how the CV data is analysed is shown below:
 
 <div id="Load_capacitor">
     
-## <a href="#sub_TOC"><b>Load_capacitor</b><i>(pathway, t_set = False, V_set = False, delimiter = False, mass_ls = False, current = False, row_skip = False, ESR_method = True, setting = False, cap_norm = False)</i></a> 
+## <a href="#sub_TOC"><b>Load_capacitor</b><i>(pathway, t_set = False, V_set = False, delimiter = False, mass_ls = False, current = False, row_skip = False, ESR_method = True, setting = False, cap_grav = True)</i></a> 
 This function loads the text file specified on the pathway into the <b>Supercap</b> class ,where capacitance and ESR analysis will be carried out. All relevant information can be extracted from the init function.
 
 
@@ -188,8 +188,8 @@ This function supports electrochemical data in either txt or csv format. In a tx
    For <code>ESR_methods = True, 1, or 2 </code>, <code>setting = False</code>. For <code>ESR_methods = 101 or 201 </code>, setting is required as the number of points n/second derivative cut off point needed for the constant point method and the constant derivative method, respectively. If <code>ESR_methods = 101 or 201 </code> but <code>setting = False</code>, the function will promt the user to choose a specific value for the ESR analysis before proceeding. 
 
 
-10. <b>cap_norm : <i>bool, optional</i></b><br>
-   It is by default that the gravimetric capacitance is calculated. By using <code>cap_norm = False</code> or <code>mass_ls = False</code> , a non-gravimetric capacitance will be calculated. 
+10. <b>cap_grav : <i>bool, optional</i></b><br>
+   It is by default that the gravimetric capacitance is calculated. By using <code>cap_grav = False</code> or <code>mass_ls = False</code> , a non-gravimetric capacitance will be calculated. 
 
 <div id="method_table">
 </div>
