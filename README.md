@@ -181,7 +181,7 @@ This function supports electrochemical data in either txt or csv format. In a tx
 <div id="ESR_para"></div>
 
 8. <b>ESR_method : <i>int, optional</i></b><br>
-   The method for ESR analysis. It is by default <b>(<code>ESR_method = True</code>)</b> that the ESR analysis will be carried out using method 2 (constant derivative). For all methods available please refer to the next session <a href="#method_table">ESR_method</a>. <code>ESR_setting = False</code> will return <code>.esr_ls</code> as <b>False</b> in the Supercap class. Available ESR_methods are: <code>ESR_methods = True, False, 1, 101, 2, 201. </code>
+   The method for ESR analysis. It is by default <b>(<code>ESR_method = True</code>)</b> that the ESR analysis will be carried out using method 2 (constant derivative). For all methods available please refer to the next session <a href="#method_table">ESR_method</a> table. <code>ESR_setting = False</code> will return <code>.esr_ls</code> as <b>False</b> in the Supercap class. Available ESR_methods are: <code>ESR_methods = True, False, 1, 101, 2, 201. </code>
 
 
 9. <b>setting : <i>float, optional</i></b><br>
@@ -551,7 +551,7 @@ Method  |  Description  |
 
 <div id="Show_dV2">
     
-## <a href="#sub_TOC">Show_dV2(self, cycle_check = False, setting = False)</a> 
+## <a href="#sub_TOC">Show_dV2(self, cycle_check = False)</a> 
 Initialize from a :class:`.Supercap`.
 
 ### Notes
@@ -566,9 +566,6 @@ Visualising the second derivative and the charge/discharge curve of a specified 
    The method for ESR analysis. Specify the cycle of the charge/discharge curve and the second derivative to be plotted on the same axes.If <code>Cycle_check = False</code>, the user will be prompted to select a cycle on the CD curve to view as the reference for adjusting the cut off point. 
 
 
-2. <b>setting : <i>float, optional</i></b><br>
-   In this case, setting should be the cut off second derivative.If <code>setting = False</code>, the user will be prompted to input the desired cut off derivative manually. For more details please refer to the example. 
-
 #### Returns
 1. A plot of charge discharge curve and the corresponding second derivative <br>
 2. :class:`.Supercap`, optional
@@ -580,9 +577,10 @@ Visualising the second derivative and the charge/discharge curve of a specified 
 ```python
 >>>Supercap1
 <Class_Supercap: 3.0 mA, 1.0 V, 5 cycles, ESR method 2>
->>>Supercap1.Show_dV2(setting = 0.002)
+>>>Supercap1.Show_dV2()
 Of which cycle would you like to see the second derivative? enter a number between 0 and 9
 >>>0
+The cut off second derivative currently being used is 0.002
 ```
 ![.Show_dV2() example](https://user-images.githubusercontent.com/70351473/91521198-095ae100-e8ef-11ea-94f5-1381dd325cbb.png '.Show_dV2() example 1')
 ```python
@@ -595,7 +593,7 @@ Please input the value of desired cut off second derivative.
 ```python
 Are you happy with the cut off point? (yes/no)
 >>>yes
-Do you wish to change the cut off point to the current value? (setting =1.0)
+Do you wish to change the cut off point to the current value? (setting =1.0)[yes/no]
 >>>yes
 >>>Supercap1
 <Class_Supercap: 3.0 mA, 1.0 V, 5 cycles, ESR method 201>
@@ -612,7 +610,7 @@ Do you wish to change the cut off point to the current value? (setting =1.0)
 
 <div id="Cap_vs_cycles">
     
-## <a href="#sub_TOC">Cap_vs_cycles(self, set_fig=False)</a> 
+## <a href="#sub_TOC">Cap_vs_cycles(self, set_fig=False, save_fig=False)</a> 
 Initialize from a :class:`.Supercap`.
 
 ### Notes
@@ -627,6 +625,10 @@ Plotting capacitance against cycle and saving it as 'current mA_cap_vs_cycles_da
    If <code>set_fig = True</code>, the user will be prompted to change the setting of the figure.
 
 
+2. <b>save_fig : <i>bool, optional</i></b><br>
+   If <code>save_fig = True</code>, the figure will be saved under the name '[current] mA_cap_vs_cycles_Date[d/m]_Time[h/m].png'
+   
+   
 #### Returns
 A figure of capacitance over cycle number
 
@@ -675,7 +677,7 @@ None
 
 #### Returns
 <b>out:<i>:class:`string`, optional</i></b>
->The number of cycles, the average capacitance, the std of capacitance, the average ESR and its std 
+>The number of cycles, the average capacitance, the std of capacitance, the average ESR and its std, the ESR_method and cap_method used. 
 
 
 ### Examples
@@ -687,6 +689,8 @@ None
 'The standard deviation of the average is 0.553348977252065'
 'The average ESRs is 11.724686851851855'
 'The standard deviation of the ESRs is 0.023315957315381737'
+'Lower half of the voltage range in the discharge curve was used for capacitance calculations'
+'Constant second derivative method was used for ESR calculations'
 ```
 
 </div>
@@ -700,7 +704,7 @@ None
 
 <div id="Check_analysis">
     
-## <a href="#sub_TOC">Check_analysis(self, begin = False, end = False, save_fig = False)</a> 
+## <a href="#sub_TOC">Check_analysis(self, begin = False, end = False, set_fig = False, save_fig = False)</a> 
 Initialize from a :class:`.Supercap`.
 
  
@@ -826,7 +830,7 @@ This function supports electrochemical data in either txt or csv format. In a tx
 <div id="int_para"></div>
 
 5. <b>int_method : <i>int, optional</i></b> <br>
-   The method for integration of the enclosed area. It is by default <b>(<code>int_method = False</code>)</b> that the ESR analysis will be carried out using method 2 (constant derivative). For all methods available please refer to the next session <a href="#int_method_table">ESR_method</a>.
+   The method for integration of the enclosed area. It is by default <b>(<code>int_method = False</code>)</b> that the ESR analysis will be carried out using method 2 (constant derivative). For all methods available please refer to the next session <a href="#int_method_table">int_method table</a>.
 
 
 <br>
@@ -852,19 +856,9 @@ Method  |  Description  |
 ---
 
 ```python
->>>Load_capacitor('./GCD/3.0_mA_1.0V_010120.txt', ESR_method = 201)
-Please enter the number of header row(s) in this file:
->>>0
-Please specify a cut-off derivative (the default value is 0.01)
->>>0.1
-<Class_Supercap: 3.0 mA, 1.0 V, 5 cycles, ESR method 201>
-```
-
-<br>
-
-```python
->>>Load_capacitor('./GCD/3.0_1.0V_010120.txt', t_set = 1, V_set = 3, mass_ls = [[12,13,12.2], [11, 10.5, 11.6]], current = 3, ESR_method = 2, setting = 0.1)
-<Class_Supercap: 3.0 mA, 1.0 V, 5 cycles, ESR method 2>
+>>>Load_capacitor('../cell1_CV/1.2V_CA2.csv', m1=10, m2=9, scan_r=1, x_name = 'voltage', y_name ='current',delimeter=',', int_method=1)
+4  CV cycles are being analysed using integration method 1
+[86.30233646681373, 88.433682993075, 89.45296144982, 90.0191569583757]
 ```
 
 </div>
