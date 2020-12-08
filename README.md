@@ -137,7 +137,7 @@ An illustration of how the CV data is analysed is shown below:
 
 <div id="Load_capacitor">
     
-## <a href="#sub_TOC"><b>Load_capacitor</b><i>(pathway, t_set = False, V_set = False, delimiter = False, mass_ls = False, current = False, row_skip = False, ESR_method = True, setting = False, cap_grav = True)</i></a> 
+## <a href="#sub_TOC"><b>Load_capacitor</b><i>(pathway, t_set = False, V_set = False, delimiter = False, mass_ls = False, current = False, row_skip = False, ESR_method = True, setting = False, cap_method = False, cap_grav = True)</i></a> 
 This function loads the txt/csv file specified on the pathway into the <b>Supercap</b> class ,where capacitance and ESR analysis will be carried out. All relevant information can be extracted from the init function.
 
 
@@ -187,8 +187,13 @@ This function supports electrochemical data in either txt or csv format. In a tx
 9. <b>setting : <i>float, optional</i></b><br>
    For <code>ESR_methods = True, 1, or 2 </code>, <code>setting = False</code>. For <code>ESR_methods = 101 or 201 </code>, setting is required as the number of points n/second derivative cut off point needed for the constant point method and the constant derivative method, respectively. If <code>ESR_methods = 101 or 201 </code> but <code>setting = False</code>, the function will promt the user to choose a specific value for the ESR analysis before proceeding. 
 
+<div id="cap_para"></div>
 
-10. <b>cap_grav : <i>bool, optional</i></b><br>
+10. <b>cap_method : <i>int, optional</i></b><br>
+    The method for capacitance analysis which determines whether the upper (cap_method = 2) or lower (cap_method = 1) half of the voltage range of the discharging curve will be used. By default <code>cap_set = False</code> and the program uses the lower half of the discharging curve. For detailed information please refer to the <a href="#cap_method_table">cap_method</a> table below. 
+
+
+11. <b>cap_grav : <i>bool, optional</i></b><br>
    It is by default that the gravimetric capacitance is calculated. By using <code>cap_grav = False</code> or <code>mass_ls = False</code> , a non-gravimetric capacitance will be calculated. 
 
 <div id="method_table">
@@ -204,6 +209,17 @@ Method  |  Description  |
 <b>101</b>    |  This method prompts the user to enter an interger n, where dV is determined between the peak voltage and the voltage of the nth points after the peak voltage |  
 <b>2</b>     |  Default Method 2. dV is calculatied using the voltage difference between the peak voltage and the smallest data point where the second derivative greater than 0.01 (the second derivative decreases during teh discharging process)   |  
 <b>201</b>    |  This method prompts the user to enter a float x, where dV is determined between the peak voltage and the voltage of the smallest data point with second derivative over x   |  
+
+
+<div id="cap_method_table">
+</div>
+
+#### <a href="#cap_para"> cap_method</a>
+
+Method  |  Description  |
+---   |  ---   | 
+<b>False/1</b>   |  Default Method. The lower half of the discharging curve is fitted for capacitance calculation.  |  
+<b>2</b>   |  The upper half of the discharging curve is fitted for capacitance calculation.  |  
 
 
 #### Returns 
@@ -241,7 +257,7 @@ Please specify a cut-off derivative (the default value is 0.01)
 
 <div id="Glob_analysis">
     
-## <a href="#sub_TOC">Glob_analysis(path, t_set = False, V_set = False, delimiter = False, mass_ls = False, row_skip = False, ESR_method = True, setting = False, plotting = True)</a> 
+## <a href="#sub_TOC">Glob_analysis(path, t_set = False, V_set = False, delimiter = False, mass_ls = False, row_skip = False, ESR_method = True, setting = False, cap_method = False, plot_set = False, plot_save = True)</a> 
 Loading all txt/csv files in the folder as specified in path. Good for analysing how capacitance changes with current density. 
 
 
@@ -266,11 +282,11 @@ Loading all txt/csv files in the folder as specified in path. Good for analysing
 
 
 2. <b>t_set : <i>int/str(csv files only), optional</i></b> <br>
-   An integer specifying the coloumn index for time(s) data, with the first coloumn being coloumn 0 starting from left. If t_set = False, column 0 will be used as time(s); if t_set = False, there will be prompt asking for time coloumn index to be entered.For csv files, the coloumn index can also be the name of the coloumn (e.g. <code>t_set = 'time(s)'</code>). 
+   An integer specifying the coloumn index for time(s) data, with the first coloumn being coloumn 0 starting from left. If t_set = False, column 0 will be used as time(s); if t_set = True, there will be prompt asking for time coloumn index to be entered.For csv files, the coloumn index can also be the name of the coloumn (e.g. <code>t_set = 'time(s)'</code>). 
    
    
 3. <b>V_set : <i>int/str(csv files only), optional</i></b> <br>
-   An integer specifying the coloumn index for voltage(V) data, with the first coloumn being coloumn 0 starting from left. If V_set = False, column 1 will be used as Voltage(V); if t_set = False, there will be prompt asking for voltage coloumn index to be entered. For csv files, the coloumn index can also be the name of the coloumn (e.g. <code>V_set = 'voltage(V)'</code>). 
+   An integer specifying the coloumn index for voltage(V) data, with the first coloumn being coloumn 0 starting from left. If V_set = False, column 1 will be used as Voltage(V); if t_set = True, there will be prompt asking for voltage coloumn index to be entered. For csv files, the coloumn index can also be the name of the coloumn (e.g. <code>V_set = 'voltage(V)'</code>). 
 
 
 4. <b>delimiter : <i>str, optional</i></b> <br>
@@ -284,23 +300,31 @@ Loading all txt/csv files in the folder as specified in path. Good for analysing
 6. <b>row_skip : <i>int, optional</i></b><br>
    Number of the rows of headers to skip in the txt files. If <b><code>row_skip = False</code></b>, row_skip = 1; if <b><code>row_skip = True</code></b>, a prompt will ask for rows to skip for the file. Enter <code>row_skip = 0</code> if no rows need to be skipped. 
 
-<div id="ESR_para"></div>
+<div id="ESR_para_glob"></div>
 
 7. <b>ESR_method : <i>int, optional</i></b><br>
-   The method for ESR analysis. It is by default <b>(<code>ESR_method = True</code>)</b> that the ESR analysis will be carried out using method 2 (constant derivative). For all methods available please refer to the next session <a href="#method_table">ESR_method</a>. <code>ESR_setting = False</code> will return <code>.esr_ls</code> as <b>False</b> in the Supercap class. Available ESR_methods are: <code>ESR_methods = True, False, 1, 101, 2, 201. </code>
+   The method for ESR analysis. It is by default <b>(<code>ESR_method = True</code>)</b> that the ESR analysis will be carried out using method 2 (constant derivative). For all methods available please refer to the next session <a href="#glob_method_table">ESR_method</a>. <code>ESR_setting = False</code> will return <code>.esr_ls</code> as <b>False</b> in the Supercap class. Available ESR_methods are: <code>ESR_methods = True, False, 1, 101, 2, 201. </code>
 
 
 8. <b>setting : <i>float, optional</i></b><br>
    For <code>ESR_methods = True, 1, or 2 </code>, <code>setting = False</code>. For <code>ESR_methods = 101 or 201 </code>, setting is required as the number of points n/second derivative cut off point needed for the constant point method and the constant derivative method, respectively. If <code>ESR_methods = 101 or 201 </code> but <code>setting = False</code>, the function will promt the user to choose a specific value for the ESR analysis before proceeding. 
 
 
-9. <b>plotting : <i>bool, optional</i></b><br>
+9. <b>cap_method : <i>bool, optional</i></b><br>
+    The method for capacitance analysis which determines whether the upper (cap_method = 2) or lower (cap_method = 1) half of the voltage range of the discharging curve will be used. By default <code>cap_set = False</code> and the program uses the lower half of the discharging curve. For detailed information please refer to the <a href="#cap_method_table">cap_method</a> table below. 
+
+
+10. <b>plot_set : <i>bool, optional</i></b><br>
+    Figure parameters for plotting. If <code>plot_set = False</code>, the defualt settings will be used. If <code>plot_set = True</code>, there will be prompts to allow customised settings for plotting.
+
+
+11. <b>plot_save : <i>bool, optional</i></b><br>
    This argument determines whether the capacitance vs. current density plot will be plotted and saved. It is by default that <code>plotting = True </code>, and  the figure will be plotted and saved as 'Gravimetric specific capacitance vs. current density [datetime].png'. If <code>plotting = False </code>, the figure will not be plotted and saved.
 
-<div id="method_table">
+<div id="glob_method_table">
 </div>
 
-#### <a href="#ESR_para"> ESR_method</a>
+#### <a href="#ESR_para_glob"> ESR_method</a>
 
 Method  |  Description  |
 ---   |  ---   | 
@@ -340,7 +364,7 @@ Method  |  Description  |
 
 <div id="__init__">
     
-## <a href="#sub_TOC">__init__(self, current,  t_V_ls, masses, cap_ls, esr_ls, extrema, cycle_n, m_error)</a> 
+## <a href="#sub_TOC">__init__(self, current,  t_V_ls, masses, cap_ls, esr_ls, extrema, cycle_n, m_error, ESR_method, cap_method, faulty_cycles)</a> 
 Initialize a :class:`.Supercap`.
 
 ### Notes
@@ -361,6 +385,8 @@ Available parameters that can be extracted include:
 9. .peaks
 10. .troughs
 11. .esr_method
+12. .cap_method
+13. .faulty_cycles
 ```
 The above method follows the name of the Supercap variable. More details in the example section.
 
@@ -403,6 +429,19 @@ The above method follows the name of the Supercap variable. More details in the 
 8. <b>m_error : <i>list, [list of uncertainties]</i></b><br>
    The uncertainty for each calculated capacitance value.
 
+
+9. <b>ESR_method : <i>int</i></b><br>
+   The method for ESR analysis.
+   ESR_method = 1/102/2/202
+
+
+9. <b>cap_method : <i>int</i></b><br>
+   The method for capacitance analysis.
+   cap_method = 1/2
+
+
+11. <b>faulty_cycles : <i>list, [list of faulty cycle numbers]</i></b><br>
+   A list of cycle numbers for the faulty cycles.
 
 
 ### Examples 
@@ -756,63 +795,57 @@ This function supports electrochemical data in either txt or csv format. In a tx
 1. <b>pathway : <i>file, str, or pathlib.Path</i></b> <br>
     File, filename of the text file to read. Note that if the library is not allocated in the same directory as the file, the pathway to the file has to be given. For <b>``` scan_r=False```</b>, current will be directly read from the filename (i.e. the fielname has to include the current followed by <code>'_mvs'</code> and seperated by <code>'_'</code>, <code>'/'</code> or it is the first component of the filename). If scan rate information cannot be obtained from the filename, the scan rate has to be specified via the <code>current</code> argument. For more details, refer to the Examples section. This function currently only supports data in the format of txt or csv. 
 
-2. <b>t_set : <i>int/str(csv files only), optional</i></b> <br>
 
-2. <b>t_set : <i>int/str(csv files only), optional</i></b> <br>
-   An integer specifying the coloumn index for time(s) data, with the first coloumn being coloumn 0 starting from left. If t_set = False, column 0 will be used as time(s); if t_set = False, there will be prompt asking for time coloumn index to be entered.For csv files, the coloumn index can also be the name of the coloumn (e.g. <code>t_set = 'time(s)'</code>). 
+2. <b>m1 : <i>float, optional</i></b> <br>
+    The mass of electrode 1 of the supercapacitor. The mass is in mg.
+    
+    
+3. <b>m2 : <i>float, optional</i></b> <br>
+    The mass of electrode 2 of the supercapacitor. The mass is in mg.
+
+
+4. <b>scan_r : <i> float, optional</i></b><br>
+   If <b><code>scan_r = False</code></b>, the scan rate value (mV/s) will be directly read from the filename given that it is supplied in the format as specified above in the pathway section. If the current is not included the filename, it should be specified in the form of <code>scan_r =<i>specified_scan_rate</i></code>
+
+
+5. <b>row_skip : <i>int, optional</i></b><br>
+   Number of the rows of headers to skip in the txt files. If <b><code>row_skip = False</code></b>, row_skip = 1; if <b><code>row_skip = True</code></b>, a prompt will ask for rows to skip for the file. Enter <code>row_skip = 0</code> if no rows need to be skipped. 
    
    
-3. <b>V_set : <i>int/str(csv files only), optional</i></b> <br>
-   An integer specifying the coloumn index for voltage(V) data, with the first coloumn being coloumn 0 starting from left. If V_set = False, column 1 will be used as Voltage(V); if t_set = False, there will be prompt asking for voltage coloumn index to be entered. For csv files, the coloumn index can also be the name of the coloumn (e.g. <code>V_set = 'voltage(V)'</code>). 
+6. <b>x_name : <i>int/str(csv files only), optional</i></b> <br>
+   An integer specifying the coloumn index for voltage(V) data, with the first coloumn being coloumn 0 starting from left. If <code>x_name = False</code>, column 0 will be used as voltage(V); if x_name = True, there will be prompt asking for scan rate coloumn index to be entered.For csv files, the coloumn index can also be the name of the coloumn (e.g. <code>x_name = 'voltage(V)'</code>). 
+     
+     
+7. <b>y_name : <i>int/str(csv files only), optional</i></b> <br>
+   An integer specifying the coloumn index for voltage(V) data, with the first coloumn being coloumn 0 starting from left. If <code>y_name = False</code>, column 1 will be used as current(mA); if y_name = True, there will be prompt asking for current coloumn index to be entered. For csv files, the coloumn index can also be the name of the coloumn (e.g. <code>y_name = 'current(mA)'</code>). 
 
 
 4. <b>delimiter : <i>str, optional</i></b> <br>
     A string which is used to seperate the data coloumns in the data file. If <code>delimiter = False</code>, the delimiter is assumed to be space <code>' '</code>.
 
+<div id="int_para"></div>
 
-5. <b>mass_ls : <i>list, [[measurements of m1], [measurements of m2]], optional</i></b> <br>
-   A list specifying the mass of each electrode in the format as shwon above. Multiple measurements for each electrode should be included for calculation of the uncertainty of the data. All masses should be recorded in <b>mg</b>. If mass_ls = False, a non-gravimetric capacitanc will be calculated and the function returns <i><code>[[False, False], [False, False]]</code></i> for the <code>.masses</code> method in the resulting Supercap entity (more details for extracting data from the Supercap class in <a href="#__init__">Supercap class>>init</a>
-
-
-6. <b>current : <i> float, optional</i></b><br>
-   If <b><code>current = False</code></b>, the current value will be directly read from the filename given that it is supplied in the format as specified above in the pathway section. If the current is not included the filename, it should be specified in the form of <code>current =<i>specified_current</i></code>
+5. <b>int_method : <i>int, optional</i></b> <br>
+   The method for integration of the enclosed area. It is by default <b>(<code>int_method = False</code>)</b> that the ESR analysis will be carried out using method 2 (constant derivative). For all methods available please refer to the next session <a href="#int_method_table">ESR_method</a>.
 
 
-7. <b>row_skip : <i>int, optional</i></b><br>
-   Number of the rows of headers to skip in the txt files. If <b><code>row_skip = False</code></b>, row_skip = 1; if <b><code>row_skip = True</code></b>, a prompt will ask for rows to skip for the file. Enter <code>row_skip = 0</code> if no rows need to be skipped. 
+<br>
 
-<div id="ESR_para"></div>
-
-8. <b>ESR_method : <i>int, optional</i></b><br>
-   The method for ESR analysis. It is by default <b>(<code>ESR_method = True</code>)</b> that the ESR analysis will be carried out using method 2 (constant derivative). For all methods available please refer to the next session <a href="#method_table">ESR_method</a>. <code>ESR_setting = False</code> will return <code>.esr_ls</code> as <b>False</b> in the Supercap class. Available ESR_methods are: <code>ESR_methods = True, False, 1, 101, 2, 201. </code>
-
-
-9. <b>setting : <i>float, optional</i></b><br>
-   For <code>ESR_methods = True, 1, or 2 </code>, <code>setting = False</code>. For <code>ESR_methods = 101 or 201 </code>, setting is required as the number of points n/second derivative cut off point needed for the constant point method and the constant derivative method, respectively. If <code>ESR_methods = 101 or 201 </code> but <code>setting = False</code>, the function will promt the user to choose a specific value for the ESR analysis before proceeding. 
-
-
-10. <b>cap_grav : <i>bool, optional</i></b><br>
-   It is by default that the gravimetric capacitance is calculated. By using <code>cap_grav = False</code> or <code>mass_ls = False</code> , a non-gravimetric capacitance will be calculated. 
-
-<div id="method_table">
+<div id="int_method_table">
 </div>
 
-#### <a href="#ESR_para"> ESR_method</a>
+#### <a href="#int_para"> int_method</a>
 
 Method  |  Description  |
 ---   |  ---   | 
-<b>True</b>   |  Default Method 2   |  
-<b>False</b>   |  Returning ESR = False (no ESR calculation)   |  
-<b>1</b>    |  Default Method 1. dV is calculatied using the voltage difference between the peak voltage and the fourth data point taken after the peak voltage is reached   |  
-<b>101</b>    |  This method prompts the user to enter an interger n, where dV is determined between the peak voltage and the voltage of the nth points after the peak voltage |  
-<b>2</b>     |  Default Method 2. dV is calculatied using the voltage difference between the peak voltage and the smallest data point where the second derivative greater than 0.01 (the second derivative decreases during teh discharging process)   |  
-<b>201</b>    |  This method prompts the user to enter a float x, where dV is determined between the peak voltage and the voltage of the smallest data point with second derivative over x   |  
+<b>False or 1</b>   |  Default method. Integration using the trapezoidal rule and integrates over discharging curve only.  |  
+<b>101</b>    |  Integration using the trapezoidal rule and integrates over both the charging and discharging curves.  |  
+<b>2</b>    |  Integration using the Simpson's rule and integrates over discharging curve only. |  
+<b>202</b>     |  Integration using the Simpson's rule and integrates over both the charging and discharging curves.   |  
 
 
 #### Returns 
-<b>out: <i>Supercap</i></b>
-
->A Supercap entity generated from the text file
+<b>out: <i>[list of calculated gravimetric capacitance]</i></b>
 
 
 ### Examples 
