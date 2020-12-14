@@ -61,7 +61,7 @@ The <b>ESR (Ω)</b> is calculated using the voltage drop:
 <img src="https://render.githubusercontent.com/render/math?math=ESR=%20\frac{V_{drop}}{2%20I}">
 </p>
 
-<i>where <img src="https://render.githubusercontent.com/render/math?math=V_{drop}"> is the vertical drop in voltage in V at the beginning of the discharging curve as shown in the figure below; I is the current in mA under which the CC analysis is conducted. <\i>
+<i>where <img src="https://render.githubusercontent.com/render/math?math=V_{drop}"> is the vertical drop in voltage in V at the beginning of the discharging curve as shown in the figure below; I is the current in mA under which the CC analysis is conducted. </i>
 
 <br>
 <br>
