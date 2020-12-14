@@ -71,9 +71,9 @@ The <b>ESR (Ω)</b> is calculated using the voltage drop:
 
 Here is an illustration of how the CC data is analysed: 
 
-![An analysed CC curve using the library](https://user-images.githubusercontent.com/70351473/102105162-f8df5f80-3e26-11eb-96a0-44714a6c144f.png =250x250
-'Illustartion of CC analysis')
-    </p>
+<p align="center">
+<img src="https://user-images.githubusercontent.com/70351473/102105162-f8df5f80-3e26-11eb-96a0-44714a6c144f.png" alt="CC analysis" width="300" height="250">
+</p>
 
 
 For <b>CV</b> analysis, the capacitance is calculated via integration of the area enclosed by current as the voltage scanned across the potential window. For <b>gravimetric capacitance (<img src="https://render.githubusercontent.com/render/math?math=F%20g^{-1}">)</b>:
