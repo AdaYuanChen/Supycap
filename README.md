@@ -21,15 +21,15 @@
         <a href="#TOC">Introduction</a>
     </h2>
     <p>
-        This is a Python library for analysis for the Galvanostatic Charge Discharge <b>(GCD)</b> curves as well as the Cyclic Voltammetry <b>(CV)</b> curves of two-electrode, symmetrical supercapacitors. It provides an easy and standardised way to quickly extract useful information from the GCD and CV data, including the <b>capacitance</b> and the <b>ESR </b>of the supercapacitor and how they evolve over cycles, with multiple options offered to suit the need of scientific investigations of supercapacitors. 
+        This is a Python library for analysis for the Constant Current <b>(CC)</b> curves as well as the Cyclic Voltammetry <b>(CV)</b> curves of two-electrode, symmetrical supercapacitors. It provides an easy and standardised way to quickly extract useful information from the CC and CV data, including the <b>capacitance</b> and the <b>ESR </b>of the supercapacitor and how they evolve over cycles, with multiple options offered to suit the need of scientific investigations of supercapacitors. 
 
 <br>
 <br>
 
-For <b>GCD</b> analysis, the capacitance is calculated via linear fitting the second half of the discharging slope in each charging/discharging cycle. For <b>gravimetric capacitance (<img src="https://render.githubusercontent.com/render/math?math=F%20g^{-1}">)</b>:
+For <b>CC</b> analysis, the capacitance is calculated via linear fitting the second half of the discharging slope in each charging/discharging cycle. For <b>gravimetric capacitance (<img src="https://render.githubusercontent.com/render/math?math=F%20g^{-1}">)</b>:
 
 <p align="center">
-<img src="https://render.githubusercontent.com/render/math?math=C_g=%20\frac{(m_1%2Bm_2)%20\times%20I%20\times%20dt}{(m_1%20\times%20m_2)%20\times%20dV}">
+<img src="https://render.githubusercontent.com/render/math?math=C_g=%20\frac{(m_1%2Bm_2)%20\times%20I%20}{(m_1%20\times%20m_2)%20\times%20\frac{dt}%20{dV}}">
 </center>
 </p>
 
@@ -39,7 +39,7 @@ For <b>GCD</b> analysis, the capacitance is calculated via linear fitting the se
 For <b>non-gravimetric capacitance (F)</b>:
 
 <p align="center">
-<img src="https://render.githubusercontent.com/render/math?math=C_{non}_{grav}=%20I%20\times%20\frac{dV}%20{dt}">
+<img src="https://render.githubusercontent.com/render/math?math=C_{non}_{grav}=%20I%20\times%20\frac{dt}%20{dV}">
 </p>
 
 <br>
@@ -54,9 +54,9 @@ The <b>ESR (Ω)</b> is calculated using the voltage drop:
 <br>
 <br>
 
-An illustration of how the GCD data is analysed is shown below: 
+An illustration of how the CC data is analysed is shown below: 
 
-![An analysed GCD curve using the library](https://user-images.githubusercontent.com/70351473/94346269-5aabdc80-0023-11eb-8486-377e821e86d5.png 'Illustartion of GCD analysis')
+![An analysed CC curve using the library](https://user-images.githubusercontent.com/70351473/94346269-5aabdc80-0023-11eb-8486-377e821e86d5.png 'Illustartion of CC analysis')
     </p>
 
 
@@ -101,7 +101,7 @@ An illustration of how the CV data is analysed is shown below:
         <a href="#TOC">Documentations</a>
     </h2>
     <p>
-        This python library offers means to analyse GCD data in the format of text files, which can be directlt exported from electrochemistry software such as <code>EC Labs</code>. <b>The file has to have two and only two coloumns of data, with the first coloumn being time (s), and the second coloumn being Voltage (V).</b> (It is intended to extended the code to enable loading from csv files and/or files with multiple coloumns of data). The documentation includes two parts: means for loading data into the Supercap class and methods within the Superclass. 
+        This python library offers means to analyse CC data in the format of text files, which can be directlt exported from electrochemistry software such as <code>EC Labs</code>. <b>The file has to have two and only two coloumns of data, with the first coloumn being time (s), and the second coloumn being Voltage (V).</b> (It is intended to extended the code to enable loading from csv files and/or files with multiple coloumns of data). The documentation includes two parts: means for loading data into the Supercap class and methods within the Superclass. 
     </p>
 </div>
 
@@ -109,7 +109,7 @@ An illustration of how the CV data is analysed is shown below:
 
 <div id="sub_TOC">
 
-### GCD analysis
+### CC analysis
 #### <b>Loading data</b>
  * <a href="#Load_capacitor">__Load_capacitor__</a>
  * <a href="#Glob_analysis">__Glob_analysis__</a>
@@ -143,7 +143,7 @@ This function loads the txt/csv file specified on the pathway into the <b>Superc
 
 ### Notes
 ---
-This function supports electrochemical data in either txt or csv format. In a txt file, it is by default that the first coloumn of the file is assumed to be time (s), and the second coloumn is assumed to be Voltage (V) for the GCD analysis. The two coloumns are assumed to be seperated by space. However, the optional arguments, <i>t_set, V_set, delimeter and row_skip</i>, offers flexibility in dealing with more complex data files. 
+This function supports electrochemical data in either txt or csv format. In a txt file, it is by default that the first coloumn of the file is assumed to be time (s), and the second coloumn is assumed to be Voltage (V) for the CC analysis. The two coloumns are assumed to be seperated by space. However, the optional arguments, <i>t_set, V_set, delimeter and row_skip</i>, offers flexibility in dealing with more complex data files. 
 
 
 
@@ -232,7 +232,7 @@ Method  |  Description  |
 ---
 
 ```python
->>>Load_capacitor('./GCD/3.0_mA_1.0V_010120.txt', ESR_method = 201)
+>>>Load_capacitor('./CC/3.0_mA_1.0V_010120.txt', ESR_method = 201)
 Please enter the number of header row(s) in this file:
 >>>0
 Please specify a cut-off derivative (the default value is 0.01)
@@ -243,7 +243,7 @@ Please specify a cut-off derivative (the default value is 0.01)
 <br>
 
 ```python
->>>Load_capacitor('./GCD/3.0_1.0V_010120.txt', t_set = 1, V_set = 3, mass_ls = [[12,13,12.2], [11, 10.5, 11.6]], current = 3, ESR_method = 2, setting = 0.1)
+>>>Load_capacitor('./CC/3.0_1.0V_010120.txt', t_set = 1, V_set = 3, mass_ls = [[12,13,12.2], [11, 10.5, 11.6]], current = 3, ESR_method = 2, setting = 0.1)
 <Class_Supercap: 3.0 mA, 1.0 V, 5 cycles, ESR method 2>
 ```
 
@@ -399,11 +399,11 @@ The above method follows the name of the Supercap variable. More details in the 
 <div id="path"></div>
 
 1. <b>current : <i>float</i></b> <br>
-    Current at which the GCD analysis is undertaken. The current is in mA.
+    Current at which the CC analysis is undertaken. The current is in mA.
 
 
 2. <b>t_V_ls : <i>list, [[list of time readings], [list of voltage readings]]</i></b> <br>
-   The raw data of the GCD analysis. 
+   The raw data of the CC analysis. 
 
 
 3. <b>masses : <i>list, [[average mass of m1, std of m1], [average mass of m2, std of m2]]</i></b><br>
@@ -788,7 +788,7 @@ This function loads the txt/csv file specified on the pathway, where capacitance
 
 ### Notes
 ---
-This function supports electrochemical data in either txt or csv format. In a txt file, it is by default that the first coloumn of the file is assumed to be voltage (V), and the second coloumn is assumed to be current (mA) for the GCD analysis. The two coloumns are assumed to be seperated by space. However, the optional arguments, <i>x_name, y_name, delimeter and row_skip</i>, offers flexibility in dealing with more complex data files. 
+This function supports electrochemical data in either txt or csv format. In a txt file, it is by default that the first coloumn of the file is assumed to be voltage (V), and the second coloumn is assumed to be current (mA) for the CC analysis. The two coloumns are assumed to be seperated by space. However, the optional arguments, <i>x_name, y_name, delimeter and row_skip</i>, offers flexibility in dealing with more complex data files. 
 
 
 
