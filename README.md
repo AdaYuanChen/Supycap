@@ -29,7 +29,7 @@
 For <b>CC</b> analysis, the capacitance is calculated via linear fitting the second half of the discharging slope in each charging/discharging cycle. For <b>gravimetric capacitance (<img src="https://render.githubusercontent.com/render/math?math=F%20g^{-1}">)</b>:
 
 <p align="center">
-<img src="https://render.githubusercontent.com/render/math?math=C_g=%20\frac{(m_1%2Bm_2)%20\times%20I%20}{(m_1%20\times%20m_2)%20\times%20\frac{dt}%20{dV}}">
+<img src="https://render.githubusercontent.com/render/math?math=C_g=%20\frac{(m_1%2Bm_2)%20\times%20I%20}{(m_1%20\times%20m_2)%20\times%20\frac{dV}%20{dt}}">
 </center>
 </p>
 
@@ -782,7 +782,6 @@ A plot of the charge/discharge curve with liniearly fitted slope and voltage dro
 <div id="CV_analysis">
     
 ## <a href="#sub_TOC"><b>CV_analysis</b><i>(pathway, m1, m2, scan_r = False, row_skip = False, x_name = False, y_name = False, delimiter = False, int_method = False)</i></a>
-Under construction...coming soon!
 This function loads the txt/csv file specified on the pathway, where capacitance analysis on the Cyclic Voltammetry will be carried out. The function returns a list of capacitance calculated from each CV cycle. 
 
 
