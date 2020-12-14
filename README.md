@@ -33,11 +33,13 @@ For <b>CC</b> analysis, the capacitance is calculated via linear fitting the sec
 </center>
 </p>
 
-where <img src="https://render.githubusercontent.com/render/math?math=m_1"> is the mass of one of the two electrodes in the electrochemical cell and <img src="https://render.githubusercontent.com/render/math?math=m_2"> is the mass of the other, both in mg; I is the current in mA under which the CC anaysis is conducted; <img src="https://render.githubusercontent.com/render/math?math=frac{dV}%20{dt}"> is the change of voltage (V) with respect to time (s). 
+<i>where <img src="https://render.githubusercontent.com/render/math?math=m_1"> is the mass of one of the two electrodes in the electrochemical cell and <img src="https://render.githubusercontent.com/render/math?math=m_2"> is the mass of the other, both in mg; I is the current in mA under which the CC anaysis is conducted; <img src="https://render.githubusercontent.com/render/math?math=\frac{dV}%20{dt}"> is the change of voltage (V) with respect to time (s). </i>
 
 <br>
 <br>
 <br>
+<br>
+
 
 For <b>non-gravimetric capacitance (F)</b>:
 
@@ -45,11 +47,13 @@ For <b>non-gravimetric capacitance (F)</b>:
 <img src="https://render.githubusercontent.com/render/math?math=C_{non}_{grav}=%20I%20\times%20\frac{dt}%20{dV}">
 </p>
 
-where I is the current in mA and <img src="https://render.githubusercontent.com/render/math?math=frac{dt}%20{dV}"> is the change of time (s) with respect to voltage (V).
+<i>where I is the current in mA and <img src="https://render.githubusercontent.com/render/math?math=frac{dt}%20{dV}"> is the change of time (s) with respect to voltage (V).</i>
 
 <br>
 <br>
 <br>
+<br>
+
 
 The <b>ESR (Ω)</b> is calculated using the voltage drop:
 
@@ -57,8 +61,9 @@ The <b>ESR (Ω)</b> is calculated using the voltage drop:
 <img src="https://render.githubusercontent.com/render/math?math=ESR=%20\frac{V_{drop}}{2%20I}">
 </p>
 
-where <img src="https://render.githubusercontent.com/render/math?math=V_{drop}"> is the vertical drop in voltage in V at the beginning of the discharging curve as shown in the figure below; I is the current in mA under which the CC analysis is conducted. 
+<i>where <img src="https://render.githubusercontent.com/render/math?math=V_{drop}"> is the vertical drop in voltage in V at the beginning of the discharging curve as shown in the figure below; I is the current in mA under which the CC analysis is conducted. <\i>
 
+<br>
 <br>
 <br>
 <br>
