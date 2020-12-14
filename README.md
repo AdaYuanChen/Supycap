@@ -47,7 +47,7 @@ For <b>non-gravimetric capacitance (F)</b>:
 <img src="https://render.githubusercontent.com/render/math?math=C_{non}_{grav}=%20I%20\times%20\frac{dt}%20{dV}">
 </p>
 
-<i>where I is the current in mA and <img src="https://render.githubusercontent.com/render/math?math=frac{dt}%20{dV}"> is the change of time (s) with respect to voltage (V).</i>
+<i>where I is the current in mA and <img src="https://render.githubusercontent.com/render/math?math=\frac{dt}%20{dV}"> is the change of time (s) with respect to voltage (V).</i>
 
 <br>
 <br>
