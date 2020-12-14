@@ -21,17 +21,19 @@
         <a href="#TOC">Introduction</a>
     </h2>
     <p>
-        This is a Python library for analysis for the Constant Current <b>(CC)</b> curves as well as the Cyclic Voltammetry <b>(CV)</b> curves of two-electrode, symmetrical supercapacitors. It provides an easy and standardised way to quickly extract useful information from the CC and CV data, including the <b>capacitance</b> and the <b>ESR </b>of the supercapacitor and how they evolve over cycles, with multiple options offered to suit the need of scientific investigations of supercapacitors. 
+        This is a Python library for analysis for the Constant Current <b>(CC)</b> curves as well as the Cyclic Voltammetry <b>(CV)</b> curves of two-electrode, symmetrical supercapacitors. It provides an easy and standardised way to quickly extract useful information from the CC and CV data, including the <b>capacitance</b> and the Equivalent Series Resistance <b>（ESR） </b>of the supercapacitor and how they evolve over cycles, with multiple options offered to suit the need of scientific investigations of supercapacitors. 
 
 <br>
 <br>
 
-For <b>CC</b> analysis, the capacitance is calculated via linear fitting the second half of the discharging slope in each charging/discharging cycle. For <b>gravimetric capacitance (<img src="https://render.githubusercontent.com/render/math?math=F%20g^{-1}">)</b>:
+For <b>CC</b> analysis, the capacitance is calculated via linear fitting the second half of the discharging slope in each charging/discharging cycle. For <b>gravimetric capacitance, <img src="https://render.githubusercontent.com/render/math?math=C_g"> (<img src="https://render.githubusercontent.com/render/math?math=F%20g^{-1}">)</b>:
 
 <p align="center">
 <img src="https://render.githubusercontent.com/render/math?math=C_g=%20\frac{(m_1%2Bm_2)%20\times%20I%20}{(m_1%20\times%20m_2)%20\times%20\frac{dV}%20{dt}}">
 </center>
 </p>
+
+where <img src="https://render.githubusercontent.com/render/math?math=m_1"> is the mass of one of the two electrodes in the electrochemical cell and <img src="https://render.githubusercontent.com/render/math?math=m_2"> is the mass of the other, both in mg; I is the current in mA under which the CC anaysis is conducted; <img src="https://render.githubusercontent.com/render/math?math=frac{dV}%20{dt}"> is the change of voltage (V) with respect to time (s). 
 
 <br>
 
@@ -41,6 +43,8 @@ For <b>non-gravimetric capacitance (F)</b>:
 <p align="center">
 <img src="https://render.githubusercontent.com/render/math?math=C_{non}_{grav}=%20I%20\times%20\frac{dt}%20{dV}">
 </p>
+
+where I is the current in mA and <img src="https://render.githubusercontent.com/render/math?math=frac{dt}%20{dV}"> is the change of time (s) with respect to voltage (V).
 
 <br>
 
