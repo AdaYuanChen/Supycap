@@ -124,7 +124,7 @@ An illustration of how the CV data is analysed is shown below:
         <a href="#TOC">Documentations</a>
     </h2>
     <p>
-        This python library offers means to analyse CC data and CV data in the format of text files or csv files, which can be directlt exported from electrochemistry software such as <code>EC Labs</code>. For <b>CC analysis</b>, the program recognises the first data coloumn as time (s) and the second coloumn as voltage (V) by default. For <b>CV analysis</b>, the program recognises the first data coloumn as voltage (V) and the second coloumn as current (mA) by default. However, the optional arguments, such as <i>t_set, V_set, delimeter and row_skip</i> for CC analysis and <i>V_set, I_set, delimeter and row_skip</i> for CV analysis, offers flexibility in dealing with more complex data files which do not meet the default format. For more information, please refer to the documentation for <a href="#Load_capacitor">__Load_capacitor__</a> and <a href="#CV_analysis">__CV_analysis__</a>, respectively. The documentation includes two parts: <b>CC analysis </b>and <b>CV analysis</b>. CC analysis is further divided into </b>Loading data</b>, which are means for loading data into the Supercap class, and <b>Supercap class</b>, which are methods within the Superclass for extracting data from the analysis. 
+        This python library offers means to analyse CC data and CV data in the format of text files or csv files, which can be directlt exported from electrochemistry software such as <code>EC Labs</code>. For <b>CC analysis</b>, the program recognises the first data coloumn as time (s) and the second coloumn as voltage (V) by default. For <b>CV analysis</b>, the program recognises the first data coloumn as voltage (V) and the second coloumn as current (mA) by default. However, the optional arguments, such as <code><i>t_set, V_set, delimeter and row_skip</i></code> for CC analysis and <code><i>V_set, I_set, delimeter and row_skip</i></code> for CV analysis, offers flexibility in dealing with more complex data files which do not meet the default format. For more information, please refer to the documentation for <a href="#Load_capacitor"><b>Load_capacitor</b></a> and <a href="#CV_analysis"><b>CV_analysis</b></a>, respectively. The documentation includes two parts: <b>CC analysis </b>and <b>CV analysis</b>. <b>CC analysis</b> is further divided into </b>Loading data</b>, which are means for loading data into the Supercap class, and <b>Supercap class</b>, which are methods within the Superclass for extracting data from the analysis. 
     </p>
 </div>
 
@@ -846,12 +846,12 @@ This function supports electrochemical data in either txt or csv format. In a tx
    An integer specifying the coloumn index for voltage(V) data, with the first coloumn being coloumn 0 starting from left. If <code>y_name = False</code>, column 1 will be used as current(mA); if y_name = True, there will be prompt asking for current coloumn index to be entered. For csv files, the coloumn index can also be the name of the coloumn (e.g. <code>I_set = 'current(mA)'</code>). 
 
 
-4. <b>delimiter : <i>str, optional</i></b> <br>
+8. <b>delimiter : <i>str, optional</i></b> <br>
     A string which is used to seperate the data coloumns in the data file. If <code>delimiter = False</code>, the delimiter is assumed to be space <code>' '</code>.
 
 <div id="int_para"></div>
 
-5. <b>int_method : <i>int, optional</i></b> <br>
+9. <b>int_method : <i>int, optional</i></b> <br>
    The method for integration of the enclosed area. It is by default <b>(<code>int_method = False</code>)</b> that the ESR analysis will be carried out using method 2 (constant derivative). For all methods available please refer to the next session <a href="#int_method_table">int_method table</a>.
 
 
