@@ -266,8 +266,8 @@ Please specify a cut-off derivative (the default value is 0.01)
 <br>
 
 ```python
->>>Load_capacitor('./CC/3.0_1.0V_010120.txt', t_set = 1, V_set = 3, mass_ls = [[12,13,12.2], [11, 10.5, 11.6]], current = 3, ESR_method = 2, setting = 0.1)
-<Class_Supercap: 3.0 mA, 1.0 V, 5 cycles, ESR method 2>
+>>>Load_capacitor('./CC/3.0_1.0V_010120.txt', t_set = 1, V_set = 3, mass_ls = [[12,13,12.2], [11, 10.5, 11.6]], current = 3, ESR_method = 2)
+<Class_Supercap: 3.0 mA, max voltage 1.0 V, 270 cycle(s), ESR method 2 (setting = 0.01), cap_method 1>
 ```
 
 </div>
@@ -341,7 +341,7 @@ Loading all txt/csv files in the folder as specified in path. Good for analysing
     Figure parameters for plotting. If <code>plot_set = False</code>, the defualt settings will be used. If <code>plot_set = True</code>, there will be prompts to allow customised settings for plotting.
 
 
-11. <b>plot_save : <i>bool, optional</i></b><br>
+11. <b>plotting : <i>bool, optional</i></b><br>
    This argument determines whether the capacitance vs. current density plot will be plotted and saved. It is by default that <code>plotting = True </code>, and  the figure will be plotted and saved as 'Gravimetric specific capacitance vs. current density [datetime].png'. If <code>plotting = False </code>, the figure will not be plotted and saved.
 
 <div id="glob_method_table">
@@ -369,11 +369,14 @@ Method  |  Description  |
 ---
 
 ```python
->>>Glob_analysis('./various_mA_folder/*.txt', mass_ls = [[12,13,12.2], [11, 10.5, 11.6]], row_skip = 1, ESR_method = 2, plotting = False)
-[[0.001, 0.003, 0.005],
-[<Class_Supercap: 1.0 mA, 1.0 V, 5 cycles, ESR method 2>,
- <Class_Supercap: 2.0 mA, 1.0 V, 7 cycles, ESR method 2>,
- <Class_Supercap: 3.0 mA, 1.0 V, 5 cycles, ESR method 2>,]]
+>>>CC_glob = Glob_analysis('./various_mA_folder/*.txt', mass_ls=[[10.7, 10.5, 11.0], [11.2, 11.2, 11.5 ]], ESR_method = 2, plotting=False)
+>>>CC_glob
+([0.0034039334341906206,
+  0.011346444780635402,
+  0.022692889561270805],
+[<Class_Supercap: 0.06 mA, max voltage 0.8 V, 4 cycle(s), ESR method 2 (setting = 0.01), cap_method 1>,
+  <Class_Supercap: 0.2 mA, max voltage 0.8 V, 4 cycle(s), ESR method 2 (setting = 0.01), cap_method 1>,
+  <Class_Supercap: 0.4 mA, max voltage 0.8 V, 4 cycle(s), ESR method 2 (setting = 0.01), cap_method 1>])
 ```
 
 </div>
