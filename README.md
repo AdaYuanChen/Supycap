@@ -82,7 +82,7 @@ For <b>CV</b> analysis, the capacitance is calculated via integration of the are
 <img src="https://render.githubusercontent.com/render/math?math=C_g=%20\frac{(m_1%20%2B%20m_2)\times%20\int%20I%20dV}{(m_1%20\times%20m_2)\times%20scan%20\space%20\space%20rate%20\times%20potential\space%20window}">
 </p>
 
-<i>where <img src="https://render.githubusercontent.com/render/math?math=m_1"> is the mass of one of the two electrodes in the electrochemical cell and <img src="https://render.githubusercontent.com/render/math?math=m_2"> is the mass of the other, both in mg; <img src="https://render.githubusercontent.com/render/math?math=\int%20I%20dV"> is the area enclosed by the discharging curve as shown below in blue；scan rate is the change in voltage per second in mV/s ;potential window is the range of voltage that has been scanned across in V</i>
+<i>where <img src="https://render.githubusercontent.com/render/math?math=m_1"> is the mass of one of the two electrodes in the electrochemical cell and <img src="https://render.githubusercontent.com/render/math?math=m_2"> is the mass of the other, both in mg; <img src="https://render.githubusercontent.com/render/math?math=\int%20I%20dV"> is the area enclosed by the discharging curve as shown below in blue；scan rate is the change in voltage per second in mV/s ;potential window is the accumulated voltage that has been scanned across in V.</i>
 
 <br>
 <br>
@@ -92,9 +92,11 @@ For <b>CV</b> analysis, the capacitance is calculated via integration of the are
 
 An illustration of how the CV data is analysed is shown below:
 
-<br>
+<p align="center">
+<img src="https://user-images.githubusercontent.com/70351473/102184813-fb35ce00-3ea7-11eb-95cb-67ceca31e45e.png" alt="CV analysis" width="550" height="400">
+</p>
 
-<b>image to be added</b>
+
 
 </div>
 
@@ -122,7 +124,7 @@ An illustration of how the CV data is analysed is shown below:
         <a href="#TOC">Documentations</a>
     </h2>
     <p>
-        This python library offers means to analyse CC data in the format of text files, which can be directlt exported from electrochemistry software such as <code>EC Labs</code>. <b>The file has to have two and only two coloumns of data, with the first coloumn being time (s), and the second coloumn being Voltage (V).</b> (It is intended to extended the code to enable loading from csv files and/or files with multiple coloumns of data). The documentation includes two parts: means for loading data into the Supercap class and methods within the Superclass. 
+        This python library offers means to analyse CC data and CV data in the format of text files or csv files, which can be directlt exported from electrochemistry software such as <code>EC Labs</code>. For <b>CC analysis</b>, the program recognises the first data coloumn as time (s) and the second coloumn as voltage (V) by default. For <b>CV analysis</b>, the program recognises the first data coloumn as voltage (V) and the second coloumn as current (mA) by default. However, the optional arguments, such as <i>t_set, V_set, delimeter and row_skip</i> for CC analysis and <i>V_set, I_set, delimeter and row_skip</i> for CV analysis, offers flexibility in dealing with more complex data files which do not meet the default format. For more information, please refer to the documentation for <a href="#Load_capacitor">__Load_capacitor__</a> and <a href="#CV_analysis">__CV_analysis__</a>, respectively. The documentation includes two parts: <b>CC analysis </b>and <b>CV analysis</b>. CC analysis is further divided into </b>Loading data</b>, which are means for loading data into the Supercap class, and <b>Supercap class</b>, which are methods within the Superclass for extracting data from the analysis. 
     </p>
 </div>
 
@@ -836,12 +838,12 @@ This function supports electrochemical data in either txt or csv format. In a tx
    Number of the rows of headers to skip in the txt files. If <b><code>row_skip = False</code></b>, row_skip = 1; if <b><code>row_skip = True</code></b>, a prompt will ask for rows to skip for the file. Enter <code>row_skip = 0</code> if no rows need to be skipped. 
    
    
-6. <b>x_name : <i>int/str(csv files only), optional</i></b> <br>
+6. <b>V_set : <i>int/str(csv files only), optional</i></b> <br>
    An integer specifying the coloumn index for voltage(V) data, with the first coloumn being coloumn 0 starting from left. If <code>x_name = False</code>, column 0 will be used as voltage(V); if x_name = True, there will be prompt asking for scan rate coloumn index to be entered.For csv files, the coloumn index can also be the name of the coloumn (e.g. <code>x_name = 'voltage(V)'</code>). 
      
      
-7. <b>y_name : <i>int/str(csv files only), optional</i></b> <br>
-   An integer specifying the coloumn index for voltage(V) data, with the first coloumn being coloumn 0 starting from left. If <code>y_name = False</code>, column 1 will be used as current(mA); if y_name = True, there will be prompt asking for current coloumn index to be entered. For csv files, the coloumn index can also be the name of the coloumn (e.g. <code>y_name = 'current(mA)'</code>). 
+7. <b>I_set : <i>int/str(csv files only), optional</i></b> <br>
+   An integer specifying the coloumn index for voltage(V) data, with the first coloumn being coloumn 0 starting from left. If <code>y_name = False</code>, column 1 will be used as current(mA); if y_name = True, there will be prompt asking for current coloumn index to be entered. For csv files, the coloumn index can also be the name of the coloumn (e.g. <code>I_set = 'current(mA)'</code>). 
 
 
 4. <b>delimiter : <i>str, optional</i></b> <br>
