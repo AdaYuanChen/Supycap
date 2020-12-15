@@ -82,8 +82,13 @@ For <b>CV</b> analysis, the capacitance is calculated via integration of the are
 <img src="https://render.githubusercontent.com/render/math?math=C_g=%20\frac{(m_1%20%2B%20m_2)\times%20\int%20I%20dV}{(m_1%20\times%20m_2)\times%20scan%20\space%20\space%20rate%20\times%20potential\space%20window}">
 </p>
 
+<i>where <img src="https://render.githubusercontent.com/render/math?math=m_1"> is the mass of one of the two electrodes in the electrochemical cell and <img src="https://render.githubusercontent.com/render/math?math=m_2"> is the mass of the other, both in mg; <img src="https://render.githubusercontent.com/render/math?math=\int%20I%20dV"> is the area enclosed by the discharging curve as shown below in blue；scan rate is the change in voltage per second in mV/s ;potential window is the range of voltage that has been scanned across in V</i>
+
 <br>
 <br>
+<br>
+<br>
+
 
 An illustration of how the CV data is analysed is shown below:
 
