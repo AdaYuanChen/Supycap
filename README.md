@@ -38,7 +38,6 @@ For <b>CC</b> analysis, the capacitance is calculated via linear fitting the sec
 <br>
 <br>
 <br>
-<br>
 
 
 For <b>non-gravimetric capacitance (F)</b>:
@@ -49,7 +48,6 @@ For <b>non-gravimetric capacitance (F)</b>:
 
 <i>where I is the current in mA and <img src="https://render.githubusercontent.com/render/math?math=\frac{dt}%20{dV}"> is the change of time (s) with respect to voltage (V).</i>
 
-<br>
 <br>
 <br>
 <br>
@@ -66,7 +64,6 @@ The <b>ESR (Ω)</b> is calculated using the voltage drop:
 <br>
 <br>
 <br>
-<br>
 
 
 Here is an illustration of how the CC data is analysed: 
@@ -75,6 +72,9 @@ Here is an illustration of how the CC data is analysed:
 <img src="https://user-images.githubusercontent.com/70351473/102109087-96d52900-3e2b-11eb-97a3-cca946645aba.png" alt="CC analysis" width="600" height="400">
 </p>
 
+<br>
+<br>
+<br>
 
 For <b>CV</b> analysis, the capacitance is calculated via integration of the area enclosed by current as the voltage scanned across the potential window. For <b>gravimetric capacitance (<img src="https://render.githubusercontent.com/render/math?math=F%20g^{-1}">)</b>:
 
@@ -87,8 +87,6 @@ For <b>CV</b> analysis, the capacitance is calculated via integration of the are
 <br>
 <br>
 <br>
-<br>
-
 
 An illustration of how the CV data is analysed is shown below:
 
@@ -255,19 +253,21 @@ Method  |  Description  |
 ---
 
 ```python
->>>Load_capacitor('./CC/3.0_mA_1.0V_010120.txt', ESR_method = 201)
-Please enter the number of header row(s) in this file:
->>>0
-Please specify a cut-off derivative (the default value is 0.01)
->>>0.1
-<Class_Supercap: 3.0 mA, 1.0 V, 5 cycles, ESR method 201>
+>>>supercap1 = Load_capacitor('./CC/3.0_mA_1.0V_010120.txt', ESR_method = 2)
+Missing current argument. Please include the current argument in mA:
+>>>4
+Mass of electrodes absents. Non-gravimetric capacitance is returned
+Cycle 1387 has insufficient data points (40% less than average). Skipped for capacitance calculation
+>>>supercap1
+<Class_Supercap: 4.0 mA, max voltage 1.0 V, 2704 cycle(s), ESR method 2 (setting = 0.01), cap_method 1>
 ```
 
 <br>
 
 ```python
->>>Load_capacitor('./CC/3.0_1.0V_010120.txt', t_set = 1, V_set = 3, mass_ls = [[12,13,12.2], [11, 10.5, 11.6]], current = 3, ESR_method = 2)
-<Class_Supercap: 3.0 mA, max voltage 1.0 V, 270 cycle(s), ESR method 2 (setting = 0.01), cap_method 1>
+>>>supercap2 = Load_capacitor('./CC/3.0_1.0V_010120.txt', t_set = 0, V_set = 1, mass_ls = [[12,13,12.2], [11, 10.5, 11.6]], current = 4, ESR_method = 2)
+>>>supercap2
+<Class_Supercap: 4.0 mA, max voltage 1.0 V, 2704 cycle(s), ESR method 2 (setting = 0.01), cap_method 1>
 ```
 
 </div>
@@ -280,7 +280,7 @@ Please specify a cut-off derivative (the default value is 0.01)
 
 <div id="Glob_analysis">
     
-## <a href="#sub_TOC">Glob_analysis(path, t_set = False, V_set = False, delimiter = False, mass_ls = False, row_skip = False, ESR_method = True, setting = False, cap_method = False, plot_set = False, plot_save = True)</a> 
+## <a href="#sub_TOC">Glob_analysis(path, t_set = False, V_set = False, delimiter = False, mass_ls = False, row_skip = False, ESR_method = True, setting = False, cap_method = False, plot_set = False, plotting = True, save_plot = False)</a> 
 Loading all txt/csv files in the folder as specified in path. Good for analysing how capacitance changes with current density. 
 
 
@@ -342,8 +342,13 @@ Loading all txt/csv files in the folder as specified in path. Good for analysing
 
 
 11. <b>plotting : <i>bool, optional</i></b><br>
-   This argument determines whether the capacitance vs. current density plot will be plotted and saved. It is by default that <code>plotting = True </code>, and  the figure will be plotted and saved as 'Gravimetric specific capacitance vs. current density [datetime].png'. If <code>plotting = False </code>, the figure will not be plotted and saved.
-
+   This argument determines whether the capacitance vs. current density plot will be plotted. It is by default that <code>plotting = True </code>, and  the figure will be plotted. If <code>plotting = False </code>, the figure will not be plotted.
+   
+   
+12. <b>save_plot : <i>bool, optional</i></b><br>
+   This argument determines whether the capacitance vs. current density plot will be saved. It is by default that <code>save_plot = True </code>, and  the figure will be saved as 'Gravimetric specific capacitance vs. current density [datetime].png'. If <code>save_plot = False </code>, the figure will not be saved.
+   
+   
 <div id="glob_method_table">
 </div>
 
@@ -475,7 +480,7 @@ The above method follows the name of the Supercap variable. More details in the 
 
 ```python
 >>>supercap1.current #supercap1 is a Supercap class variable.
-0.5
+4.0
 >>>supercap1.masses 
 [[10.2, 0.0912], [12.1, 0.0853]]
 ```
@@ -497,8 +502,8 @@ Returns a string which state the current, maximum voltage and number of cycle an
 ### Examples
 ---
 ```python
->>>Supercap1
-<Class_Supercap: 3.0 mA, 1.0 V, 5 cycles, ESR method 2>
+>>>Supercap2 #variable as saved in the previous example in Load_capacitor
+<Class_Supercap: 4.0 mA, max voltage 1.0 V, 2704 cycle(s), ESR method 2 (setting = 0.01), cap_method 1>
 ```
 
 </div>
@@ -558,12 +563,14 @@ Method  |  Description  |
 ---
 
 ```python
->>>Supercap1
-<Class_Supercap: 1.0 mA, 1.0 V, 5 cycles, ESR method 2>
-
->>>Supercap1.ESR_method_change(ESR_method = 101, setting = 201, setting =1)
->>>Supercap1
-<Class_Supercap: 1.0 mA, 1.0 V, 5 cycles, ESR method 201>
+>>>Supercap2
+<Class_Supercap: 4.0 mA, max voltage 1.0 V, 2704 cycle(s), ESR method 2 (setting = 0.01), cap_method 1>
+>>>Supercap2.ESR_method_change(ESR_method = 201, setting =1)
+The original ESR method is 2 , and the setting is 0.01
+array([20.66931875, 20.762845  , 20.72346125, ..., 20.536415  ,
+       20.5659475 , 20.570865  ])
+>>>Supercap2
+<Class_Supercap: 4.0 mA, max voltage 1.0 V, 2704 cycle(s), ESR method 201 (setting = 1), cap_method 1>
 ```
 
 </div>
@@ -601,28 +608,30 @@ Visualising the second derivative and the charge/discharge curve of a specified 
 ### Examples
 ---
 ```python
->>>Supercap1
-<Class_Supercap: 3.0 mA, 1.0 V, 5 cycles, ESR method 2>
+>>>Supercap2
+<Class_Supercap: 4.0 mA, max voltage 1.0 V, 2704 cycle(s), ESR method 201 (setting = 1), cap_method 1>
 >>>Supercap1.Show_dV2()
-Of which cycle would you like to see the second derivative? enter a number between 0 and 9
+Of which cycle would you like to see the second derivative? enter a number between 1 and 2704
 >>>0
-The cut off second derivative currently being used is 0.002
+The cut off second derivative currently being used is 1
 ```
 ![.Show_dV2() example](https://user-images.githubusercontent.com/70351473/91521198-095ae100-e8ef-11ea-94f5-1381dd325cbb.png '.Show_dV2() example 1')
 ```python
 Are you happy with the cut off point? (yes/no)
 >>>no
 Please input the value of desired cut off second derivative.
->>>1
+>>>0.01
 ```
 ![.Show_dV2() example](https://user-images.githubusercontent.com/70351473/91521234-22639200-e8ef-11ea-9cfc-accae0456220.png  '.Show_dV2() example 2')
 ```python
+The cut off second derivative currently being used is 0.01
 Are you happy with the cut off point? (yes/no)
 >>>yes
-Do you wish to change the cut off point to the current value? (setting =1.0)[yes/no]
+Do you wish to change the cut off point to the current value? (setting =0.01)[yes/no]
 >>>yes
->>>Supercap1
-<Class_Supercap: 3.0 mA, 1.0 V, 5 cycles, ESR method 201>
+The original ESR method is 201 , and the setting is 1
+>>>Supercap2
+<Class_Supercap: 4.0 mA, max voltage 1.0 V, 2704 cycle(s), ESR method 201 (setting = 0.01), cap_method 1>
 ```
 
 </div>
@@ -709,14 +718,15 @@ None
 ### Examples
 ---
 ```python
->>>Supercap1.Get_info()
-'The number of cycle(s) analysed is 9'
-'The average capacitance is 24.028444381438409'
-'The standard deviation of the average is 0.553348977252065'
-'The average ESRs is 11.724686851851855'
-'The standard deviation of the ESRs is 0.023315957315381737'
-'Lower half of the voltage range in the discharge curve was used for capacitance calculations'
-'Constant second derivative method was used for ESR calculations'
+>>>Supercap2.Get_info()
+The number of cycle(s) analysed is 2704
+The number of faulty cycle is 1
+The average capacitance is 60.9025 F g^(-1)
+The standard deviation of the average is 0.0101
+The average ESRs is 14.3174 Ohms
+The standard deviation of the ESRs is 0.4699
+Lower half of the voltage range in the discharge curve was used for capacitance calculations
+Constant second derivative method was used for ESR calculations
 ```
 
 </div>
@@ -793,7 +803,7 @@ A plot of the charge/discharge curve with liniearly fitted slope and voltage dro
 ```python
 >>>Supercap1.Check_analysis(begin = 0, end = 4, save_fig = False)
 ```
-![.Check_analysis() example](https://user-images.githubusercontent.com/70351473/94346269-5aabdc80-0023-11eb-8486-377e821e86d5.png  '.Check_analysis() example')
+![.Check_analysis() example](https://user-images.githubusercontent.com/70351473/102226302-220ff680-3ee0-11eb-849b-743320186013.png  '.Check_analysis() example')
 
 </div>
 
@@ -881,7 +891,7 @@ Method  |  Description  |
 ---
 
 ```python
->>>Load_capacitor('../cell1_CV/1.2V_CA2.csv', m1=10, m2=9, scan_r=1, x_name = 'voltage', y_name ='current',delimeter=',', int_method=1)
+>>>CV_analysis('../cell1_CV/1.2V_CA2.csv', m1=10, m2=9, scan_r=1, x_name = 'voltage', y_name ='current',delimeter=',', int_method=1)
 4  CV cycles are being analysed using integration method 1
 [86.30233646681373, 88.433682993075, 89.45296144982, 90.0191569583757]
 ```
