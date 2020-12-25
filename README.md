@@ -69,7 +69,7 @@ The <b>ESR (Ω)</b> is calculated using the voltage drop:
 Here is an illustration of how the CC data is analysed: 
 
 <p align="center">
-<img src="https://user-images.githubusercontent.com/70351473/102109087-96d52900-3e2b-11eb-97a3-cca946645aba.png" alt="CC analysis" width="600" height="400">
+<img src="https://user-images.githubusercontent.com/70351473/103138710-2ea90180-46cd-11eb-9508-913085b99f34.png" alt="CC analysis" width="600" height="400">
 </p>
 
 <br>
