@@ -1,11 +1,12 @@
 from numpy import*
 from matplotlib import* 
 from matplotlib import pylab, mlab, pyplot
+from matplotlib.font_manager import FontProperties
 from pylab import*
 from scipy.signal import find_peaks
 from IPython.core.pylabtools import figsize, getfigs
 
-from .cccap.utilities import ConstantDeriv, ConstantPoints, ESR_ls, ESR_dv2
+from .cccap.utilities import ConstantDeriv, ConstantPoints, ESR_ls, ESR_dv2, Half_pt_ind
 
 
 
@@ -30,7 +31,7 @@ class Supercap():
 
  
     
-    def __init__(self, current,  t_V_ls, masses, cap_ls, esr_ls, extrema, cycle_n, m_error, ESR_method):
+    def __init__(self, current,  t_V_ls, masses, cap_ls, esr_ls, extrema, cycle_n, m_error, ESR_method, cap_method, faulty_cycles):
         """
         Initialize a :class:`.Supercap`.
         
@@ -73,6 +74,18 @@ class Supercap():
         m_error : :class:`list` 
             The uncertainty for each calculated capacitance value
             input: [list of uncertainties]            
+
+        ESR_method : :class:`int`
+            The method for ESR analysis
+            ESR_method = 1/102/2/202
+
+        cap_method : :class:`int`
+            The method for capacitance analysis
+            cap_method = 1/2
+            
+        faulty_cycles : :class:`list`
+            A list of cycle numbers for the faulty cycles
+            input: [list of faulty cycle numbers]
             
        """
         
@@ -86,7 +99,9 @@ class Supercap():
         self.error = m_error #only mass error is considered
         self.peaks = extrema[0] #output the indices of all the peaks in the dataset
         self.troughs = extrema[1] #output the indices of all the troughs in the dataset
-        self.esr_method = ESR_method
+        self.esr_method = ESR_method#[ESR method, setting]
+        self.cap_method = cap_method
+        self.faulty_cycles = array(faulty_cycles) #cycle number for the faulty cycles (cycle index starts from 0)
         
     def __repr__(self):
         """
@@ -98,7 +113,7 @@ class Supercap():
         
         """
         
-        return f'<Class_{self.__class__.__name__}: {self.current} mA, {self.V_ls[self.peaks[0]]} V, {self.cycle_n} cycles, ESR method {self.esr_method}>'
+        return f'<Class_{self.__class__.__name__}: {self.current} mA, max voltage {round(self.V_ls[self.peaks[0]],2)} V, {self.cycle_n} cycle(s), ESR method {self.esr_method[0]} (setting = {self.esr_method[1]}), cap_method {self.cap_method}>'
     
     def ESR_method_change(self, ESR_method = True, setting = False):
         """
@@ -115,7 +130,7 @@ class Supercap():
             The method for ESR analysis.
             ESR_method = 1 (default constant point analyis using the first point after the peak for calculating voltage drop) 
                        = 101 (constant point analysis using the nth point after the peak, where n is specified using setting)
-                       = 2 or True (default constant second derivative method using the point where the second derivative is greater than 0.01)
+                       = 2 or True (default constant second derivative method where the cut off second derivative is greater than 1)
                        = 201 (constant second derivative method where the cut off derivative is specified using setting)
                        
         setting : :class:`float`, optional
@@ -129,6 +144,14 @@ class Supercap():
             self.esr_ls        
         
         """
+        print('The original ESR method is', self.esr_method[0], ', and the setting is', self.esr_method[1])
+        
+        if ESR_method is True:
+            print('ESR method is changed to the default constant second derivative analysis, where the cut off second derivative is 1')
+        elif ESR_method is False:
+            print('ESR calculation is turned off')
+        else:
+            pass
         
         if ESR_method == 101 and setting is False:
             setting = int(input('How many points after the peak would you like to be considered for the ESR analysis? (the default value is 1)'))
@@ -143,19 +166,25 @@ class Supercap():
             pass
         
         if ESR_method == 1 or ESR_method == 101:
-            esr_v = [ConstantPoints(self.V_ls, self.peaks[i], set_n = setting) for i in range(test_glob[1][0].cycle_n)]
+            esr_v = [ConstantPoints(self.V_ls, self.peaks[i], set_n = setting) for i in range(self.cycle_n)]
       
         elif ESR_method is True or ESR_method == 2 or ESR_method == 201:
             esr_v = [ConstantDeriv(self.t_ls, self.V_ls, self.peaks[i], self.troughs[i], set_deriv = setting)[0] for i in range(self.cycle_n)]
                       
         else:
             esr_v = False
+        
+        if ESR_method is 1 or ESR_method is 2:
+            setting = 1
             
         self.esr_ls = array(ESR_ls(esr_v, self.current*10**(-3)))
+        self.esr_method=[ESR_method, setting]
+        
+        return self.esr_ls
   
   
     #For visualising the second derivative for method 2 and/or method 201 and manually changing the second derivative cutt off point
-    def Show_dV2(self, cycle_check = False, setting = False):
+    def Show_dV2(self, cycle_check = False, ):
         """
         Initialize from a :class:`.Supercap`.
            
@@ -172,7 +201,7 @@ class Supercap():
               
         setting : :class:`float`, optional
             The setting for ESR analysis
-            setting = the cut off second derivative depending on the ESR_method
+            setting = the cut off second derivative being used in the ESR_method. (setting = 1 for ESR_method = 1 or 2)
 
         Return 
         ------
@@ -182,14 +211,29 @@ class Supercap():
 
         """
         
+        if self.esr_method[0] != 2 and self.esr_method[0] != 201:
+            print('The current ESR method is neither 2 or 201. Please change the ESR method to constant second derivative analysis using .ESR_method_change().')
+            return False
+        else:
+            pass
         
         if cycle_check is False:
-            cycle_check = int(input('Of which cycle would you like to see the second derivative? enter a number between 0 and '+str(self.cycle_n)))
+            cycle_check = int(input('Of which cycle would you like to see the second derivative? enter a number between 1 and '+str(self.cycle_n)))
         else:
             pass 
         
-        proceed = False
+        proceed = True
+        cycle_check -= 1
         
+        while proceed is True:
+            if cycle_check in self.faulty_cycles:
+                cycle_check = int(input('The cycle enteres is a faulty cycle. Please enter another number between 1 and '+str(self.cycle_n)))
+                cycle_check -= 1
+            else:
+                proceed = False
+
+        
+        setting = self.esr_method[1]
         while proceed is False:
             print('The cut off second derivative currently being used is '+str(setting))
             esr_dV2 = [ESR_dv2(self.t_ls, self.V_ls, self.peaks[i], self.troughs[i], set_deriv = setting)[1] for i in range(self.cycle_n)]
@@ -203,43 +247,53 @@ class Supercap():
             V_ls1 = self.V_ls[peak1:trough1]
             
 
-            figure(figsize(30,20))
+            figure(figsize(20,15))
             fig, ax1 = plt.subplots()
+            
+            font = FontProperties()
+            font.set_family('sans-serif')
+            font.set_name('Arial')
+            font.set_size(35)
 
             color = 'tab:red'
-            ax1.set_xlabel('time (s)', fontsize=35)
-            ax1.set_ylabel('Second derivative $ dV^2/dt $', color=color, fontsize=35)
+            ax1.set_xlabel('Time (s)', fontproperties=font)
+            ax1.set_ylabel('Second derivative $ dV^2/dt $', color=color, fontproperties=font)
             ax1.plot(t_ls1[1:40], dV_ls1[0:39], linewidth=5, marker='x', ms=12, mew=5, color=color)
             ax1.plot(t_ls1[num1+2], dV_ls1[num1+1], linewidth=5, marker='x', ms=20, mew=6, color='y')
             ax1.tick_params(axis='y', labelcolor=color)
+            
 
             ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
             color = 'tab:blue'
-            ax2.set_ylabel('Voltage (V)', color=color, fontsize=35)  # we already handled the x-label with ax1
+            ax2.set_ylabel('Voltage (V)', color=color, fontproperties=font)  # we already handled the x-label with ax1
             ax2.plot(t_ls1[:40], V_ls1[:40],  linewidth=5, marker='x',ms=12, mew=5, color=color)
             ax2.plot(t_ls1[num1+1], V_ls1[num1+1],  linewidth=5, marker='x',ms=20, mew=6, color='y')
             ax2.tick_params(axis='y', labelcolor=color)
 
+
             ax = gca()
             for label in ax1.get_xticklabels() + ax1.get_yticklabels()  + ax2.get_yticklabels():
                 label.set_fontsize(30)
+                label.set_family('sans-serif')
+                label.set_name('Arial')
             
             show()
             
             opinion = input('Are you happy with the cut off point? (yes/no)')
             if opinion == 'yes':
                 proceed = True 
-                change_setting = input('Do you wish to change the cut off point to the current value? (setting =' + str(setting)+ ')')
+                change_setting = input('Do you wish to change the cut off point to the current value? (setting =' + str(setting)+ ')[yes/no]')
                 if change_setting == 'yes':
                     self.ESR_method_change(ESR_method = 201, setting = setting)
                     break
                     
             else:
                 setting = float(input('Please input the value of desired cut off second derivative.'))
-                    
+ 
+
         
     #Tp plot capacitance against the number of cycles
-    def Cap_vs_cycles(self, set_fig=False):
+    def Cap_vs_cycles(self, set_fig=False, save_fig=False):
         """
         Initialize from a :class:`.Supercap`.
         
@@ -253,6 +307,8 @@ class Supercap():
         set_fig : :class:`bool`, optional
             Changing the setting of the figure
 
+        save_fig : :class:`bool`, optional
+            whether the figure will be saved
 
         Return 
         ------
@@ -267,27 +323,43 @@ class Supercap():
             lw = float(input('Please input the line width for the figure:'))
             clr = input('Please input the line colour for the figure:')
         else: 
-            length = 60
-            width = 20
-            label_size = 30
+            length = 20
+            width = 15
+            label_size = 40
             lw =5
             clr = 'black'
+        
         figure(figsize(length,width))
         ax = gca()
         for label in ax.get_xticklabels() + ax.get_yticklabels():
             label.set_fontsize(label_size)
-        tx = ax.xaxis.get_offset_text()
+            label.set_family('sans-serif')
+            label.set_name('Arial')
+            
+            
+        tx = ax.yaxis.get_offset_text()
         tx.set_fontsize(label_size)
+        tx.set_family('sans-serif')
+        tx.set_name('Arial')
         
-        xlabel('Number of cycles', fontsize = label_size)        
-        if self.masses[0][0] is False:
-            ylabel('Non-gravimetric capacitance $F$', fontsize = label_size)
+       
+        font = FontProperties()
+        font.set_family('sans-serif')
+        font.set_name('Arial')
+        font.set_size(label_size + 10)
+        
+        xlabel('Number of cycles', fontproperties=font)        
+        if self.error is False:
+            ylabel('Non-gravimetric capacitance $F$', fontproperties=font)
         else:
-            ylabel('Capacitance $F g^{-1}$', fontsize = label_size)
+            ylabel('Capacitance $F g^{-1}$', fontproperties=font)
 
-        plot(range(1, self.cycle_n+1), self.cap_ls, color= clr , linewidth = lw)
-
-        savefig(str(self.current)+'mA_cap_vs_cycles_'+'{0:%d%m}_{0:%I_%M}'.format(datetime.datetime.now())+'.png', transparent = True)
+        plot(range(1, self.cycle_n-len(self.faulty_cycles)+1), self.cap_ls, color= clr , linewidth = lw)
+        
+        if save_fig is True:
+            savefig(str(self.current)+'mA_cap_vs_cycles_'+'Date{0:%d%m}_Time{0:%I_%M}'.format(datetime.datetime.now())+'.png', transparent = True)
+        else:
+            pass
     
     #To get general info of the capacitance analysis
     def Get_info(self):
@@ -305,16 +377,24 @@ class Supercap():
         Return 
         ------
         :class:`string`, optional
-            The number of cycles, the average capacitance, the std of capacitance, the average ESR and its std 
+            The number of cycles, the average capacitance, the std of capacitance, the average ESR and its std, the ESR_method and cap_method used.
         
         """
         
         print('The number of cycle(s) analysed is', self.cycle_n)
-        print('The average capacitance is', mean(self.cap_ls), '$F g^{-1}$')
-        print('The standard deviation of the average is', std(self.cap_ls))
-        print('The average ESRs is', mean(self.esr_ls), '$\Omega $')
-        print('The standard deviation of the ESRs is', std(self.esr_ls))       
-    
+        print('The number of faulty cycle is', len(self.faulty_cycles))
+        print('The average capacitance is', round(mean(self.cap_ls),4), 'F g^(-1)')
+        print('The standard deviation of the average is', round(std(self.cap_ls),4))
+        print('The average ESRs is', round(mean(self.esr_ls),4), 'Ohms')
+        print('The standard deviation of the ESRs is', round(std(self.esr_ls),4))
+        if self.cap_method is 1:
+            print('Lower half of the voltage range in the discharge curve was used for capacitance calculations')
+        else:
+            print('Upper half of the voltage range in the discharge curve was used for capacitance calculations')
+        if self.esr_method[0] is True or self.esr_method[0]==2 or self.esr_method[0] == 202:
+            print('Constant second derivative method was used for ESR calculations')
+        else:
+            print('Constant point method was used for ESR calculations')
     
     #To check whether the code is running correctly by visualising a small section of the analysis
     def Check_analysis(self, begin = False, end = False, set_fig = False, save_fig = False):
@@ -371,55 +451,84 @@ class Supercap():
             mew = float(input('Please input the marker weight for the figure:'))
             degrees = float(input('Please input the rotation degrees for the x ticks:'))
         else: 
-            length = 30
-            width = 20
-            label_size = 60
-            lw = 8
-            ms = 50
-            mew = 10
-            degrees = 0
+            length = 10
+            width = 7
+            label_size = 30
+            lw = 5
+            ms = 25
+            mew = 5
+            degrees = 45
         
         
         figure(figsize(length, width))
         ax = gca()
-        for label in ax.get_xticklabels() + ax.get_yticklabels():
-                label.set_fontsize(label_size)        
+        for label in ax.get_xticklabels() + ax.get_yticklabels(): 
+                label.set_fontsize(label_size)
+                label.set_family('sans-serif')
+                label.set_name('Arial')
+                
         tx = ax.xaxis.get_offset_text()
         tx.set_fontsize(label_size)
+        tx.set_family('sans-serif')
+        tx.set_name('Arial')
         
         if begin is 1:
             plot(self.t_ls[0:self.troughs[end-1]], self.V_ls[0:self.troughs[end-1]], label=str(self.current)+' mA', linewidth=lw, c='black') 
         else:
             plot(self.t_ls[self.troughs[begin-2]:self.troughs[end-1]], self.V_ls[self.troughs[begin-2]:self.troughs[end-1]], label=str(self.current)+' mA', linewidth=lw, c='black')       
-        for i in range(begin-1, end):
-            peaki = self.peaks[i]
-            troughi = self.troughs[i]
-            ipeakx = self.t_ls[peaki]
-            itroughx = self.t_ls[troughi]
-            ind_mid = floor((peaki+troughi)/2)
-            ind_mid = int(ind_mid)
-            line_adj = (itroughx-ipeakx)*0.7
             
-            fit = polyfit(self.t_ls[ind_mid:troughi], self.V_ls[ind_mid:troughi],1, cov=True)
-            fitx = linspace(itroughx-line_adj,itroughx,20)
-            fity = fitx*fit[0][0]+fit[0][1]  
+        mid_ind = [Half_pt_ind(self.V_ls[self.peaks[i]:self.troughs[i]],(self.V_ls[self.peaks[i]]+ self.V_ls[self.troughs[i]])/2) for i in range(len(self.peaks))]
+        
+        for i in range(begin-1, end):
+            if i in self.faulty_cycles:
+                print('Cycle '+str(i+1)+' was skipped for calculation due to errors')
+                
+            else:
+                peaki = self.peaks[i]
+                troughi = self.troughs[i]
+                ipeakx = self.t_ls[peaki]
+                itroughx = self.t_ls[troughi]
+                
+                if self.cap_method is 1:
+                    fit = polyfit(self.t_ls[peaki:troughi][mid_ind[i]:], self.V_ls[peaki:troughi][mid_ind[i]:],1, cov=True)[0]
+                    fitx = linspace(ipeakx*0.8+itroughx*0.2, itroughx, 20)
+                    fity = fitx*fit[0]+fit[1]  
                             
-            plot(fitx, fity, linewidth=lw, linestyle='--', color='red')
-            plot([ipeakx + 0.08*(itroughx-ipeakx)]*(end-begin+1)*100, linspace(self.V_ls[peaki], self.V_ls[peaki]-self.esr_ls[i]*2*self.current*10**(-3), 100), color='b', linewidth=lw, linestyle=':')
-            plot(ipeakx, self.V_ls[peaki]-self.esr_ls[i]*2*self.current*10**(-3), linestyle='', marker=1, ms=ms, mew=mew, color='b')
-            plot(ipeakx, self.V_ls[peaki], linestyle='', marker=1, ms=ms, mew=mew, color='b')
-            plot(self.t_ls[ind_mid], self.V_ls[ind_mid], linestyle='', marker='+', ms=ms, mew=mew, color='r')
-            plot( itroughx, self.V_ls[troughi], linestyle='', marker='+', ms=ms, mew=mew, color='r')
-    
+                    plot(fitx, fity, linewidth=lw, linestyle='--', color='red')
+                    plot([ipeakx + 0.035*(itroughx-ipeakx)*(end-begin+1)]*100, linspace(self.V_ls[peaki], self.V_ls[peaki]-self.esr_ls[i]*2*self.current*10**(-3), 100), color='b', linewidth=lw, linestyle=':')
+                    plot(ipeakx, self.V_ls[peaki]-self.esr_ls[i]*2*self.current*10**(-3), linestyle='', marker=1, ms=ms, mew=mew, color='b')
+                    plot(ipeakx, self.V_ls[peaki], linestyle='', marker=1, ms=ms, mew=mew, color='b')
+                    plot(self.t_ls[peaki:troughi][mid_ind[i]], self.V_ls[peaki:troughi][mid_ind[i]], linestyle='', marker='+', ms=ms, mew=mew, color='r')
+                    plot(itroughx, self.V_ls[troughi], linestyle='', marker='+', ms=ms, mew=mew, color='r')
+                    
+                else:
+                    fit = polyfit(self.t_ls[peaki:troughi][:mid_ind[i]], self.V_ls[peaki:troughi][:mid_ind[i]],1, cov=True)[0]
+                    fitx = linspace(1.4*ipeakx-0.4*itroughx, ipeakx*0.45 + itroughx*0.55, 20)
+                    fity = fitx*fit[0]+fit[1]  
+                            
+                    plot(fitx, fity, linewidth=lw, linestyle='--', color='red')
+                    plot([ipeakx + 0.035*(itroughx-ipeakx)*(end-begin+1)]*100, linspace(self.V_ls[peaki], self.V_ls[peaki]-self.esr_ls[i]*2*self.current*10**(-3), 100), color='b', linewidth=lw, linestyle=':')
+                    plot(ipeakx, self.V_ls[peaki]-self.esr_ls[i]*2*self.current*10**(-3), linestyle='', marker=1, ms=ms, mew=mew, color='b')
+                    plot(ipeakx, self.V_ls[peaki], linestyle='', marker=1, ms=ms, mew=mew, color='b')
+                    plot(self.t_ls[peaki:troughi][mid_ind[i]], self.V_ls[peaki:troughi][mid_ind[i]], linestyle='', marker='+', ms=ms, mew=mew, color='r')
+                    plot(ipeakx, self.V_ls[peaki], linestyle='', marker='+', ms=ms, mew=mew, color='r')                    
+        
+        font = FontProperties()
+        font.set_family('sans-serif')
+        font.set_name('Arial')
+        font.set_size(label_size + 5)
+        
         xticks(rotation = degrees)
-        xlabel('Time (s)', fontsize=label_size)
-        ylabel('Voltage (V)', fontsize=label_size)
-        legend(fontsize = label_size)
+        xlabel('Time (s)', fontproperties = font)
+        ylabel('Voltage (V)', fontproperties = font)
+        font.set_size(label_size)
+        legend(fontsize=label_size)
         
         if save_fig == True: 
-            savefig('Check_analysis_'+'{0:%d%m}_{0:%I_%M}_'.format(datetime.datetime.now())+'.png', transparent=True)
+            savefig('Check_analysis_'+'Date{0:%d%m}_Time{0:%I_%M}_'.format(datetime.datetime.now())+'.png', transparent=True)
         elif save_fig == False:
             pass   
         else:
              savefig(str(save_fig)+'.png', transparent=True)
 
+####CHANGE CHECK ANALYSIS TO EXCLUDE WRONG DATA POINTS!

@@ -8,7 +8,7 @@ from .supercap import*
 #mass_ls is a list of two lists of the mass of each electrode
 #if current is not entered, it is going to be generated from the filename (the file name has to include the current in mA, seperated by '/' or '_' and followed by '_mA')
 #recieve mass and current in mg and mA respectively, output as mg and mA
-def Load_capacitor(pathway, t_set = False, V_set = False, delimiter = False, mass_ls = False, current = False, row_skip = False, ESR_method = True, setting = False, cap_norm = False):
+def Load_capacitor(pathway, t_set = False, V_set = False, delimiter = False, mass_ls = False, current = False, row_skip = False, ESR_method = True, setting = False, cap_method = False, cap_grav = True):
     """
         Loading all relevant information of the measured supercapacitor the of the specified text file
         
@@ -56,9 +56,18 @@ def Load_capacitor(pathway, t_set = False, V_set = False, delimiter = False, mas
                        = 201 (constant second derivative method where the cut off derivative is specified using setting)
                        = False (ESR value will be returned as False)
                        
-        cap_norm : :class:`bool` 
-            norm_cap = False, output gravimetric capacitance
-            norm_cap = True, output non-gravimetric capacitance
+        setting : :class:`int`, optional
+            The cut off second derivative or the cut off number of points used for ESR determination.
+            setting = False (setting = 1 by default)
+                       
+        cap_method : :class:`int`, optional
+            The method for capacitance analysis. 
+            cap_method = 1 or False (the capacitance is analysed from the lower half of the voltage range)
+            cap_method = 2 (the capacitance is analysed from the upper half of the voltage range)
+                       
+        cap_grav : :class:`bool` 
+            cap_grav = True, output gravimetric capacitance
+            cap_grav = False, output non-gravimetric capacitance
 
         returns
         -------
@@ -68,11 +77,9 @@ def Load_capacitor(pathway, t_set = False, V_set = False, delimiter = False, mas
             
     """
     if current is False:
-        try:
-            current = Readcurrent(pathway)
-        except:
-            print('Missing current argument. Please enter the current for the GCD analysis in mA:')
-            #current= float(input('Missing current argument. Please enter the current for the GCD analysis in mA:')
+        current = Readcurrent(pathway)
+        if current is False:
+            current = float(input('Missing current argument. Please include the current argument in mA:'))
     else:
         pass
 
@@ -83,6 +90,7 @@ def Load_capacitor(pathway, t_set = False, V_set = False, delimiter = False, mas
         row_skip = int(input('Please enter the number of header row(s) in this file:'))
     else:
         pass
+    
     
     GDC = Fast_load(pathway, skip_header = row_skip, t_set = t_set, V_set = V_set, delimiter = delimiter)
     GDC_t = GDC[0]
@@ -106,29 +114,41 @@ def Load_capacitor(pathway, t_set = False, V_set = False, delimiter = False, mas
         std1 = std(m1)
         std2 = std(m2)
         
-    if mass_ls != False and cap_norm is True:
+    if mass_ls != False and cap_grav is False:
         print('Mass of electrodes presents. Non-gravimetric capacitance is returned')
-    elif mass_ls is False and cap_norm is False:
+    elif mass_ls is False and cap_grav is True:
         print('Mass of electrodes absents. Non-gravimetric capacitance is returned')
     else:
         pass
+    
     
     if ESR_method == 101 and setting is False:
         setting = int(input('How many points after the peak would you like to be considered for the ESR analysis? (the default value is 1)'))
         
     elif ESR_method == 201 and setting is False:
         setting = float(input('Please specify a cut-off derivative (the default value is 1)'))
-        
+
     else:
         pass
 
-    if ESR_method is True:
-        cap_data = CC_Cap(GDC_t, GDC_V, current, mm1, mm2, norm_cap=cap_norm)
-
-    elif ESR_method is False:
-        cap_data = CC_Cap(GDC_t, GDC_V, current, mm1, mm2, ESR_method= False , norm_cap=cap_norm)
-
+    
+    if ESR_method is 1:
+        setting = 1
+    elif ESR_method is 2:
+        setting = 0.01
     else:
-        cap_data = CC_Cap(GDC_t, GDC_V, current, mm1, mm2, ESR_method= ESR_method, setting = setting, norm_cap=cap_norm)
+        pass
+    
+    
+    if cap_method is False:
+        cap_method = 1
+    elif cap_method is True or cap_method not in [1, 2]:
+        cap_method = int(input('Please enter the desired capacitance analysis method. (1 or 2)'))
+    else:
+        pass
+
+    
+    cap_data = CC_Cap(GDC_t, GDC_V, current, mm1, mm2, ESR_method= ESR_method, setting = setting, cap_method = cap_method, cap_grav = cap_grav)
+    
                       
-    return Supercap(current, [GDC_t, GDC_V], [[mm1, std1],[mm2, std2]], cap_data[0], cap_data[1], [cap_data[2], cap_data[3]], cap_data[4], error, ESR_method)
+    return Supercap(current, [GDC_t, GDC_V], [[mm1, std1],[mm2, std2]], cap_data[0], cap_data[1], [cap_data[2], cap_data[3]], cap_data[4], error, [ESR_method, setting], cap_method, cap_data[5])

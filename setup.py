@@ -9,8 +9,8 @@ with open("README.md", "r") as fh:
   long_description = fh.read()
 
 setuptools.setup(
-  name="Supercap_analysis",
-  version=0.02,
+  name="Supycap",
+  version= '2.4',
   author="Yuan Chen",
   author_email="yuan.chen18@imperial.ac.uk",
   description="A python library for GCD analysis of supercapacitors",
@@ -22,7 +22,9 @@ setuptools.setup(
       'scipy', 
       'matplotlib', 
       'numpy',
+      'pandas',
       'IPython', 
+      'sklearn',
       'datetime',
   ),
   include_package_data = True,

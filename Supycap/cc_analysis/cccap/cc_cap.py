@@ -1,12 +1,12 @@
 from scipy.signal import find_peaks
 from numpy import*
 
-from .utilities import ConstantDeriv, ConstantPoints, ESR_ls, Cap_ls
+from .utilities import ConstantDeriv, ConstantPoints, ESR_ls, Cap_ls, Half_pt_ind
 
 
 #Capacitance analysis (given x and y dataset, current and masses)
 #Recieve current in mA and mass in mg and convert to A and g for calculations
-def CC_Cap(xset, yset, current, m1=False, m2=False, ESR_method = True, setting = False, filename=False, norm_cap=False):
+def CC_Cap(xset, yset, current, m1 = False, m2 = False, ESR_method = True, setting = False, cap_method = False, filename = False, cap_grav = True):
     """
         Data manipulation
         
@@ -43,15 +43,20 @@ def CC_Cap(xset, yset, current, m1=False, m2=False, ESR_method = True, setting =
             The setting for ESR analysis
             setting = False for ESR_method = 1, 2 or True
             setting = nth point/cut off second derivative depending on the ESR_method
+            
+        cap_method : :class:`int`, optional
+            The method for capacitance analysis
+            cap_method = 1 (default method where the lower voltage range is used)
+                       = 2 (upper voltage range is used)
   
  
         filename : :class:`string`, optional
             Name of the text file being analysed
         
 
-        norm_cap : :class:`bool` 
-            norm_cap = False, output gravimetric capacitance
-            norm_cap = True, output non-gravimetric capacitance
+        cap_grav : :class:`bool` 
+            cap_grav = False, output non-gravimetric capacitance
+            cap_grav = True, output gravimetric capacitance
 
         returns
         -------
@@ -84,30 +89,70 @@ def CC_Cap(xset, yset, current, m1=False, m2=False, ESR_method = True, setting =
         else:
             print('Error! The number of peaks cannot match the number of troughs')
                         
-
     
-    cc_grad = [polyfit(xset[int(floor((peaks[i]+troughs[i])/2)):troughs[i]], yset[int(floor((peaks[i]+troughs[i])/2)):troughs[i]],1, cov=False)[0] for i in range(len(peaks))]
+    mid_ind = [Half_pt_ind(yset[peaks[i]:troughs[i]],(yset[peaks[i]]+yset[troughs[i]])/2) for i in range(len(peaks))]
+    
+    
+    #calculate ave len
+    steps = int(floor(len(peaks)/10))+1
+    sel_peaks = peaks[::steps]
+    sel_troughs = troughs[::steps]
+    ave_len=0
+    for i in range(len(sel_peaks)):
+        ave_len += len(xset[sel_peaks[i]:sel_troughs[i]])
+    ave_len = ave_len/len(sel_peaks)
+    
+    cc_grad = []
+    faulty_cyc_ind = []
+    for i in range(len(peaks)):
+        if len(xset[peaks[i]:troughs[i]]) < ave_len*0.6:
+            faulty_cyc_ind += [i]
+            print('Cycle ' + str(i+1)+ ' has insufficient data points (40% less than average). Skipped for capacitance calculation') 
+            
+        elif len(xset[peaks[i]:troughs[i]]) > ave_len*1.4:
+            faulty_cyc_ind += [i]
+            print('Cycle ' + str(i+1)+ ' has significantly more data points (40% more than average). Skipped for capacitance calculation') 
         
+        else:
+            if cap_method is 1 or cap_method is False:
+                try:
+                    cc_grad += [polyfit(xset[peaks[i]:troughs[i]][mid_ind[i]:], yset[peaks[i]:troughs[i]][mid_ind[i]:],1, cov=False)[0]]
+                except:
+                    faulty_cyc_ind += [i]
+                    print('Error found in cycle ' + str(i+1)+ '. Skipped for capacitance calculation')
+                  
+            if cap_method is 2:
+                try:
+                    cc_grad += [polyfit(xset[peaks[i]:troughs[i]][:mid_ind[i]], yset[peaks[i]:troughs[i]][:mid_ind[i]],1, cov=False)[0]]
+                except:
+                    faulty_cyc_ind += [i]
+                    print('Error found in cycle ' + str(i+1)+ '. Skipped for capacitance calculation')         
+      
+         
+                        
+    
     if ESR_method == 1 or ESR_method == 101:
         esr_v = [ConstantPoints(yset, peaks[i], set_n = setting) for i in range(len(peaks))]
       
     elif ESR_method is True or ESR_method == 2 or ESR_method == 201:
         esr_v = [ConstantDeriv(xset, yset, peaks[i], troughs[i], set_deriv = setting)[0] for i in range(len(peaks))]
                       
-    else:
+    elif ESR_method is False:
         esr_v = False
-
-        
-    if norm_cap==True:
-        cap_ls_calc = Cap_ls(cc_grad, current*10**(-3), norm_cap=True)
-        
-    elif m1==False and m2==False:
-        cap_ls_calc = Cap_ls(cc_grad, current*10**(-3), norm_cap=True)
         
     else:
+        print('ESR method not specified. ESR values will not be calculated.')
+        esr_v= False
+        
+    if cap_grav is True and m1 is not False and m2 is not False:
         cap_ls_calc = Cap_ls(cc_grad, current*10**(-3), m1*10**(-3), m2*10**(-3))
+        
+    else:
+        cap_ls_calc = Cap_ls(cc_grad, current*10**(-3), cap_grav = False)
+
     
     esr_ls_calc = ESR_ls(esr_v, current*10**(-3))
     
-    return cap_ls_calc, esr_ls_calc, peaks, troughs, N_cycle
+    return cap_ls_calc, esr_ls_calc, peaks, troughs, N_cycle, faulty_cyc_ind
+
 

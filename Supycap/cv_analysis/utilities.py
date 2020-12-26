@@ -6,7 +6,7 @@ from numpy import*
 #Read the scan rate in a file name.
 #In the filename, the scan rate is stated at the very front of the file, OR
 #the scan rate seperated from other elements of the filename and/or seperated by '_' and/or '/'
-#current needs to end with '_mvs'
+#the scan rate needs to end with '_mvs'
 def Read_scan_r(filename):
     for i in range(len(filename)-2):
         if filename[i:i+2] == 'mvs':
@@ -14,6 +14,8 @@ def Read_scan_r(filename):
             while filename[k] != '_' and filename[k] != '/' and filename[k] != '\\' and k >= 0:
                 k -= 1
             return float(filename[k+1:i-1])
+        else:
+            return False
 
 
 def Pos_split(x, y):
@@ -55,12 +57,12 @@ def Neg_split(x, y):
     return x_split1, y_split1, x_split2, y_split2
 
 
-def Trapz_area(x_split1, y_split1, x_split2, y_split2):
+def Trapz_area2(x_split1, y_split1, x_split2, y_split2):
 
     try:
         status = 0
-        area2 = auc(x_split2, y_split2)
-        area1 = auc(x_split1, y_split1)
+        bigger_area = auc(x_split2, y_split2)
+        smaller_area = auc(x_split1, y_split1)
         
     except: 
         status = 1
@@ -71,12 +73,24 @@ def Trapz_area(x_split1, y_split1, x_split2, y_split2):
         
     return bigger_area-smaller_area, status
 
+def Trapz_area(x_split1, y_split1, x_split2, y_split2):
 
-def Simps_area(x_split1, y_split1, x_split2, y_split2):
-    x_split1 = splitted[0]
-    y_split1 = splitted[1]
-    x_split2 = splitted[2]
-    y_split2 = splitted[3]
+    try:
+        status = 0
+        bigger_area = auc(x_split2, y_split2)
+        smaller_area = auc(x_split1, y_split1)
+        
+    except: 
+        status = 1
+        x_split2 = linspace(x_split2[0], x_split2[-1], len(x_split2))
+        x_split1 = linspace(x_split1[0], x_split1[-1], len(x_split1))
+        bigger_area = auc(x_split2, y_split2)
+        smaller_area = auc(x_split1, y_split1)
+        
+    return bigger_area + smaller_area, status
+
+
+def Simps_area2(x_split1, y_split1, x_split2, y_split2):
     
     dx1 =(max(x_split1)-min(x_split1))/len(x_split1)
     dx2 =(max(x_split2)-min(x_split2))/len(x_split2)
@@ -84,6 +98,16 @@ def Simps_area(x_split1, y_split1, x_split2, y_split2):
     area1 = simps(y_split1, dx=dx1)
     
     return area2 - area1
+
+
+def Simps_area(x_split1, y_split1, x_split2, y_split2):
+    
+    dx1 =(max(x_split1)-min(x_split1))/len(x_split1)
+    dx2 =(max(x_split2)-min(x_split2))/len(x_split2)
+    area2 = simps(y_split2, dx=dx2)
+    area1 = simps(y_split1, dx=dx1)
+    
+    return area2 + area1
 
 
 def Load_cycle(CV_x, CV_y):
@@ -124,4 +148,4 @@ def Pn_slice(cycle_xls, cycle_yls, cycle_n):
 
 ###scan rate in mv/s and mass in mg!!!
 def CV_cap_cal(Integrated, m1, m2, scan_r, potential_r):
-    return 1000000 * Integrated * (m1 + m2) / (m1*m2*scan_r)*potential_r
+    return 1000 * Integrated * (m1 + m2) / (m1*m2*scan_r*potential_r)

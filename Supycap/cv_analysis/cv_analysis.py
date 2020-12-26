@@ -1,7 +1,7 @@
 from ..cc_analysis.utilities import Fast_load
 from .cv_calc import*
 
-def CV_analysis(pathway, m1, m2, scan_r = False, row_skip = False, x_name = False, y_name = False, delimiter = False, int_method = False):
+def CV_analysis(pathway, m1, m2, scan_r = False, row_skip = False, V_set = False, I_set = False, delimiter = False, int_method = False):
     """
         Calculate the gravimetric capacitance from every cycle of CV scans and output a list of calculated capacitance (F g^-1) for all cycles.
         
@@ -24,33 +24,34 @@ def CV_analysis(pathway, m1, m2, scan_r = False, row_skip = False, x_name = Fals
             The mass of electrode 2 of the supercapacitor. The mass is in mg.
 
         scan_r : :class:`float`, optional
-            The scan rate for the CV measurement in mV/s. If scan_r = False, the program will attempt to extract the scan rate from the file name, given that 
+            The scan rate for the CV measurement in mV/s. If scan_r = False, the program will attempt to extract the scan rate from the file name, given that the scan rate is seperated from other elements of the filename and/or seperated by '_' and/or '/' and that it ends with '_mvs'.
             
-        delimiter : :class:`str`, optional
-            The symbol which seperates one data coloumn from the other. If delimiter = False, the delimiter is assumed to be space ''.
-        
         row_skip : :class:`int`, optional
             The number of rows of headers to skip in the text files.
             row_skip = False (row_skip = 1)
                      = : :class:`int` (The specified number of rows will be skipped for all files in the path)
                      
-        x_name : :class:`int`, optional
+        x_name : :class:`int`/`str`, optional
             Specify the coloumn index for the voltage(V) data, coloumn 0 being the first coloumn starting from the left
             x_name = False (t_set = 0)
                     True (The prompt will ask for the column index to be entered)
                     : :class: `int` (specify the coloumn which will be used as current)
         
-        y_name : :class:`int`, optional
+        y_name : :class:`int`/`str`, optional
             Specify the coloumn index for the current(mA) data, coloumn 0 being the first coloumn starting from the left
             y_name = False (V_set = 0)
                     True (The prompt will ask for the column index to be entered)
                     : :class: `int` (specify the coloumn which will be used as voltage)
-
+                    
+        delimiter : :class:`str`, optional
+            The symbol which seperates one data coloumn from the other. If delimiter = False, the delimiter is assumed to be space ''.
         
         int_method : :class:`int`, optional
             The method for integration for the enclosed area.
-            int_method = 1 or False (integration using trapezoidal rule) 
-                       = 2 (integration using Simpson's rule)
+            int_method = False or 1 (Integration using the trapezoidal rule, discharging curve only)
+                       = 102 (Integration using the trapezoidal rule, charging and discharging)
+                       = 2 (Integration using the Simpson's rule, discharging curve only)
+                       = 202 (Integration using the Simpson's rule, charging and discharging)
 
                        
         returns
@@ -60,12 +61,13 @@ def CV_analysis(pathway, m1, m2, scan_r = False, row_skip = False, x_name = Fals
     """
     
     if scan_r is False:
-        try:
-            scan_r = Read_scan_r(pathway)
-        except:
+        scan_r = Read_scan_r(pathway)
+        if scan_r is False:
             print('Missing scan rate value. Please enter the scan rate for the CV analysis in mV/s:')
+            return None
     else:
         pass
+    
     
     if row_skip is False:
         row_skip = 1
@@ -74,8 +76,8 @@ def CV_analysis(pathway, m1, m2, scan_r = False, row_skip = False, x_name = Fals
     else:
         pass
     
-    CV_raw = Fast_load(pathway, skip_header = row_skip, t_set = x_name, V_set = y_name, delimiter = delimiter)
+    CV_raw = Fast_load(pathway, skip_header = row_skip, t_set = V_set, V_set = I_set, delimiter = delimiter)
     x = CV_raw[0]
     y = CV_raw[1]
     
-    return CV_calc(x, y, m1, m2, scan_r, int_method = False) 
+    return CV_calc(x, y, m1, m2, scan_r, int_method = int_method) 

@@ -12,8 +12,8 @@ def Cap_norm(grad, I,):
 
 #Calculating the capacitance given a list of gradients
 #Recieve current in A and mass in g
-def Cap_ls(gradient_ls, current, m1=False , m2=False, norm_cap=False):
-    if norm_cap is False:
+def Cap_ls(gradient_ls, current, m1=False , m2=False, cap_grav=True):
+    if cap_grav is True:
         cap_ls = [Cap_calc(i, current, m1, m2) for i in gradient_ls]
         
     elif m1 is False and m2 is False:
@@ -31,7 +31,7 @@ def Intersect(grad, intc, pk):
     return grad*pk+intc
 
 
-#method 1 (first n point), at default the first 4 points after the peak are taken
+#method 1 (first n point), by default the first 1 point after the peak are taken
 def ConstantPoints(V_ls, pk_index, set_n = False):
     if set_n is False:
         dv = V_ls[pk_index]-V_ls[pk_index + 1]
@@ -56,7 +56,7 @@ def ConstantDeriv(xset, yset, pk_index, tr_index, set_deriv = False,):
     dt2 = 0.5*(dx[:-1]+dx[1:])
     
     if set_deriv is False:
-        deriv = 1
+        deriv = 0.01
     else:
         deriv = set_deriv
     
@@ -67,7 +67,7 @@ def ConstantDeriv(xset, yset, pk_index, tr_index, set_deriv = False,):
        
     dv = yset[pk_index] - yset[pk_index + 1 + num_pt]
     
-    return dv, dV2 #num_pt
+    return dv, dV2
        
 
 #receive current in A
@@ -86,6 +86,11 @@ def ESR_ls(esr_ls, current):
         
         return esr
 
+def Half_pt_ind(lst, half_value):
+    for i, x in enumerate(lst):
+        if x<half_value:
+            return i
+
 
 def ESR_dv2(xset, yset, pk_index, tr_index, set_deriv = False):
     #calculaltion for first and second derivative
@@ -100,7 +105,7 @@ def ESR_dv2(xset, yset, pk_index, tr_index, set_deriv = False):
     dt2 = 0.5*(dt1[:-1]+dt1[1:])
     
     if set_deriv is False:
-        deriv = 0.01
+        deriv = 1
     else:
         deriv = set_deriv
     

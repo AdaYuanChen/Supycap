@@ -74,6 +74,10 @@ def Readcurrent(filename):
             while filename[k] != '_' and filename[k] != '/' and filename[k] != '\\' and k >= 0:
                 k -= 1
             return float(filename[k+1:i-1])
+        else:
+            pass
+    return False
+    
 
 #calculate mass errors as the major source of uncertainties in capacitance
 #error analysis: only uncertainty from mass is considered as other errors are insignificant compare to this

@@ -1,6 +1,7 @@
 from numpy import*
 from matplotlib import* 
 from matplotlib import pylab, mlab, pyplot
+from matplotlib.font_manager import FontProperties
 from pylab import*
 from IPython.core.pylabtools import figsize, getfigs
 import glob
@@ -13,7 +14,7 @@ from .load_capacitor import Load_capacitor
 #Analyse one supercapacitor under different currents (use multiple supercap()) with error bars
 #path is directed to the folder which contains all relevant txt files for the analysis
 #m1, m2 are recived in unit of mg 
-def Glob_analysis(path, t_set = False, V_set = False, delimiter = False, mass_ls = False, row_skip = False, ESR_method = True, setting = False, plot_set = False, plotting = True):
+def Glob_analysis(path, t_set = False, V_set = False, delimiter = False, mass_ls = False, row_skip = False, ESR_method = True, setting = False,  cap_method = False, plot_set = False, plotting = True, save_plot = False):
     """
         Loading all text files in the folder as specified in path. Good for analysing how capacitance changes with current density. 
         
@@ -43,6 +44,10 @@ def Glob_analysis(path, t_set = False, V_set = False, delimiter = False, mass_ls
             V_set = False (V_set = 0)
                     True (The prompt will ask for the column index to be entered)
                     : :class: `int` (specify the coloumn which will be used as time)
+                    
+        delimiter : :class:`str`, optional
+             A string which is used to seperate the data coloumns in the data file. If delimiter = False, the delimiter is assumed to be space ' '.
+             
         mass_ls : :class:`list`
             Measurements of the mass of each electrode. mass_ls will result in non-gravimetric capacitance being calculated. 
             mass_ls = False (calculate non-gravimetric capacitance)
@@ -51,33 +56,49 @@ def Glob_analysis(path, t_set = False, V_set = False, delimiter = False, mass_ls
         
         row_skip : :class:`int`
             The number of rows of headers to skip in the text files.
-            row_skip = False (The prompt will ask for rows to skip for each files)
+            row_skip = False (row_skip = 1)
+                     = True (The prompt will ask for rows to skip for each files)
                      = : :class:`int` (The specified number of rows will be skipped for all files in the path)
         
         ESR_method : :class:`int`, optional
             The method for ESR analysis.
             ESR_method = 1 (default constant point analyis using the first point after the peak for calculating voltage drop) 
                        = 101 (constant point analysis using the nth point after the peak, where n is specified using setting)
-                       = 2 or True (default constant second derivative method using the point where the second derivative is greater than 0.01)
+                       = 2 or True (default constant second derivative method where the cut off second derivative is greater than 1)
                        = 201 (constant second derivative method where the cut off derivative is specified using setting)
                        = False (ESR value will be returned as False)
                        
         setting : :class:`float`, optional
             The setting for ESR analysis
-            setting = False (for ESR_method = 1, 2 or True, the defualt setting will be used)
+            setting = False (for ESR_method = 1, 2 or True, the default setting will be used)
                     = : :class:`int` (nth point/cut off second derivative depending on the ESR_method)
-                    
+        
+        cap_method : :class:`int`, optional
+            The method for capacitance analysis. 
+            cap_method = 1 or False (the capacitance is analysed from the lower half of the voltage range)
+            cap_method = 2 (the capacitance is analysed from the upper half of the voltage range)
+        
+        plot_set :  :class:`bool`, optional
+            Figure parameters for plotting
+            plot_set = False (default settings will be used for plotting)
+                       True (prompts to allow customised settings for plotting)
+
         plotting : :class:`bool`, optional
+            Whether the capacitance vs. current density plot will be plotted
+            plotting = False (the figure will not be plotted)
+                     = True (the figure will be plotted)
+                    
+        save_plot : :`bool`, optional
             Whether the capacitance vs. current density plot will be saved
-            plotting = False (the figure will not be saved)
-                    =  True (the figure will be saved as 'Gravimetric specific capacitance vs. current density [datetime].png')
+            save_plot = False (the figure will not be saved)
+                     =  True (the figure will be saved as 'Gravimetric specific capacitance vs. current density [datetime].png')
 
         returns
         -------
         : :class:`Supercap` 
                        
     """
-    if row_skip is False:
+    if row_skip is True:
         decision = input('''Do you want to enter the header's row number for each file individually? yes/no''')
         if decision == 'yes':
             pass
@@ -100,15 +121,15 @@ def Glob_analysis(path, t_set = False, V_set = False, delimiter = False, mass_ls
     
     #cap_norm setting
     if mass_ls is False:
-        cap_norm = True
+        cap_grav = False
     else:
-        cap_norm = False
+        cap_grav = True
 
     #print(ESR_method, 'glob')
     Glob_set = glob.glob(path)
     
     #loading data into the Supercap file 
-    supc_ls = [Load_capacitor(i, t_set = t_set, V_set = V_set, delimiter = delimiter, mass_ls = mass_ls, row_skip = row_skip, ESR_method = ESR_method, setting = setting, cap_norm = cap_norm) for i in Glob_set]
+    supc_ls = [Load_capacitor(i, t_set = t_set, V_set = V_set, delimiter = delimiter, mass_ls = mass_ls, row_skip = row_skip, ESR_method = ESR_method, setting = setting,  cap_method = cap_method, cap_grav = cap_grav) for i in Glob_set]
         
     #Analyze each set of data
     Cap_ls_g = [mean(i.cap_ls) for i in supc_ls]
@@ -118,13 +139,14 @@ def Glob_analysis(path, t_set = False, V_set = False, delimiter = False, mass_ls
     
     #plot set up
     if plot_set == False:
-        width = 30
-        length = 30
-        font_size = 50
+        width = 20
+        length = 20
+        font_size = 40
         line_colour = 'black'
         linewidth = 8
         error_bar = 6
         marker = 27
+        rotation = 0
     if plot_set == True: 
         width = int(input('Please specify the width of the figure'))
         length = int(input('Please specify the length of the figure'))
@@ -133,6 +155,7 @@ def Glob_analysis(path, t_set = False, V_set = False, delimiter = False, mass_ls
         linewidth = int(input('Please specify the linewidth'))
         error_bar = int(input('Please specify the size of the error bars'))
         marker = int(input('Please specify the size of the markers'))
+        rotation = int(input('Please specify the rotation degrees of the x ticks'))
  
     #current density
     if mass_ls == False: 
@@ -144,8 +167,8 @@ def Glob_analysis(path, t_set = False, V_set = False, delimiter = False, mass_ls
     
     else:
         Cd_ls =[i.current/(i.masses[0][0]+i.masses[1][0]) for i in supc_ls]
-        x_lab = 'Current density $A g^{-1}$'
-        y_lab = '$C_g /F g^{-1}$'
+        x_lab = 'Current density $(A$ $g^{-1})$'
+        y_lab = 'Gravimetric capacitance $C_g$ $(F$ $g^{-1})$'
         
         
     #plotting
@@ -154,13 +177,34 @@ def Glob_analysis(path, t_set = False, V_set = False, delimiter = False, mass_ls
         ax = gca()
         for label in ax.get_xticklabels() + ax.get_yticklabels():
             label.set_fontsize(font_size)
-        errorbar(Cd_ls, Cap_ls_g, yerr=Cap_error*array(Cap_ls_g), linewidth = linewidth, elinewidth = error_bar, capthick = error_bar, capsize = error_bar*3, ecolor = line_colour, marker ='x', color = line_colour, ms = marker, mew = marker/3)
-        xlabel(x_lab, fontsize = font_size)
-        ylabel(y_lab, fontsize = font_size)
-        savefig('Gravimetric specific capacitance vs. current density'+' {0:%d%m}_{0:%I_%M}'.format(datetime.datetime.now())+'.png',transparent=True)
+            label.set_family('sans-serif')
+            label.set_name('Arial')
+            
+        tx = ax.xaxis.get_offset_text()
+        tx.set_fontsize(font_size)
+        tx.set_family('sans-serif')
+        tx.set_name('Arial')
         
+        font = FontProperties()
+        font.set_family('sans-serif')
+        font.set_name('Arial')
+        font.set_size(font_size+10)
+        
+        errorbar(Cd_ls, Cap_ls_g, yerr=Cap_error*array(Cap_ls_g), linewidth = linewidth, elinewidth = error_bar, capthick = error_bar, capsize = error_bar*3, ecolor = line_colour, marker ='x', color = line_colour, ms = marker, mew = marker/3)
+        xlabel(x_lab, fontproperties=font)
+        ylabel(y_lab, fontproperties=font)
+        xticks(rotation = rotation)
+
     else:
         pass
+    
+            
+    if save_plot == True:
+        savefig('Gravimetric specific capacitance vs. current density'+' Date{0:%d%m}_Time{0:%I_%M}'.format(datetime.datetime.now())+'.png',transparent=True)
+    
+    else:
+        pass
+    
     
 #function returns lists of current, current density, averaged capacitance, the standard deviation of capcitance, ESR average, and ESR std accordingly. 
     return Cd_ls, supc_ls
