@@ -21,7 +21,7 @@
         <a href="#TOC">Introduction</a>
     </h2>
     <p>
-        This is a Python library for analysis for the Constant Current <b>(CC)</b> curves as well as the Cyclic Voltammetry <b>(CV)</b> curves of two-electrode, symmetrical supercapacitors. It provides an easy and standardised way to quickly extract useful information from the CC and CV data, including the <b>capacitance</b> and the Equivalent Series Resistance <b>（ESR） </b>of the supercapacitor and how they evolve over cycles, with multiple options offered to suit the need of scientific investigations of supercapacitors. 
+        Welcome to Supycap! This is a Python library for analysis for the Constant Current <b>(CC)</b> curves as well as the Cyclic Voltammetry <b>(CV)</b> curves of two-electrode, symmetrical supercapacitors. It provides an easy and standardised way to quickly extract useful information from the CC and CV data, including the <b>capacitance</b> and the Equivalent Series Resistance <b>（ESR） </b>of the supercapacitor and how they evolve over cycles, with multiple options offered to suit the need of scientific investigations of supercapacitors. 
 
 <br>
 <br>
