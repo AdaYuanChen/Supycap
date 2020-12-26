@@ -91,7 +91,7 @@ For <b>CV</b> analysis, the capacitance is calculated via integration of the are
 An illustration of how the CV data is analysed is shown below:
 
 <p align="center">
-<img src="https://user-images.githubusercontent.com/70351473/103138917-f0144680-46ce-11eb-9558-1808bf599c87.png" alt="CV analysis" width="550" height="400">
+<img src="https://user-images.githubusercontent.com/70351473/103149865-ac205080-4765-11eb-8832-abab45c0194d.png" alt="CV analysis" width="550" height="400">
 </p>
 
 
