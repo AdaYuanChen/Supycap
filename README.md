@@ -26,6 +26,7 @@
 <br>
 <br>
 
+## CC analysis
 For <b>CC</b> analysis, the capacitance is calculated via linear fitting the second half of the discharging slope in each charging/discharging cycle. For <b>gravimetric capacitance, <img src="https://render.githubusercontent.com/render/math?math=C_g"> (<img src="https://render.githubusercontent.com/render/math?math=F%20g^{-1}">)</b>:
 
 <p align="center">
@@ -35,7 +36,6 @@ For <b>CC</b> analysis, the capacitance is calculated via linear fitting the sec
 
 <i>where <img src="https://render.githubusercontent.com/render/math?math=m_1"> is the mass of one of the two electrodes in the electrochemical cell and <img src="https://render.githubusercontent.com/render/math?math=m_2"> is the mass of the other, both in mg; I is the current in mA under which the CC anaysis is conducted; <img src="https://render.githubusercontent.com/render/math?math=\frac{dV}%20{dt}"> is the change of voltage (V) with respect to time (s). </i>
 
-<br>
 <br>
 <br>
 
@@ -50,7 +50,6 @@ For <b>non-gravimetric capacitance (F)</b>:
 
 <br>
 <br>
-<br>
 
 
 The <b>ESR (Ω)</b> is calculated using the voltage drop:
@@ -61,7 +60,6 @@ The <b>ESR (Ω)</b> is calculated using the voltage drop:
 
 <i>where <img src="https://render.githubusercontent.com/render/math?math=V_{drop}"> is the vertical drop in voltage in V at the beginning of the discharging curve as shown in the figure below; I is the current in mA under which the CC analysis is conducted. </i>
 
-<br>
 <br>
 <br>
 
@@ -76,6 +74,7 @@ Here is an illustration of how the CC data is analysed:
 <br>
 <br>
 
+## CV analysis
 For <b>CV</b> analysis, the capacitance is calculated via integration of the area enclosed by current as the voltage scanned across the potential window. For <b>gravimetric capacitance (<img src="https://render.githubusercontent.com/render/math?math=F%20g^{-1}">)</b>:
 
 <p align="center">
@@ -84,7 +83,6 @@ For <b>CV</b> analysis, the capacitance is calculated via integration of the are
 
 <i>where <img src="https://render.githubusercontent.com/render/math?math=m_1"> is the mass of one of the two electrodes in the electrochemical cell and <img src="https://render.githubusercontent.com/render/math?math=m_2"> is the mass of the other, both in mg; <img src="https://render.githubusercontent.com/render/math?math=\int%20I%20dV"> is the area enclosed by the discharging curve as shown below in blue；scan rate is the change in voltage per second in mV/s ;potential window is the accumulated voltage that has been scanned across in V.</i>
 
-<br>
 <br>
 <br>
 
