@@ -26,7 +26,7 @@
 <br>
 <br>
 
-## CC analysis
+### CC analysis
 For <b>CC</b> analysis, the capacitance is calculated via linear fitting the second half of the discharging slope in each charging/discharging cycle. For <b>gravimetric capacitance, <img src="https://render.githubusercontent.com/render/math?math=C_g"> (<img src="https://render.githubusercontent.com/render/math?math=F%20g^{-1}">)</b>:
 
 <p align="center">
@@ -74,7 +74,7 @@ Here is an illustration of how the CC data is analysed:
 <br>
 <br>
 
-## CV analysis
+### CV analysis
 For <b>CV</b> analysis, the capacitance is calculated via integration of the area enclosed by current as the voltage scanned across the potential window. For <b>gravimetric capacitance (<img src="https://render.githubusercontent.com/render/math?math=F%20g^{-1}">)</b>:
 
 <p align="center">
