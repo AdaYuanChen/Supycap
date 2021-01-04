@@ -1,4 +1,4 @@
-![image](https://user-images.githubusercontent.com/70351473/103553331-39218300-4ea5-11eb-955f-54c553c1115b.png)
+<img src="https://user-images.githubusercontent.com/70351473/103138710-2ea90180-46cd-11eb-9508-913085b99f34.png" alt="CC analysis" width="600" height="400">
 
 <h1 class="title">
      Table of content
