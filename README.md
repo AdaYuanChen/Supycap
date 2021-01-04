@@ -43,7 +43,7 @@ For <b>CC</b> analysis, the capacitance is calculated via linear fitting the sec
 For <b>non-gravimetric capacitance (F)</b>:
 
 <p align="center">
-<img src="https://render.githubusercontent.com/render/math?math=C_{non}_{grav}=%20I%20\times%20\frac{1}{\frac{dV}%20{dt}}">
+<img src="https://render.githubusercontent.com/render/math?math=C_{non}_{grav}=%20I%20\frac{1}{\frac{dV}%20{dt}}">
 </p>
 
 <i>where I is the current in A and <img src="https://render.githubusercontent.com/render/math?math=\frac{dt}%20{dV}"> is the change of time (s) with respect to voltage (V).</i>
@@ -58,7 +58,7 @@ The <b>ESR (Ω)</b> is calculated using the voltage drop:
 <img src="https://render.githubusercontent.com/render/math?math=ESR=%20\frac{\Delta%20V_{drop}}{2%20I}">
 </p>
 
-<i>where <img src="https://render.githubusercontent.com/render/math?math=\Delta%20V_{drop}}"> is the vertical drop in voltage in V at the beginning of the discharging curve as shown in the figure below; I is the current in A under which the CC analysis is conducted. </i>
+<i>where <img src="https://render.githubusercontent.com/render/math?math=\Delta%20V_{drop}"> is the vertical drop in voltage in V at the beginning of the discharging curve as shown in the figure below; I is the current in A under which the CC analysis is conducted. </i>
 
 <br>
 <br>
@@ -81,7 +81,7 @@ For <b>CV</b> analysis, the capacitance is calculated via integration of the are
 <img src="https://render.githubusercontent.com/render/math?math=C_g=%20\frac{m_1%2Bm_2}{m_1%20m_2}%20\frac{I}{\frac{dV}%20{dt}}%20\frac{1}{\Delta%20V}%20\int_{V_0}^{V_1}%20I%20dV">
 </p>
 
-<i>where <img src="https://render.githubusercontent.com/render/math?math=m_1"> is the mass of one of the two electrodes in the electrochemical cell and <img src="https://render.githubusercontent.com/render/math?math=m_2"> is the mass of the other, both in mg; <img src="https://render.githubusercontent.com/render/math?math=\frac{dV}{dt}"> is the CV scan rate in <img src="https://render.githubusercontent.com/render/math?math=V s^{-1}">; <img src="https://render.githubusercontent.com/render/math?math=%20\Delta V"> is the full discharge voltage in V; <img src="https://render.githubusercontent.com/render/math?math=V_0"> and <img src="https://render.githubusercontent.com/render/math?math=V_1"> are the voltages in V at the start of discharge and at the end of discharge, respectively.</i>
+<i>where <img src="https://render.githubusercontent.com/render/math?math=m_1"> is the mass of one of the two electrodes in the electrochemical cell and <img src="https://render.githubusercontent.com/render/math?math=m_2"> is the mass of the other, both in g; <img src="https://render.githubusercontent.com/render/math?math=\frac{dV}{dt}"> is the CV scan rate in <img src="https://render.githubusercontent.com/render/math?math=V s^{-1}">; <img src="https://render.githubusercontent.com/render/math?math=\Delta V"> is the full discharge voltage in V; <img src="https://render.githubusercontent.com/render/math?math=V_0"> and <img src="https://render.githubusercontent.com/render/math?math=V_1"> are the voltages in V at the start of discharge and at the end of discharge, respectively.</i>
 
 <br>
 <br>
