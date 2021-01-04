@@ -607,11 +607,11 @@ Changing the cap analysis method used for calculating capacitance.
 
 
 3. <b>m1 : <i>float, optional</i></b> <br>
-    The mass of electrode 1 of the supercapacitor. The mass is in <b>mg<\b>.
+    The mass of electrode 1 of the supercapacitor. The mass is in <b>mg</b>.
     
     
 4. <b>m2 : <i>float, optional</i></b> <br>
-    The mass of electrode 2 of the supercapacitor. The mass is in <b>mg<\b>.
+    The mass of electrode 2 of the supercapacitor. The mass is in <b>mg</b>.
 
 
 #### Returns 
@@ -908,11 +908,11 @@ This function supports electrochemical data in either txt or csv format. In a tx
 
 
 2. <b>m1 : <i>float, optional</i></b> <br>
-    The mass of electrode 1 of the supercapacitor. The mass is in <b>mg<\b>.
+    The mass of electrode 1 of the supercapacitor. The mass is in <b>mg</b>.
     
     
 3. <b>m2 : <i>float, optional</i></b> <br>
-    The mass of electrode 2 of the supercapacitor. The mass is in <b>mg<\b>.
+    The mass of electrode 2 of the supercapacitor. The mass is in <b>mg</b>.
 
 
 4. <b>scan_r : <i> float, optional</i></b><br>
