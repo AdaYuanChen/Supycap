@@ -30,11 +30,11 @@
 For <b>CC</b> analysis, the capacitance is calculated via linear fitting the second half of the discharging slope in each charging/discharging cycle. For <b>gravimetric capacitance, <img src="https://render.githubusercontent.com/render/math?math=C_g"> (<img src="https://render.githubusercontent.com/render/math?math=F%20g^{-1}">)</b>:
 
 <p align="center">
-<img src="https://render.githubusercontent.com/render/math?math=C_g=%20\frac{(m_1%2Bm_2)%20\times%20I%20}{(m_1%20\times%20m_2)%20\times%20\frac{dV}%20{dt}}">
+<img src="https://render.githubusercontent.com/render/math?math=C_g=%20\frac{m_1%2Bm_2}{m_1%20m_2}%20\frac{I}{\frac{dV}%20{dt}}">
 </center>
 </p>
 
-<i>where <img src="https://render.githubusercontent.com/render/math?math=m_1"> is the mass of one of the two electrodes in the electrochemical cell and <img src="https://render.githubusercontent.com/render/math?math=m_2"> is the mass of the other, both in mg; I is the current in mA under which the CC anaysis is conducted; <img src="https://render.githubusercontent.com/render/math?math=\frac{dV}%20{dt}"> is the change of voltage (V) with respect to time (s). </i>
+<i>where <img src="https://render.githubusercontent.com/render/math?math=m_1"> is the mass of one of the two electrodes in the electrochemical cell and <img src="https://render.githubusercontent.com/render/math?math=m_2"> is the mass of the other, both in g; I is the current in A under which the CC anaysis is conducted; <img src="https://render.githubusercontent.com/render/math?math=\frac{dV}%20{dt}"> is the discharge slope, which is the change of voltage (V) with respect to time (s). </i>
 
 <br>
 <br>
@@ -43,10 +43,10 @@ For <b>CC</b> analysis, the capacitance is calculated via linear fitting the sec
 For <b>non-gravimetric capacitance (F)</b>:
 
 <p align="center">
-<img src="https://render.githubusercontent.com/render/math?math=C_{non}_{grav}=%20I%20\times%20\frac{dt}%20{dV}">
+<img src="https://render.githubusercontent.com/render/math?math=C_{non}_{grav}=%20I%20\times%20\frac{1}{\frac{dV}%20{dt}}">
 </p>
 
-<i>where I is the current in mA and <img src="https://render.githubusercontent.com/render/math?math=\frac{dt}%20{dV}"> is the change of time (s) with respect to voltage (V).</i>
+<i>where I is the current in A and <img src="https://render.githubusercontent.com/render/math?math=\frac{dt}%20{dV}"> is the change of time (s) with respect to voltage (V).</i>
 
 <br>
 <br>
@@ -55,10 +55,10 @@ For <b>non-gravimetric capacitance (F)</b>:
 The <b>ESR (Ω)</b> is calculated using the voltage drop:
 
 <p align="center">
-<img src="https://render.githubusercontent.com/render/math?math=ESR=%20\frac{V_{drop}}{2%20I}">
+<img src="https://render.githubusercontent.com/render/math?math=ESR=%20\frac{\Delta%20V_{drop}}{2%20I}">
 </p>
 
-<i>where <img src="https://render.githubusercontent.com/render/math?math=V_{drop}"> is the vertical drop in voltage in V at the beginning of the discharging curve as shown in the figure below; I is the current in mA under which the CC analysis is conducted. </i>
+<i>where <img src="https://render.githubusercontent.com/render/math?math=\Delta%20V_{drop}}"> is the vertical drop in voltage in V at the beginning of the discharging curve as shown in the figure below; I is the current in A under which the CC analysis is conducted. </i>
 
 <br>
 <br>
@@ -78,10 +78,10 @@ Here is an illustration of how the CC data is analysed:
 For <b>CV</b> analysis, the capacitance is calculated via integration of the area enclosed by current as the voltage scanned across the potential window. For <b>gravimetric capacitance (<img src="https://render.githubusercontent.com/render/math?math=F%20g^{-1}">)</b>:
 
 <p align="center">
-<img src="https://render.githubusercontent.com/render/math?math=C_g=%20\frac{(m_1%20%2B%20m_2)\times%20\int%20I%20dV}{(m_1%20\times%20m_2)\times%20scan%20\space%20\space%20rate%20\times%20potential\space%20window}">
+<img src="https://render.githubusercontent.com/render/math?math=C_g=%20\frac{m_1%2Bm_2}{m_1%20m_2}%20\frac{I}{\frac{dV}%20{dt}}%20\frac{1}{\Delta%20V}%20\int_{V_0}^{V_1}%20I%20dV">
 </p>
 
-<i>where <img src="https://render.githubusercontent.com/render/math?math=m_1"> is the mass of one of the two electrodes in the electrochemical cell and <img src="https://render.githubusercontent.com/render/math?math=m_2"> is the mass of the other, both in mg; <img src="https://render.githubusercontent.com/render/math?math=\int%20I%20dV"> is the area enclosed by the discharging curve as shown below in blue；scan rate is the change in voltage per second in mV/s ;potential window is the accumulated voltage that has been scanned across in V.</i>
+<i>where <img src="https://render.githubusercontent.com/render/math?math=m_1"> is the mass of one of the two electrodes in the electrochemical cell and <img src="https://render.githubusercontent.com/render/math?math=m_2"> is the mass of the other, both in mg; <img src="https://render.githubusercontent.com/render/math?math=\frac{dV}{dt}"> is the CV scan rate in <img src="https://render.githubusercontent.com/render/math?math=V s^{-1}">; <img src="https://render.githubusercontent.com/render/math?math=%20\Delta V"> is the full discharge voltage in V; <img src="https://render.githubusercontent.com/render/math?math=V_0"> and <img src="https://render.githubusercontent.com/render/math?math=V_1"> are the voltages in V at the start of discharge and at the end of discharge, respectively.</i>
 
 <br>
 <br>
