@@ -606,6 +606,12 @@ Changing the cap analysis method used for calculating capacitance.
    It is by default that the gravimetric capacitance is calculated. By using <code>cap_grav = False</code> or <code>mass_ls = False</code> , a non-gravimetric capacitance will be calculated. 
 
 
+3. <b>m1 : <i>float, optional</i></b> <br>
+    The mass of electrode 1 of the supercapacitor. The mass is in <b>mg<\b>.
+    
+    
+4. <b>m2 : <i>float, optional</i></b> <br>
+    The mass of electrode 2 of the supercapacitor. The mass is in <b>mg<\b>.
 
 
 #### Returns 
@@ -629,6 +635,13 @@ Cycle 1387 has insufficient data points (50% less than average). Skipped for cap
 array([49.3082373 , 49.37786468, 49.34835958, ..., 51.12061108,
        51.13964009, 51.11665995])
 
+>>>Supercap2.Check_analysis(start = 1387, end = 1389)
+Cycle 1387 was skipped for calculation due to errors
+```
+![cap_method 2, upper voltage range](https://user-images.githubusercontent.com/70351473/103543708-e04aee00-4e96-11eb-98ea-afa38a100d44.png 'cap_method 2, upper voltage range')
+
+
+```
 >>>Supercap2
 <Class_Supercap: 4.0 mA, max voltage 1.0 V, 2704 cycle(s), ESR method 2 (setting = 0.01), cap_method 2>
 ```
@@ -895,11 +908,11 @@ This function supports electrochemical data in either txt or csv format. In a tx
 
 
 2. <b>m1 : <i>float, optional</i></b> <br>
-    The mass of electrode 1 of the supercapacitor. The mass is in mg.
+    The mass of electrode 1 of the supercapacitor. The mass is in <b>mg<\b>.
     
     
 3. <b>m2 : <i>float, optional</i></b> <br>
-    The mass of electrode 2 of the supercapacitor. The mass is in mg.
+    The mass of electrode 2 of the supercapacitor. The mass is in <b>mg<\b>.
 
 
 4. <b>scan_r : <i> float, optional</i></b><br>
