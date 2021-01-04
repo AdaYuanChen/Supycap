@@ -136,6 +136,7 @@ An illustration of how the CV data is analysed is shown below:
  * <a href="#__init__">__init__</a>
  * <a href="#__repr__">__repr__</a>
  * <a href="#ESR_method_change">__ESR_method_change__</a>
+ * <a href="#Cap_method_change">__Cap_method_change__</a>
  * <a href="#Show_dV2">__Show_dV2__</a>
  * <a href="#Cap_vs_cycles">__Cap_vs_cycles__</a>
  * <a href="#Get_info">__Get_info__</a>
@@ -191,7 +192,7 @@ This function supports electrochemical data in either txt or csv format. In a tx
 
 
 6. <b>current : <i> float, optional</i></b><br>
-   If <b><code>current = False</code></b>, the current value will be directly read from the filename given that it is supplied in the format as specified above in the pathway section. If the current is not included the filename, it should be specified in the form of <code>current =<i>specified_current</i></code>
+   If <b><code>current = False</code></b>, the current value will be directly read from the filename given that it is supplied in the format as specified above in the pathway section. If the current is not included the filename, it should be specified in the form of <code>current =<i>specified_current</i></code>. The current value should be recorded in <b>mA</b>.
 
 
 7. <b>row_skip : <i>int, optional</i></b><br>
@@ -299,7 +300,7 @@ Loading all txt/csv files in the folder as specified in path. Good for analysing
 <div id="path"></div>
 
 1. <b>path : <i>file, str, or pathlib.Path</i></b> <br>
-    File, filename of the text file to read. Note that if the library is not allocated in the same directory as the file, the pathway to the file has to be given. For <b>``` current=False```</b>, current will be directly read from the filename (i.e. the fielname has to include the current followed by <code>'_mA'</code> and seperated by <code>'_'</code>, <code>'/'</code> or it is the first component of the filename). For more details, refer to the Examples section.
+    File, filename of the text file to read. Note that if the library is not allocated in the same directory as the file, the pathway to the file has to be given. For <b>``` current=False```</b>, current will be directly read from the filename (i.e. the fielname has to include the current followed by <code>'_mA'</code> and seperated by <code>'_'</code>, <code>'/'</code> or it is the first component of the filename). Note that the current values must be recorded in <b>mA</b>.For more details, refer to the Examples section.
 
 
 2. <b>t_set : <i>int/str(csv files only), optional</i></b> <br>
@@ -470,7 +471,9 @@ The above method follows the name of the Supercap variable. More details in the 
 
 
 11. <b>faulty_cycles : <i>list, [list of faulty cycle numbers]</i></b><br>
-   A list of cycle numbers for the faulty cycles.
+   A list of cycle numbers (cycle number starting from 1) for the faulty cycles. The faulty cycle could be due to: 
+   1. The discharge slope of a CC cycle has significantly more or less data  points compared to the neighbouring cycles (more than 50% difference).
+   2. The discharge slope fails to perform linear fitting.
 
 
 ### Examples 
@@ -530,7 +533,7 @@ Changing the ESR analysis method used for calculating esr_ls.
 #### Arguments
 
 1. <b>ESR_method : <i>int, optional</i></b><br>
-   The method for ESR analysis. It is by default <b>(<code>ESR_method = True</code>)</b> that the ESR analysis will be carried out using method 2 (constant derivative). For all methods available please refer to the next session <a href="#method_table">ESR_method</a>. <code>ESR_setting = False</code> will return <code>.esr_ls</code> as <b>False</b> in the Supercap class. Available ESR_methods are: <code>ESR_methods = True, False, 1, 101, 2, 201. </code>
+   The method for ESR analysis. For all methods available please refer to the next session <a href="#method_table">ESR_method</a>. <code>ESR_setting = True</code> will change the ESR analysis method to default, which is the constant second derivative method with a cut-off second derivative of 0.01. <code>ESR_setting = False</code> will turn off the ESR calculation. Available ESR_methods are: <code>ESR_methods = True, False, 1, 101, 2, 201. </code>
 
 
 2. <b>setting : <i>float, optional</i></b><br>
@@ -573,6 +576,58 @@ array([20.66931875, 20.762845  , 20.72346125, ..., 20.536415  ,
 
 </div>
 
+<br>
+<br>
+
+---
+---
+
+<div id="Cap_method_change">
+    
+## <a href="#sub_TOC">Cap_method_change(self, cap_method = False, cap_grav = True, m1 = False, m2 = False)</a> 
+Initialize from a :class:`.Supercap`.
+
+
+### Notes
+---
+Changing the cap analysis method used for calculating capacitance.
+       
+
+### Parameters
+---
+
+#### Arguments
+
+1. <b>cap_method : <i>int</i></b><br>
+   The method for capacitance analysis into which is changed. For <code>cap_method = 1 or False</code>)</b>, discharge slope of the lower half of the voltage range will be analysed. For <code>cap_method = 2</code>)</b>, discharge slope of the upper voltage range will be analysed.
+
+
+2. <b>cap_grav : <i>bool, optional</i></b><br>
+   It is by default that the gravimetric capacitance is calculated. By using <code>cap_grav = False</code> or <code>mass_ls = False</code> , a non-gravimetric capacitance will be calculated. 
+
+
+
+
+#### Returns 
+<b>out: <i>:class:`.Supercap`</i></b>
+>self.esr_ls
+
+
+### Examples 
+---
+
+```python
+>>>Supercap2
+<Class_Supercap: 4.0 mA, max voltage 1.0 V, 2704 cycle(s), ESR method 2 (setting = 0.01), cap_method 1>
+>>>Supercap2.ESR_method_change(ESR_method = 201, setting =1)
+The original ESR method is 2 , and the setting is 0.01
+array([20.66931875, 20.762845  , 20.72346125, ..., 20.536415  ,
+       20.5659475 , 20.570865  ])
+>>>Supercap2
+<Class_Supercap: 4.0 mA, max voltage 1.0 V, 2704 cycle(s), ESR method 201 (setting = 1), cap_method 1>
+```
+
+</div>
 
 <br>
 <br>
@@ -594,7 +649,7 @@ Visualising the second derivative and the charge/discharge curve of a specified 
 
 #### Arguments
 1. <b>Cycle_check : <i>int, optional</i></b><br>
-   The method for ESR analysis. Specify the cycle of the charge/discharge curve and the second derivative to be plotted on the same axes.If <code>Cycle_check = False</code>, the user will be prompted to select a cycle on the CD curve to view as the reference for adjusting the cut off point. 
+   The method for ESR analysis. Specify the cycle of the charge/discharge curve and the second derivative to be plotted on the same axes.If <code>Cycle_check = False</code>, the user will be prompted to select a cycle on the CD curve to view as the reference for adjusting the cut off point. (Note: the cycle number starts from 1)
 
 
 #### Returns
@@ -761,7 +816,7 @@ Plotting the charge/discharge curve and visualising how the data is analysed (in
 
 1. <b>begin : <i>int, optional</i></b><br>
 
-   The first cycle to be visualised. For <code> begin = False </code>, the user will be prompted to choose the first cycle to be visualised.
+   The first cycle to be visualised. For <code> begin = False </code>, the user will be prompted to choose the first cycle to be visualised. Please note that the cycle number starts from 1. 
 
  
 
@@ -842,7 +897,7 @@ This function supports electrochemical data in either txt or csv format. In a tx
 
 
 4. <b>scan_r : <i> float, optional</i></b><br>
-   If <b><code>scan_r = False</code></b>, the scan rate value (mV/s) will be directly read from the filename given that it is supplied in the format as specified above in the pathway section. If the current is not included the filename, it should be specified in the form of <code>scan_r =<i>specified_scan_rate</i></code>
+   If <b><code>scan_r = False</code></b>, the scan rate value in <b>mV/s</b> will be directly read from the filename given that it is supplied in the format as specified above in the pathway section. If the current is not included the filename, it should be specified in the form of <code>scan_r =<i>specified_scan_rate</i></code>
 
 
 5. <b>row_skip : <i>int, optional</i></b><br>
@@ -850,11 +905,11 @@ This function supports electrochemical data in either txt or csv format. In a tx
    
    
 6. <b>V_set : <i>int/str(csv files only), optional</i></b> <br>
-   An integer specifying the coloumn index for voltage(V) data, with the first coloumn being coloumn 0 starting from left. If <code>x_name = False</code>, column 0 will be used as voltage(V); if x_name = True, there will be prompt asking for scan rate coloumn index to be entered.For csv files, the coloumn index can also be the name of the coloumn (e.g. <code>x_name = 'voltage(V)'</code>). 
+   An integer specifying the coloumn index for voltage in <b>V<\b>, with the first coloumn being coloumn 0 starting from left. If <code>x_name = False</code>, column 0 will be used as voltage(V); if x_name = True, there will be prompt asking for scan rate coloumn index to be entered.For csv files, the coloumn index can also be the name of the coloumn (e.g. <code>x_name = 'voltage(V)'</code>). 
      
      
 7. <b>I_set : <i>int/str(csv files only), optional</i></b> <br>
-   An integer specifying the coloumn index for voltage(V) data, with the first coloumn being coloumn 0 starting from left. If <code>y_name = False</code>, column 1 will be used as current(mA); if y_name = True, there will be prompt asking for current coloumn index to be entered. For csv files, the coloumn index can also be the name of the coloumn (e.g. <code>I_set = 'current(mA)'</code>). 
+   An integer specifying the coloumn index for voltage(V) data, with the first coloumn being coloumn 0 starting from left. If <code>y_name = False</code>, column 1 will be used as current in <b>mA<\b>; if y_name = True, there will be prompt asking for current coloumn index to be entered. For csv files, the coloumn index can also be the name of the coloumn (e.g. <code>I_set = 'current(mA)'</code>). 
 
 
 8. <b>delimiter : <i>str, optional</i></b> <br>
@@ -863,7 +918,7 @@ This function supports electrochemical data in either txt or csv format. In a tx
 <div id="int_para"></div>
 
 9. <b>int_method : <i>int, optional</i></b> <br>
-   The method for integration of the enclosed area. It is by default <b>(<code>int_method = False</code>)</b> that the ESR analysis will be carried out using method 2 (constant derivative). For all methods available please refer to the next session <a href="#int_method_table">int_method table</a>.
+   The method for integration of the enclosed area. It is by default <b>(<code>int_method = False</code>)</b> that the area under the curve will be calculated using the Simpson's rule. For all methods available please refer to the next session <a href="#int_method_table">int_method table</a>.
 
 
 <br>
@@ -875,10 +930,10 @@ This function supports electrochemical data in either txt or csv format. In a tx
 
 Method  |  Description  |
 ---   |  ---   | 
-<b>False or 1</b>   |  Default method. Integration using the trapezoidal rule and integrates over discharging curve only.  |  
-<b>101</b>    |  Integration using the trapezoidal rule and integrates over both the charging and discharging curves.  |  
-<b>2</b>    |  Integration using the Simpson's rule and integrates over discharging curve only. |  
-<b>202</b>     |  Integration using the Simpson's rule and integrates over both the charging and discharging curves.   |  
+<b>False or 1</b>   |  Default method. Integration using the Simpson's rule and integrates over discharging curve only.  |  
+<b>101</b>    |  Integration using the Simpson's rule and integrates over both the charging and discharging curves.  |  
+<b>2</b>    |  Integration using the trapezoidal rule and integrates over discharging curve only. |  
+<b>202</b>     |  Integration using the trapezoidal rule and integrates over both the charging and discharging curves.   |  
 
 
 #### Returns 
