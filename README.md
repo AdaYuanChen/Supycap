@@ -610,7 +610,7 @@ Changing the cap analysis method used for calculating capacitance.
 
 #### Returns 
 <b>out: <i>:class:`.Supercap`</i></b>
->self.esr_ls
+>self.cap_ls
 
 
 ### Examples 
@@ -619,12 +619,18 @@ Changing the cap analysis method used for calculating capacitance.
 ```python
 >>>Supercap2
 <Class_Supercap: 4.0 mA, max voltage 1.0 V, 2704 cycle(s), ESR method 2 (setting = 0.01), cap_method 1>
->>>Supercap2.ESR_method_change(ESR_method = 201, setting =1)
-The original ESR method is 2 , and the setting is 0.01
-array([20.66931875, 20.762845  , 20.72346125, ..., 20.536415  ,
-       20.5659475 , 20.570865  ])
+>>>Supercap2.cap_method_change(cap_method = 2, cap_grav = True)
+The original cap_method is 1
+The cap_method is changed to 2
+Gravimetric capacitance (F g^-1) is being calculated.
+Electrode masses are taken as specified previously.
+Cycle 1387 has insufficient data points (50% less than average). Skipped for capacitance calculation
+
+array([49.3082373 , 49.37786468, 49.34835958, ..., 51.12061108,
+       51.13964009, 51.11665995])
+
 >>>Supercap2
-<Class_Supercap: 4.0 mA, max voltage 1.0 V, 2704 cycle(s), ESR method 201 (setting = 1), cap_method 1>
+<Class_Supercap: 4.0 mA, max voltage 1.0 V, 2704 cycle(s), ESR method 2 (setting = 0.01), cap_method 2>
 ```
 
 </div>
