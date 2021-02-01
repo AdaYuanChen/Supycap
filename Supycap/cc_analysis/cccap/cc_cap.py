@@ -93,25 +93,23 @@ def CC_Cap(xset, yset, current, m1 = False, m2 = False, ESR_method = True, setti
     mid_ind = [Half_pt_ind(yset[peaks[i]:troughs[i]],(yset[peaks[i]]+yset[troughs[i]])/2) for i in range(len(peaks))]
     
     
-    #calculate ave len
-    steps = int(floor(len(peaks)/10))+1
-    sel_peaks = peaks[::steps]
-    sel_troughs = troughs[::steps]
-    ave_len=0
-    for i in range(len(sel_peaks)):
-        ave_len += len(xset[sel_peaks[i]:sel_troughs[i]])
-    ave_len = ave_len/len(sel_peaks)
     
     cc_grad = []
     faulty_cyc_ind = []
     for i in range(len(peaks)):
-        if len(xset[peaks[i]:troughs[i]]) < ave_len*0.6:
+        if i<=10:
+            sel_peaks = peaks[:10]
+            ave_len = mean([len(xset[peaks[k]:troughs[k]]) for k in range(len(sel_peaks))])
+        else:
+            ave_len = mean([len(xset[peaks[k]:troughs[k]]) for k in range(i-10, i)])
+
+        if len(xset[peaks[i]:troughs[i]]) < ave_len*0.5:
             faulty_cyc_ind += [i]
-            print('Cycle ' + str(i+1)+ ' has insufficient data points (40% less than average). Skipped for capacitance calculation') 
+            print('Cycle ' + str(i+1)+ ' has insufficient data points (50% less than average). Skipped for capacitance calculation') 
             
-        elif len(xset[peaks[i]:troughs[i]]) > ave_len*1.4:
+        elif len(xset[peaks[i]:troughs[i]]) > ave_len*1.5:
             faulty_cyc_ind += [i]
-            print('Cycle ' + str(i+1)+ ' has significantly more data points (40% more than average). Skipped for capacitance calculation') 
+            print('Cycle ' + str(i+1)+ ' has significantly more data points (50% more than average). Skipped for capacitance calculation') 
         
         else:
             if cap_method is 1 or cap_method is False:
@@ -121,7 +119,7 @@ def CC_Cap(xset, yset, current, m1 = False, m2 = False, ESR_method = True, setti
                     faulty_cyc_ind += [i]
                     print('Error found in cycle ' + str(i+1)+ '. Skipped for capacitance calculation')
                   
-            if cap_method is 2:
+            elif cap_method is 2:
                 try:
                     cc_grad += [polyfit(xset[peaks[i]:troughs[i]][:mid_ind[i]], yset[peaks[i]:troughs[i]][:mid_ind[i]],1, cov=False)[0]]
                 except:

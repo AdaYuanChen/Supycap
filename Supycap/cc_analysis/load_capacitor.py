@@ -136,6 +136,9 @@ def Load_capacitor(pathway, t_set = False, V_set = False, delimiter = False, mas
         setting = 1
     elif ESR_method is 2:
         setting = 0.01
+    elif ESR_method is True:
+        ESR_method = 2
+        setting = 0.01
     else:
         pass
     

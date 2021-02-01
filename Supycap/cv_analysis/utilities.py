@@ -149,3 +149,7 @@ def Pn_slice(cycle_xls, cycle_yls, cycle_n):
 ###scan rate in mv/s and mass in mg!!!
 def CV_cap_cal(Integrated, m1, m2, scan_r, potential_r):
     return 1000 * Integrated * (m1 + m2) / (m1*m2*scan_r*potential_r)
+
+#calculation for non-gravimetric capacitance
+def CV_non_grav(Integrated, scan_r, potential_r):
+    return 1000 * Integrated / (scan_r*potential_r)

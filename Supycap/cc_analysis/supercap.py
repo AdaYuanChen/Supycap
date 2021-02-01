@@ -6,7 +6,7 @@ from pylab import*
 from scipy.signal import find_peaks
 from IPython.core.pylabtools import figsize, getfigs
 
-from .cccap.utilities import ConstantDeriv, ConstantPoints, ESR_ls, ESR_dv2, Half_pt_ind
+from .cccap.utilities import ConstantDeriv, ConstantPoints, ESR_ls, ESR_dv2, Half_pt_ind, Cap_ls
 
 
 
@@ -101,7 +101,7 @@ class Supercap():
         self.troughs = extrema[1] #output the indices of all the troughs in the dataset
         self.esr_method = ESR_method#[ESR method, setting]
         self.cap_method = cap_method
-        self.faulty_cycles = array(faulty_cycles) #cycle number for the faulty cycles (cycle index starts from 0)
+        self.faulty_cycles = array(faulty_cycles)+1 #cycle number for the faulty cycles (starting from 1)
         
     def __repr__(self):
         """
@@ -147,42 +147,117 @@ class Supercap():
         print('The original ESR method is', self.esr_method[0], ', and the setting is', self.esr_method[1])
         
         if ESR_method is True:
-            print('ESR method is changed to the default constant second derivative analysis, where the cut off second derivative is 1')
+            ESR_method = 2
+            print('ESR method is changed to the default constant second derivative analysis, where the cut off second derivative is 0.01')
         elif ESR_method is False:
             print('ESR calculation is turned off')
         else:
             pass
         
-        if ESR_method == 101 and setting is False:
+        if ESR_method is 101 and setting is False:
             setting = int(input('How many points after the peak would you like to be considered for the ESR analysis? (the default value is 1)'))
         
-        elif ESR_method == 201 and setting is False:
+        elif ESR_method is 201 and setting is False:
             setting = float(input('Please specify a cut-off derivative (the default value is 1)'))
             
-        elif ESR_method == 1 or ESR_method == 2:
-            setting = False
+        elif ESR_method is 1:
+            setting = 1
+       
+        elif ESR_method is 2:
+            setting = 0.01
             
         else:
             pass
         
-        if ESR_method == 1 or ESR_method == 101:
+        if ESR_method is 1 or ESR_method is 101:
             esr_v = [ConstantPoints(self.V_ls, self.peaks[i], set_n = setting) for i in range(self.cycle_n)]
       
-        elif ESR_method is True or ESR_method == 2 or ESR_method == 201:
+        elif ESR_method is 2 or ESR_method is 201:
             esr_v = [ConstantDeriv(self.t_ls, self.V_ls, self.peaks[i], self.troughs[i], set_deriv = setting)[0] for i in range(self.cycle_n)]
                       
         else:
             esr_v = False
         
-        if ESR_method is 1 or ESR_method is 2:
-            setting = 1
             
         self.esr_ls = array(ESR_ls(esr_v, self.current*10**(-3)))
         self.esr_method=[ESR_method, setting]
         
         return self.esr_ls
+        
+        
+    def Cap_method_change(self, cap_method = False, cap_grav = True, m1 = False, m2 = False):
+        print('The original cap_method is {}'.format(self.cap_method))
+        
+        if cap_method is False:
+            cap_method = int(input('Please enter the desired cap_method: (1/2)'))
+        print('The cap_method is changed to {}'.format(cap_method))
+
+        if cap_grav is True:
+            print('Gravimetric capacitance (F g^-1) is being calculated.')
+            if m1 is False or m2 is False:
+                if mean(self.masses[0]) == False or  mean(self.masses[1]) == False:
+                   print('electrode masses are missing for the gravimetric capacitance calculation.')
+                   m1 = float(input('Please enter the mass of one of the electrode (mg):'))
+                   m2 = float(input('Please enter the mass of the other electrode (mg):'))
+                   
+                else:
+                    print('Electrode masses are taken as specified previously.')
+                    m1 = mean(self.masses[0])
+                    m2 = mean(self.masses[1])
+                    
+            else:
+                pass
+        else:
+            print('Non-gravimetric capacitance (F) is being calculated.')
+                       
+        mid_ind = [Half_pt_ind(self.V_ls[self.peaks[i]:self.troughs[i]],(self.V_ls[self.peaks[i]]+self.V_ls[self.troughs[i]])/2) for i in range(len(self.peaks))]
+    
+        cc_grad = []
+        faulty_cyc_ind = []
+        for i in range(len(self.peaks)):
+            if i<=10:
+                sel_peaks = self.peaks[:10]
+                ave_len = mean([len(self.t_ls[self.peaks[k]:self.troughs[k]]) for k in range(len(sel_peaks))])
+            else:
+                ave_len = mean([len(self.t_ls[self.peaks[k]:self.troughs[k]]) for k in range(i-10, i)])
+            
+            if len(self.t_ls[self.peaks[i]:self.troughs[i]]) < ave_len*0.5:
+                faulty_cyc_ind += [i]
+                print('Cycle ' + str(i+1)+ ' has insufficient data points (50% less than average). Skipped for capacitance calculation') 
+            
+            elif len(self.t_ls[self.peaks[i]:self.troughs[i]]) > ave_len*1.5:
+                faulty_cyc_ind += [i]
+                print('Cycle ' + str(i+1)+ ' has significantly more data points (50% more than average). Skipped for capacitance calculation') 
+        
+            else:
+                if cap_method is 1 or cap_method is False:
+                    try:
+                        cc_grad += [polyfit(self.t_ls[self.peaks[i]:self.troughs[i]][mid_ind[i]:], self.V_ls[self.peaks[i]:self.troughs[i]][mid_ind[i]:],1, cov=False)[0]]
+                    except:
+                        faulty_cyc_ind += [i]
+                        print('Error found in cycle ' + str(i+1)+ '. Skipped for capacitance calculation')
+                  
+                elif cap_method is 2:
+                    try:
+                        cc_grad += [polyfit(self.t_ls[self.peaks[i]:self.troughs[i]][:mid_ind[i]], self.V_ls[self.peaks[i]:self.troughs[i]][:mid_ind[i]],1, cov=False)[0]]
+                    except:
+                        faulty_cyc_ind += [i]
+                        print('Error found in cycle ' + str(i+1)+ '. Skipped for capacitance calculation')  
   
-  
+        if cap_grav is True:
+            cap_ls_calc = Cap_ls(cc_grad, self.current*10**(-3), m1*10**(-3), m2*10**(-3))
+        
+        else:
+            cap_ls_calc = Cap_ls(cc_grad, self.current*10**(-3), cap_grav = False)
+        
+        self.cap_ls = array(cap_ls_calc)
+        self.cap_method = cap_method
+        
+        return self.cap_ls
+        
+    
+        
+    
     #For visualising the second derivative for method 2 and/or method 201 and manually changing the second derivative cutt off point
     def Show_dV2(self, cycle_check = False, ):
         """
@@ -243,7 +318,7 @@ class Supercap():
             trough1 = self.troughs[cycle_check]
             num1 = num_pt[cycle_check]
             dV_ls1 = esr_dV2[cycle_check]
-            t_ls1 = self.t_ls[peak1:trough1]-self.t_ls[peak1]
+            t_ls1 = array(self.t_ls[peak1:trough1])-self.t_ls[peak1]
             V_ls1 = self.V_ls[peak1:trough1]
             
 
@@ -258,7 +333,7 @@ class Supercap():
             color = 'tab:red'
             ax1.set_xlabel('Time (s)', fontproperties=font)
             ax1.set_ylabel('Second derivative $ dV^2/dt $', color=color, fontproperties=font)
-            ax1.plot(t_ls1[1:40], dV_ls1[0:39], linewidth=5, marker='x', ms=12, mew=5, color=color)
+            ax1.plot(t_ls1[1:-2], dV_ls1[:-1], linewidth=5, marker='x', ms=12, mew=5, color=color)
             ax1.plot(t_ls1[num1+2], dV_ls1[num1+1], linewidth=5, marker='x', ms=20, mew=6, color='y')
             ax1.tick_params(axis='y', labelcolor=color)
             
@@ -266,7 +341,7 @@ class Supercap():
             ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
             color = 'tab:blue'
             ax2.set_ylabel('Voltage (V)', color=color, fontproperties=font)  # we already handled the x-label with ax1
-            ax2.plot(t_ls1[:40], V_ls1[:40],  linewidth=5, marker='x',ms=12, mew=5, color=color)
+            ax2.plot(t_ls1[:-2], V_ls1[:-2],  linewidth=5, marker='x',ms=12, mew=5, color=color)
             ax2.plot(t_ls1[num1+1], V_ls1[num1+1],  linewidth=5, marker='x',ms=20, mew=6, color='y')
             ax2.tick_params(axis='y', labelcolor=color)
 
@@ -480,7 +555,7 @@ class Supercap():
         mid_ind = [Half_pt_ind(self.V_ls[self.peaks[i]:self.troughs[i]],(self.V_ls[self.peaks[i]]+ self.V_ls[self.troughs[i]])/2) for i in range(len(self.peaks))]
         
         for i in range(begin-1, end):
-            if i in self.faulty_cycles:
+            if i+1 in self.faulty_cycles:
                 print('Cycle '+str(i+1)+' was skipped for calculation due to errors')
                 
             else:

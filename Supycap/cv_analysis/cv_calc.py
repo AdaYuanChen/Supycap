@@ -31,10 +31,10 @@ def CV_calc(x, y, m1, m2, scan_r, int_method = False):
 
         int_method : :class:`bool` or `int`, optional
             The method used for integration (Trapezoidal or Simpsons's rules)
-            int_method = False or 1 (Integration using the trapezoidal rule, discharging curve only)
-            int_method = 102 (Integration using the trapezoidal rule, charging and discharging)
-            int_method = 2 (Integration using the Simpson's rule, discharging curve only)
-            int_method = 202 (Integration using the Simpson's rule, charging and discharging)
+            int_method = False or 1 (Integration using the Simpson's rule, discharging curve only)
+            int_method = 102 (Integration using the Simpson's rule, charging and discharging)
+            int_method = 2 (Integration using the trapezoidal rule, discharging curve only)
+            int_method = 202 (Integration using the trapezoidal rule, charging and discharging)
             
         Return 
         ------
@@ -48,7 +48,7 @@ def CV_calc(x, y, m1, m2, scan_r, int_method = False):
         int_method = int(input('Please select the method for integration (1, 102, 2 or 202):'))
     else:
         pass
-
+    
     y = array(y)
     cycles = Load_cycle(x,y)
     potential_r = (max(x)-min(x))
@@ -58,6 +58,21 @@ def CV_calc(x, y, m1, m2, scan_r, int_method = False):
     area_ls = []
     sta = 0
     if int_method is False or int_method is 1:
+        for i in range(cycle_n):
+            pox1, poy1, pox2, poy2 = Pos_split(x_pos[i], y_pos[i])
+            nex1, ney1, nex2, ney2 = Neg_split(x_neg[i], y_neg[i])
+            a = Simps_area(pox1, poy1, nex2, ney2)
+            area_ls += [-a*2]
+
+    elif int_method is 102:
+        for i in range(cycle_n):
+            pox1, poy1, pox2, poy2 = Pos_split(x_pos[i], y_pos[i])
+            nex1, ney1, nex2, ney2 = Neg_split(x_neg[i], y_neg[i])
+            a2 = Simps_area2(pox1, poy1, pox2, poy2)
+            a1 = Simps_area2(nex1, ney1, nex2, ney2)
+            area_ls += [a2-a1]
+ 
+    elif int_method is 2:
         for i in range(cycle_n):
             pox1, poy1, pox2, poy2 = Pos_split(x_pos[i], y_pos[i])
             nex1, ney1, nex2, ney2 = Neg_split(x_neg[i], y_neg[i])
@@ -72,7 +87,7 @@ def CV_calc(x, y, m1, m2, scan_r, int_method = False):
         else:
             pass 
         
-    elif int_method is 102:
+    elif int_method is 202:
         for i in range(cycle_n):
             pox1, poy1, pox2, poy2 = Pos_split(x_pos[i], y_pos[i])
             nex1, ney1, nex2, ney2 = Neg_split(x_neg[i], y_neg[i])
@@ -86,27 +101,18 @@ def CV_calc(x, y, m1, m2, scan_r, int_method = False):
             print('x values are assumed to be evenly spaced from minimum to maximum voltage for those cycles')
             
         else:
-            pass
-            
-    elif int_method is 2:
-        for i in range(cycle_n):
-            pox1, poy1, pox2, poy2 = Pos_split(x_pos[i], y_pos[i])
-            nex1, ney1, nex2, ney2 = Neg_split(x_neg[i], y_neg[i])
-            a = Simps_area(pox1, poy1, nex2, ney2)
-            area_ls += [-a*2]
-
-    elif int_method is 202:
-        for i in range(cycle_n):
-            pox1, poy1, pox2, poy2 = Pos_split(x_pos[i], y_pos[i])
-            nex1, ney1, nex2, ney2 = Neg_split(x_neg[i], y_neg[i])
-            a2 = Simps_area2(pox1, poy1, pox2, poy2)
-            a1 = Simps_area2(nex1, ney1, nex2, ney2)
-            area_ls += [a2-a1]
+            pass 
             
     else:
-        method = int(input('''Integration method has to be either 1 (trapezoidal, discharging only), 102 (trapezoidal, charging and discharging), 2 (Simpson's, discharging only), or 202 (Simpson's, charging and discharging)'''))
+        method = int(input('''Integration method has to be either 1 (Simpson's, discharging only), 102 (Simpson's, charging and discharging), 2 (trapezoidal, discharging only), or 202 (trapezoidal, charging and discharging)'''))
         CV_analysis(x,y,method = method)
 
-    CV_ls = [CV_cap_cal(i, m1, m2, scan_r, potential_r) for i in area_ls]
+    if m1 is False or m2 is False:
+        print('Non-gravimetric capacitance is returned.')
+        CV_ls = [round(CV_non_grav(i, scan_r, potential_r), 1) for i in area_ls]
+    
+    else:
+        print('Gravimetric capacitance is returned.')
+        CV_ls = [round(CV_cap_cal(i, m1, m2, scan_r, potential_r), 1) for i in area_ls]
     
     return CV_ls  

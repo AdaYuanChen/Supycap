@@ -1,7 +1,7 @@
 from ..cc_analysis.utilities import Fast_load
 from .cv_calc import*
 
-def CV_analysis(pathway, m1, m2, scan_r = False, row_skip = False, V_set = False, I_set = False, delimiter = False, int_method = False):
+def CV_analysis(pathway, m1 = False, m2 = False, scan_r = False, row_skip = False, V_set = False, I_set = False, delimiter = False, int_method = False):
     """
         Calculate the gravimetric capacitance from every cycle of CV scans and output a list of calculated capacitance (F g^-1) for all cycles.
         
