@@ -112,8 +112,10 @@ class Supercap():
         Returns a string which state the current, maximum voltage and number of cycle analysed in the Supercap class
         
         """
+        peak_step = int(floor(len(self.peaks)/10))+1
+        ave_peak = mean(self.V_ls[self.peaks[::peak_step]])
         
-        return f'<Class_{self.__class__.__name__}: {self.current} mA, max voltage {round(self.V_ls[self.peaks[0]],2)} V, {self.cycle_n} cycle(s), ESR method {self.esr_method[0]} (setting = {self.esr_method[1]}), cap_method {self.cap_method}>'
+        return f'<Class_{self.__class__.__name__}: {self.current} mA, max voltage {round(ave_peak,2)} V, {self.cycle_n} cycle(s), ESR method {self.esr_method[0]} (setting = {self.esr_method[1]}), cap_method {self.cap_method}>'
     
     def ESR_method_change(self, ESR_method = True, setting = False):
         """
@@ -148,7 +150,7 @@ class Supercap():
         
         if ESR_method is True:
             ESR_method = 2
-            print('ESR method is changed to the default constant second derivative analysis, where the cut off second derivative is 0.01')
+            print('ESR method is changed to the default constant second derivative analysis, where the cut off second derivative is 1')
         elif ESR_method is False:
             print('ESR calculation is turned off')
         else:
@@ -164,7 +166,7 @@ class Supercap():
             setting = 1
        
         elif ESR_method is 2:
-            setting = 0.01
+            setting = 1
             
         else:
             pass
@@ -173,7 +175,7 @@ class Supercap():
             esr_v = [ConstantPoints(self.V_ls, self.peaks[i], set_n = setting) for i in range(self.cycle_n)]
       
         elif ESR_method is 2 or ESR_method is 201:
-            esr_v = [ConstantDeriv(self.t_ls, self.V_ls, self.peaks[i], self.troughs[i], set_deriv = setting)[0] for i in range(self.cycle_n)]
+            esr_v = [ConstantDeriv(self.t_ls, self.V_ls, self.peaks[i], self.troughs[i], set_deriv = setting) for i in range(self.cycle_n)]
                       
         else:
             esr_v = False
@@ -196,9 +198,9 @@ class Supercap():
             print('Gravimetric capacitance (F g^-1) is being calculated.')
             if m1 is False or m2 is False:
                 if mean(self.masses[0]) == False or  mean(self.masses[1]) == False:
-                   print('electrode masses are missing for the gravimetric capacitance calculation.')
-                   m1 = float(input('Please enter the mass of one of the electrode (mg):'))
-                   m2 = float(input('Please enter the mass of the other electrode (mg):'))
+                    print('electrode masses are missing for the gravimetric capacitance calculation.')
+                    m1 = float(input('Please enter the mass of one of the electrode (mg):'))
+                    m2 = float(input('Please enter the mass of the other electrode (mg):'))
                    
                 else:
                     print('Electrode masses are taken as specified previously.')

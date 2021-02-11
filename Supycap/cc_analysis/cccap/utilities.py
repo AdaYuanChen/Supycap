@@ -56,7 +56,7 @@ def ConstantDeriv(xset, yset, pk_index, tr_index, set_deriv = False,):
     dt2 = 0.5*(dx[:-1]+dx[1:])
     
     if set_deriv is False:
-        deriv = 0.01
+        deriv = 1
     else:
         deriv = set_deriv
     
@@ -67,7 +67,7 @@ def ConstantDeriv(xset, yset, pk_index, tr_index, set_deriv = False,):
        
     dv = yset[pk_index] - yset[pk_index + 1 + num_pt]
     
-    return dv, dV2
+    return dv
        
 
 #receive current in A

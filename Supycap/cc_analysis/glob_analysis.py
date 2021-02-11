@@ -9,6 +9,7 @@ from functools import reduce
 import datetime
 
 from .load_capacitor import Load_capacitor
+from .utilities import Round_ls
 
 
 #Analyse one supercapacitor under different currents (use multiple supercap()) with error bars
@@ -33,18 +34,18 @@ def Glob_analysis(path, t_set = False, V_set = False, delimiter = False, mass_ls
             The current of each file has to be specified and seperated by either '/' or '_' and followed by '_mA' at the end
             Example: './folder_x/0.1_mA_GCD_sample_A.txt'
             
-       t_set : :class:`int`, optional
+       t_set : :class:`int` or `ls`, optional
             Specify the coloumn index for the time(s) data, coloumn 0 being the first coloumn starting from the left
             t_set = False (t_set = 0)
                     True (The prompt will ask for the column index to be entered)
                     : :class: `int` (specify the coloumn which will be used as time)
         
-        V_set : :class:`int`, optional
+        V_set : :class:`int` or `ls`, optional
             Specify the coloumn index for the Volatge(V) data, coloumn 0 being the first coloumn starting from the left
             V_set = False (V_set = 0)
                     True (The prompt will ask for the column index to be entered)
                     : :class: `int` (specify the coloumn which will be used as time)
-                    
+       
         delimiter : :class:`str`, optional
              A string which is used to seperate the data coloumns in the data file. If delimiter = False, the delimiter is assumed to be space ' '.
              
@@ -157,7 +158,9 @@ def Glob_analysis(path, t_set = False, V_set = False, delimiter = False, mass_ls
         marker = int(input('Please specify the size of the markers'))
         rotation = int(input('Please specify the rotation degrees of the x ticks'))
  
-    #current density
+    
+    
+    #titles for the figure
     if mass_ls == False: 
         print('current density cannot be calculated, current (mA) is returned. Non-gravimetric capacitance is calculated.')
         Cd_ls =[i.current for i in supc_ls]
@@ -169,8 +172,9 @@ def Glob_analysis(path, t_set = False, V_set = False, delimiter = False, mass_ls
         Cd_ls =[i.current/(i.masses[0][0]+i.masses[1][0]) for i in supc_ls]
         x_lab = 'Current density $(A$ $g^{-1})$'
         y_lab = 'Gravimetric capacitance $C_g$ $(F$ $g^{-1})$'
-        
-        
+    
+    Cd_ls = Round_ls(Cd_ls, 3)
+    
     #plotting
     if plotting == True: 
         figure(figsize(length, width))
@@ -194,11 +198,13 @@ def Glob_analysis(path, t_set = False, V_set = False, delimiter = False, mass_ls
         xlabel(x_lab, fontproperties=font)
         ylabel(y_lab, fontproperties=font)
         xticks(rotation = rotation)
+        show()
 
     else:
         pass
     
-            
+    show()
+
     if save_plot == True:
         savefig('Gravimetric specific capacitance vs. current density'+' Date{0:%d%m}_Time{0:%I_%M}'.format(datetime.datetime.now())+'.png',transparent=True)
     
@@ -208,5 +214,6 @@ def Glob_analysis(path, t_set = False, V_set = False, delimiter = False, mass_ls
     
 #function returns lists of current, current density, averaged capacitance, the standard deviation of capcitance, ESR average, and ESR std accordingly. 
     return Cd_ls, supc_ls
+
 
     

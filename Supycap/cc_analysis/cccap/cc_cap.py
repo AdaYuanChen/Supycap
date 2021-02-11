@@ -36,7 +36,7 @@ def CC_Cap(xset, yset, current, m1 = False, m2 = False, ESR_method = True, setti
             The method for ESR analysis.
             ESR_method = 1 (default constant point analyis using the first point after the peak for calculating voltage drop) 
                        = 101 (constant point analysis using the nth point after the peak, where n is specified using setting)
-                       = 2 or True (default constant second derivative method using the point where the second derivative is greater than 0.01)
+                       = 2 or True (default constant second derivative method using the point where the second derivative is greater than 1)
                        = 201 (constant second derivative method where the cut off derivative is specified using setting)
         
         setting : :class:`float`, optional
@@ -92,6 +92,10 @@ def CC_Cap(xset, yset, current, m1 = False, m2 = False, ESR_method = True, setti
     
     mid_ind = [Half_pt_ind(yset[peaks[i]:troughs[i]],(yset[peaks[i]]+yset[troughs[i]])/2) for i in range(len(peaks))]
     
+    peak_step = int(floor(len(peaks)/20))+1
+    ave_peak = mean(yset[peaks[::peak_step]])
+    ave_trough = mean(yset[troughs[::peak_step]])
+    ave_length = ave_peak-ave_trough
     
     
     cc_grad = []
@@ -111,6 +115,14 @@ def CC_Cap(xset, yset, current, m1 = False, m2 = False, ESR_method = True, setti
             faulty_cyc_ind += [i]
             print('Cycle ' + str(i+1)+ ' has significantly more data points (50% more than average). Skipped for capacitance calculation') 
         
+        elif yset[peaks[i]] < ave_peak*0.9:
+            faulty_cyc_ind += [i]
+            print('Cycle ' + str(i+1)+ ' did not reach the maximum cycling voltage ' + str(round(ave_peak, 2)) + ' V. Skipped for capacitance calculation') 
+            
+        elif yset[peaks[i]]-yset[troughs[i]] < ave_length*0.9 or yset[peaks[i]]-yset[troughs[i]] > ave_length*1.1:
+            faulty_cyc_ind += [i]
+            print('Cycle ' + str(i+1)+ ' has abnormal charging/discharging voltage range. Skipped for capacitance calculation') 
+            
         else:
             if cap_method is 1 or cap_method is False:
                 try:
@@ -133,7 +145,7 @@ def CC_Cap(xset, yset, current, m1 = False, m2 = False, ESR_method = True, setti
         esr_v = [ConstantPoints(yset, peaks[i], set_n = setting) for i in range(len(peaks))]
       
     elif ESR_method is True or ESR_method == 2 or ESR_method == 201:
-        esr_v = [ConstantDeriv(xset, yset, peaks[i], troughs[i], set_deriv = setting)[0] for i in range(len(peaks))]
+        esr_v = [ConstantDeriv(xset, yset, peaks[i], troughs[i], set_deriv = setting) for i in range(len(peaks))]
                       
     elif ESR_method is False:
         esr_v = False

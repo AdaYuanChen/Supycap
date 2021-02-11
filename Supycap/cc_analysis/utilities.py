@@ -91,5 +91,7 @@ def delt_m(m_1, m_2):
     d1p2_1p2 = (d1**2 + d2**2)**0.5/(m1 + m2)
     d1t2_1t2 = (p1**2 + p2**2)**0.5
     return (d1t2_1t2**2 + d1p2_1p2**2)**0.5
-    
+
+def Round_ls(ls, rounding):
+    return [round(i, rounding) for i in ls]
 

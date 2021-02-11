@@ -52,7 +52,7 @@ def Load_capacitor(pathway, t_set = False, V_set = False, delimiter = False, mas
             The method for ESR analysis.
             ESR_method = 1 (default constant point analyis using the first point after the peak for calculating voltage drop) 
                        = 101 (constant point analysis using the nth point after the peak, where n is specified using setting)
-                       = 2 or True (default constant second derivative method using the point where the second derivative is greater than 0.01)
+                       = 2 or True (default constant second derivative method using the point where the second derivative is greater than 1)
                        = 201 (constant second derivative method where the cut off derivative is specified using setting)
                        = False (ESR value will be returned as False)
                        
@@ -135,10 +135,10 @@ def Load_capacitor(pathway, t_set = False, V_set = False, delimiter = False, mas
     if ESR_method is 1:
         setting = 1
     elif ESR_method is 2:
-        setting = 0.01
+        setting = 1
     elif ESR_method is True:
         ESR_method = 2
-        setting = 0.01
+        setting = 1
     else:
         pass
     

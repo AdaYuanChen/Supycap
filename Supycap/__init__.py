@@ -4,4 +4,4 @@ from .cc_analysis import*
 from .cv_analysis import*
 
 
-__version__ ='26.12.2020'
+__version__ ='27.09.2020'
