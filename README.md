@@ -107,10 +107,6 @@ An illustration of how the CV data is analysed is shown below:
     <p>
         Please follow the instruction under the 'code' tab.
                   
- Alternatively, use(https://pypi.org/project/Supercap-analysis/):
- ```python
- pip install Supercap-analysis
- ```
         
    </p>
 </div>
