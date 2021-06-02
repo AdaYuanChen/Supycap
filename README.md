@@ -111,7 +111,7 @@ An illustration of how the CV data is analysed is shown below:
 <b>Method 2</b>: Alternatively, the library can be directly downloaded from PyPI (https://pypi.org/project/Supycap/) using the following command in terminal:
 
 ```python
- pip install Supercap-analysis
+ pip install Supycap
  ```
                   
    </p>
