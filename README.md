@@ -106,8 +106,13 @@ An illustration of how the CV data is analysed is shown below:
     </h2>
     <p>
         Please follow the instruction under the 'code' tab.
+       
+         
+         Alternatively, the library can be directly downloaded from PyPI using the following command in terminal:
+        ```python
+         pip install Supercap-analysis
+         ```
                   
-        
    </p>
 </div>
 
