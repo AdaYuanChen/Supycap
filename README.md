@@ -105,10 +105,10 @@ An illustration of how the CV data is analysed is shown below:
         <a href="#TOC">Installation</a>
     </h2>
     <p>
-        Please follow the instruction under the 'code' tab.
+        <b>Method 1</b>:Please follow the instruction under the 'code' tab.
        <br>
        <br>
-Alternatively, the library can be directly downloaded from PyPI using the following command in terminal:
+<b>Method 2</b>: Alternatively, the library can be directly downloaded from PyPI using the following command in terminal:
 
 ```python
  pip install Supercap-analysis
@@ -145,6 +145,7 @@ Alternatively, the library can be directly downloaded from PyPI using the follow
  * <a href="#Cap_vs_cycles">__Cap_vs_cycles__</a>
  * <a href="#Get_info">__Get_info__</a>
  * <a href="#Check_analysis">__Check_analysis__</a>
+ * <a href="#Export">__Export__</a>
  
 
 ### CV analysis
@@ -889,8 +890,47 @@ A plot of the charge/discharge curve with liniearly fitted slope and voltage dro
 
 ---
 ---
+     
+<div id="Export">
+
+## <a href="#sub_TOC">Export(self, name, error = False, delimiter = False)</a> 
+Initialize a :class:`.Supercap`.
+
+     
+###Parameters 
+---
+     
+     
+     
+#### Arguments
+
+1. <b>name : <i>str </i></b><br>
+     Name of the exported text file.
+     
+     
+1. <b>error : <i>bool, optional</i></b><br>
+     Whether a list of uncertainty of capacitance is included. If <code>error = False</code>, which is the default setting, a list of uncertainty will not be included; if <code>error = True</code>, a list of uncertainty will be included. 
+   
+
+1. <b>delimiter : <i>str, optional</i></b><br>
+     String or character separating columns.
+     
+     
+     
+#### Returns
+     
+Returns a text file 'name.txt' including lists of capacitance, ESR and uncertainty of capacitance (optional).
+
+     
+</div>
 
 
+<br>
+<br>
+
+---
+---
+     
 <div id="CV_analysis">
     
 ## <a href="#sub_TOC"><b>CV_analysis</b><i>(pathway, m1, m2, scan_r = False, row_skip = False, x_name = False, y_name = False, delimiter = False, int_method = False)</i></a>
