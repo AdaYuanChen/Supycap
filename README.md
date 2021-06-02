@@ -926,7 +926,7 @@ This function supports electrochemical data in either txt or csv format. In a tx
      
      
 7. <b>I_set : <i>int/str(csv files only), optional</i></b> <br>
-   An integer specifying the coloumn index for voltage(V) data, with the first coloumn being coloumn 0 starting from left. If <code>y_name = False</code>, column 1 will be used as current in <b>mA<\b>; if y_name = True, there will be prompt asking for current coloumn index to be entered. For csv files, the coloumn index can also be the name of the coloumn (e.g. <code>I_set = 'current(mA)'</code>). 
+   An integer specifying the coloumn index for voltage(V) data, with the first coloumn being coloumn 0 starting from left. If <code>y_name = False</code>, column 1 will be used as current in <b>mA</b>; if y_name = True, there will be prompt asking for current coloumn index to be entered. For csv files, the coloumn index can also be the name of the coloumn (e.g. <code>I_set = 'current(mA)'</code>). 
 
 
 8. <b>delimiter : <i>str, optional</i></b> <br>
