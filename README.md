@@ -922,7 +922,7 @@ This function supports electrochemical data in either txt or csv format. In a tx
    
    
 6. <b>V_set : <i>int/str(csv files only), optional</i></b> <br>
-   An integer specifying the coloumn index for voltage in <b>V<\b>, with the first coloumn being coloumn 0 starting from left. If <code>x_name = False</code>, column 0 will be used as voltage(V); if x_name = True, there will be prompt asking for scan rate coloumn index to be entered.For csv files, the coloumn index can also be the name of the coloumn (e.g. <code>x_name = 'voltage(V)'</code>). 
+   An integer specifying the coloumn index for voltage in <b>V</b>, with the first coloumn being coloumn 0 starting from left. If <code>x_name = False</code>, column 0 will be used as voltage(V); if x_name = True, there will be prompt asking for scan rate coloumn index to be entered.For csv files, the coloumn index can also be the name of the coloumn (e.g. <code>x_name = 'voltage(V)'</code>). 
      
      
 7. <b>I_set : <i>int/str(csv files only), optional</i></b> <br>
@@ -938,9 +938,7 @@ This function supports electrochemical data in either txt or csv format. In a tx
    The method for integration of the enclosed area. It is by default <b>(<code>int_method = False</code>)</b> that the area under the curve will be calculated using the Simpson's rule. For all methods available please refer to the next session <a href="#int_method_table">int_method table</a>.
 
 10. <b>calc_method : <i>int, optional</i></b> <br>
-   The method which determines whether capacitance or capacity (enclosed area divided by mass) is being calculated.
-        calc_method = 1 (capacitance is calculated) <br>
-        calc_method = 2 (capacity is calculated by dividng the enclosed area by )
+   The method which determines whether capacitance or capacity (enclosed area divided by mass) is being calculated. If <code>calc_method = 1 </code>, capacitance is calculated; if <code>calc_method = 2</code>, capacity is calculated by dividng the enclosed area by the mass of the electrodes. 
 
 
 <br>
