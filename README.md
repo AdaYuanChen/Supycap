@@ -937,6 +937,11 @@ This function supports electrochemical data in either txt or csv format. In a tx
 9. <b>int_method : <i>int, optional</i></b> <br>
    The method for integration of the enclosed area. It is by default <b>(<code>int_method = False</code>)</b> that the area under the curve will be calculated using the Simpson's rule. For all methods available please refer to the next session <a href="#int_method_table">int_method table</a>.
 
+10. <b>calc_method : <i>int, optional</i></b> <br>
+   The method which determines whether capacitance or capacity (enclosed area divided by mass) is being calculated.
+        calc_method = 1 (capacitance is calculated)
+        calc_method = 2 (capacity is calculated by dividng the enclosed area by )
+
 
 <br>
 
