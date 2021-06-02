@@ -36,6 +36,11 @@ def CV_calc(x, y, m1, m2, scan_r, int_method = False, calc_method = False):
             int_method = 2 (Integration using the trapezoidal rule, discharging curve only)
             int_method = 202 (Integration using the trapezoidal rule, charging and discharging)
             
+        calc_method : :class:`int`, optional
+            The method which determines whether capacitance or capacity (enclosed area divided by mass) is being calculated
+            calc_method = 1 (capacitance is calculated)
+            calc_method = 2 (capacity is calculated by dividng the enclosed area by )
+            
         Return 
         ------
         A list of gravimetric capacitance calculated from each CV cycle.
@@ -46,6 +51,15 @@ def CV_calc(x, y, m1, m2, scan_r, int_method = False, calc_method = False):
         int_method = 1
     elif int_method is True:
         int_method = int(input('Please select the method for integration (1, 102, 2 or 202):'))
+    else:
+        pass
+    
+    if calc_method is 2 and int_method is 1: 
+        print('Capacity calculation requires the entire enclosed area. int_method is changed to 102')
+        int_method = 102
+    elif calc_method is 2 and int_method is 2: 
+        print('Capacity calculation requires the entire enclosed area. int_method is changed to 202')
+        int_method = 202
     else:
         pass
     

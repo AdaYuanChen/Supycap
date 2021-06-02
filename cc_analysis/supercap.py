@@ -476,6 +476,8 @@ class Supercap():
         else:
             print('Constant point method was used for ESR calculations')
     
+    
+    
     #To check whether the code is running correctly by visualising a small section of the analysis
     def Check_analysis(self, begin = False, end = False, set_fig = False, save_fig = False):
         """
@@ -610,5 +612,54 @@ class Supercap():
             pass   
         else:
              savefig(str(save_fig)+'.png', transparent=True)
+                
 
-####CHANGE CHECK ANALYSIS TO EXCLUDE WRONG DATA POINTS!
+                
+    def Export(self, name, error = False, delimiter = False):
+        """
+        Initialize from a :class:`.Supercap`.
+        
+        Notes
+        -----
+        Exporting the electrochemical parameters as a txt file
+        
+        Parameter
+        ----------
+        name: :class:`str`
+            Name of the exported text file
+            
+        error : :class:`bool`, optional
+            Whether a list of uncertainty of capacitance is included
+            error = False (default, list of uncertainty will not be included) 
+            error = True (list of uncertainty will be included) 
+            
+        delimiter : :class:`str`, optional
+            String or character separating columns
+            
+        Return 
+        ------
+        A text file 'name.txt' including lists of capacitance, ESR and uncertainty of capacitance (optional)
+        
+        """
+        if error is False:
+            final_data = column_stack((self.cap_ls, self.esr_ls))
+            if self.error is False:
+                heading = 'Non-gravimetric Capacitance (F)  ESR (Ohm)  uncertainty'
+            else:
+                heading = 'Gravimetric Capacitance (F/g)  ESR (Ohm)'
+                
+        else:
+            final_data = column_stack((self.cap_ls, self.esr_ls, self.cap_ls*self.error))
+            if self.error is False:
+                heading = 'Non-gravimetric Capacitance (F)  ESR (Ohm)  uncertainty'
+            else:
+                heading = 'Gravimetric Capacitance (F/g)  ESR (Ohm)'
+                
+        header = '#{} \n{}'.format(self.__repr__()[1:-1], heading)
+                
+        if delimiter is False:
+            delimiter = ' '
+                
+        savetxt(fname = name+'.txt', X = final_data, delimiter = delimiter, header = header, comments = '')
+            
+        

@@ -154,4 +154,4 @@ def CV_non_grav(Integrated, scan_r, potential_r):
     return Integrated / (scan_r*potential_r)
 
 def CV_capacity(Integrated, m1, m2):
-    return Integrated * (m1 + m2) / (m1*m2)
+    return Integrated * (m1 + m2) / ((m1*m2)*2)
