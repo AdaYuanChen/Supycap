@@ -105,7 +105,7 @@ An illustration of how the CV data is analysed is shown below:
         <a href="#TOC">Installation</a>
     </h2>
     <p>
-        <b>Method 1</b>:Please follow the instruction under the 'code' tab.
+        <b>Method 1</b>: Please follow the instruction under the 'code' tab.
        <br>
        <br>
 <b>Method 2</b>: Alternatively, the library can be directly downloaded from PyPI (https://pypi.org/project/Supycap/) using the following command in terminal:
