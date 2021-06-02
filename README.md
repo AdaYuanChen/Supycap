@@ -823,15 +823,13 @@ Initialize from a :class:`.Supercap`.
  
 
 ### Notes
-
 ---
 
 Plotting the charge/discharge curve and visualising how the data is analysed (indicate the slope fitting for capacitance and the voltage drop for ESR).
 
  
 
-### Parameters
-
+### Parameters 
 ---
 
  
@@ -897,7 +895,15 @@ A plot of the charge/discharge curve with liniearly fitted slope and voltage dro
 Initialize a :class:`.Supercap`.
 
      
-###Parameters 
+     
+### Notes
+---
+   
+Exporting the electrochemical parameters as a txt file
+     
+     
+     
+### Parameters 
 ---
      
      
