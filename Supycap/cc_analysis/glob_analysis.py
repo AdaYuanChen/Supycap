@@ -129,9 +129,34 @@ def Glob_analysis(path, t_set = False, V_set = False, delimiter = False, mass_ls
     #print(ESR_method, 'glob')
     Glob_set = glob.glob(path)
     
+ 
     #loading data into the Supercap file 
     supc_ls = [Load_capacitor(i, t_set = t_set, V_set = V_set, delimiter = delimiter, mass_ls = mass_ls, row_skip = row_skip, ESR_method = ESR_method, setting = setting,  cap_method = cap_method, cap_grav = cap_grav) for i in Glob_set]
-        
+    
+    
+    #titles for the figure
+    if mass_ls == False: 
+        print('current density cannot be calculated, current (mA) is returned. Non-gravimetric capacitance is calculated.')
+        Cd_ls =[i.current for i in supc_ls]
+        x_lab = 'Current (mA)'
+        y_lab = 'Non-gravimetric capacitance (F)'
+        error_bar = 0
+    
+    else:
+        Cd_ls =[i.current/(i.masses[0][0]+i.masses[1][0]) for i in supc_ls]
+        x_lab = 'Current density $(A$ $g^{-1})$'
+        y_lab = 'Gravimetric capacitance $C_g$ $(F$ $g^{-1})$'
+
+    
+    #sorting the list of current density corresponding supercap entities according to the values 
+    Cd_ls = Round_ls(Cd_ls, 3) #rounding the current density values
+    Cd_ls = array(Cd_ls)
+    supc_ls = array(supc_ls)
+    
+    ind = Cd_ls.argsort()
+    Cd_ls = Cd_ls[ind]
+    supc_ls = supc_ls[ind]
+    
     #Analyze each set of data
     Cap_ls_g = [mean(i.cap_ls) for i in supc_ls]
     Cap_error = [i.error for i in supc_ls]
@@ -159,21 +184,6 @@ def Glob_analysis(path, t_set = False, V_set = False, delimiter = False, mass_ls
         rotation = int(input('Please specify the rotation degrees of the x ticks'))
  
     
-    
-    #titles for the figure
-    if mass_ls == False: 
-        print('current density cannot be calculated, current (mA) is returned. Non-gravimetric capacitance is calculated.')
-        Cd_ls =[i.current for i in supc_ls]
-        x_lab = 'Current (mA)'
-        y_lab = 'Non-gravimetric capacitance (F)'
-        error_bar = 0
-    
-    else:
-        Cd_ls =[i.current/(i.masses[0][0]+i.masses[1][0]) for i in supc_ls]
-        x_lab = 'Current density $(A$ $g^{-1})$'
-        y_lab = 'Gravimetric capacitance $C_g$ $(F$ $g^{-1})$'
-    
-    Cd_ls = Round_ls(Cd_ls, 3)
     
     #plotting
     if plotting == True: 
@@ -210,6 +220,7 @@ def Glob_analysis(path, t_set = False, V_set = False, delimiter = False, mass_ls
     
     else:
         pass
+    
     
     
 #function returns lists of current, current density, averaged capacitance, the standard deviation of capcitance, ESR average, and ESR std accordingly. 

@@ -10,13 +10,13 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
   name="Supycap",
-  version= '2.4',
-  author="Yuan Chen",
+  version= '2.2',
+  author="Ada Yuan Chen",
   author_email="yuan.chen18@imperial.ac.uk",
-  description="A python library for GCD analysis of supercapacitors",
+  description="A python library for electrochemical analysis of supercapacitors",
   long_description=long_description,
   long_description_content_type="text/markdown",
-  url="https://github.com/",
+  url="https://github.com/AdaYuanChen/Supycap",
   packages=setuptools.find_packages(),
   install_requires=(
       'scipy', 

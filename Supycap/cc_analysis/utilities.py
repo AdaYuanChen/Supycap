@@ -71,11 +71,10 @@ def Readcurrent(filename):
     for i in range(len(filename)-1):
         if filename[i] + filename[i+1] == 'mA':
             k = i-2
-            while filename[k] != '_' and filename[k] != '/' and filename[k] != '\\' and k >= 0:
+            while filename[k] != '_' and filename[k] != '/' and filename[k] != '\\' and filename[k] != ' ' and k >= 0:
                 k -= 1
             return float(filename[k+1:i-1])
-        else:
-            pass
+        
     return False
     
 

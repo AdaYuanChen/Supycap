@@ -261,7 +261,7 @@ class Supercap():
         
     
     #For visualising the second derivative for method 2 and/or method 201 and manually changing the second derivative cutt off point
-    def Show_dV2(self, cycle_check = False, ):
+    def Show_dV2(self, cycle_check = False, zoom_in = False):
         """
         Initialize from a :class:`.Supercap`.
            
@@ -323,6 +323,9 @@ class Supercap():
             t_ls1 = array(self.t_ls[peak1:trough1])-self.t_ls[peak1]
             V_ls1 = self.V_ls[peak1:trough1]
             
+            if zoom_in is False:
+                zoom_in = int(floor(len(t_ls1)/2))
+            
 
             figure(figsize(20,15))
             fig, ax1 = plt.subplots()
@@ -335,16 +338,16 @@ class Supercap():
             color = 'tab:red'
             ax1.set_xlabel('Time (s)', fontproperties=font)
             ax1.set_ylabel('Second derivative $ dV^2/dt $', color=color, fontproperties=font)
-            ax1.plot(t_ls1[1:-2], dV_ls1[:-1], linewidth=5, marker='x', ms=12, mew=5, color=color)
-            ax1.plot(t_ls1[num1+2], dV_ls1[num1+1], linewidth=5, marker='x', ms=20, mew=6, color='y')
+            ax1.plot(t_ls1[1:zoom_in-2], dV_ls1[:zoom_in-3], linewidth=5, marker='x', ms=12, mew=5, color=color)
+            ax1.plot(t_ls1[num1+2], dV_ls1[num1+1], linewidth=5, marker='x', ms=20, mew=6, color='g')
             ax1.tick_params(axis='y', labelcolor=color)
             
 
             ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
             color = 'tab:blue'
             ax2.set_ylabel('Voltage (V)', color=color, fontproperties=font)  # we already handled the x-label with ax1
-            ax2.plot(t_ls1[:-2], V_ls1[:-2],  linewidth=5, marker='x',ms=12, mew=5, color=color)
-            ax2.plot(t_ls1[num1+1], V_ls1[num1+1],  linewidth=5, marker='x',ms=20, mew=6, color='y')
+            ax2.plot(t_ls1[:zoom_in-2], V_ls1[:zoom_in-2],  linewidth=5, marker='x',ms=12, mew=5, color=color)
+            ax2.plot(t_ls1[num1+1], V_ls1[num1+1],  linewidth=5, marker='x',ms=20, mew=6, color='g')
             ax2.tick_params(axis='y', labelcolor=color)
 
 
@@ -472,6 +475,8 @@ class Supercap():
             print('Constant second derivative method was used for ESR calculations')
         else:
             print('Constant point method was used for ESR calculations')
+    
+    
     
     #To check whether the code is running correctly by visualising a small section of the analysis
     def Check_analysis(self, begin = False, end = False, set_fig = False, save_fig = False):
@@ -607,5 +612,54 @@ class Supercap():
             pass   
         else:
              savefig(str(save_fig)+'.png', transparent=True)
+                
 
-####CHANGE CHECK ANALYSIS TO EXCLUDE WRONG DATA POINTS!
+                
+    def Export(self, name, error = False, delimiter = False):
+        """
+        Initialize from a :class:`.Supercap`.
+        
+        Notes
+        -----
+        Exporting the electrochemical parameters as a txt file
+        
+        Parameter
+        ----------
+        name: :class:`str`
+            Name of the exported text file
+            
+        error : :class:`bool`, optional
+            Whether a list of uncertainty of capacitance is included
+            error = False (default, list of uncertainty will not be included) 
+            error = True (list of uncertainty will be included) 
+            
+        delimiter : :class:`str`, optional
+            String or character separating columns
+            
+        Return 
+        ------
+        A text file 'name.txt' including lists of capacitance, ESR and uncertainty of capacitance (optional)
+        
+        """
+        if error is False:
+            final_data = column_stack((self.cap_ls, self.esr_ls))
+            if self.error is False:
+                heading = 'Non-gravimetric Capacitance (F)  ESR (Ohm)  uncertainty'
+            else:
+                heading = 'Gravimetric Capacitance (F/g)  ESR (Ohm)'
+                
+        else:
+            final_data = column_stack((self.cap_ls, self.esr_ls, self.cap_ls*self.error))
+            if self.error is False:
+                heading = 'Non-gravimetric Capacitance (F)  ESR (Ohm)  uncertainty'
+            else:
+                heading = 'Gravimetric Capacitance (F/g)  ESR (Ohm)'
+                
+        header = '#{} \n{}'.format(self.__repr__()[1:-1], heading)
+                
+        if delimiter is False:
+            delimiter = ' '
+                
+        savetxt(fname = name+'.txt', X = final_data, delimiter = delimiter, header = header, comments = '')
+            
+        

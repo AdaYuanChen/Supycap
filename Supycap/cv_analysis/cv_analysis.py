@@ -1,7 +1,7 @@
 from ..cc_analysis.utilities import Fast_load
 from .cv_calc import*
 
-def CV_analysis(pathway, m1 = False, m2 = False, scan_r = False, row_skip = False, V_set = False, I_set = False, delimiter = False, int_method = False):
+def CV_analysis(pathway, m1 = False, m2 = False, scan_r = False, row_skip = False, V_set = False, I_set = False, delimiter = False, int_method = False, calc_method = False):
     """
         Calculate the gravimetric capacitance from every cycle of CV scans and output a list of calculated capacitance (F g^-1) for all cycles.
         
@@ -63,7 +63,7 @@ def CV_analysis(pathway, m1 = False, m2 = False, scan_r = False, row_skip = Fals
     if scan_r is False:
         scan_r = Read_scan_r(pathway)
         if scan_r is False:
-            print('Missing scan rate value. Please enter the scan rate for the CV analysis in mV/s:')
+            print('Missing scan rate value. Please enter the scan rate for the CV analysis in mV/s')
             return None
     else:
         pass
@@ -76,8 +76,13 @@ def CV_analysis(pathway, m1 = False, m2 = False, scan_r = False, row_skip = Fals
     else:
         pass
     
+    if type(m1) is list:
+        m1 = mean(m1)
+        m2 = mean(m2)
+        
+    
     CV_raw = Fast_load(pathway, skip_header = row_skip, t_set = V_set, V_set = I_set, delimiter = delimiter)
     x = CV_raw[0]
     y = CV_raw[1]
     
-    return CV_calc(x, y, m1, m2, scan_r, int_method = int_method) 
+    return CV_calc(x, y, m1, m2, scan_r, int_method = int_method, calc_method = calc_method) 

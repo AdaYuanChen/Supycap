@@ -74,8 +74,8 @@ def CC_Cap(xset, yset, current, m1 = False, m2 = False, ESR_method = True, setti
     
 
     
-    troughs, _= find_peaks(-yset)
-    peaks, _= find_peaks(yset)
+    troughs, _= find_peaks(-yset, prominence=(0.5))
+    peaks, _= find_peaks(yset, prominence=(0.5))
     N_cycle=0
     
     #Checking the number of cycle(s)
@@ -96,7 +96,6 @@ def CC_Cap(xset, yset, current, m1 = False, m2 = False, ESR_method = True, setti
     ave_peak = mean(yset[peaks[::peak_step]])
     ave_trough = mean(yset[troughs[::peak_step]])
     ave_length = ave_peak-ave_trough
-    
     
     cc_grad = []
     faulty_cyc_ind = []
@@ -122,7 +121,7 @@ def CC_Cap(xset, yset, current, m1 = False, m2 = False, ESR_method = True, setti
         elif yset[peaks[i]]-yset[troughs[i]] < ave_length*0.9 or yset[peaks[i]]-yset[troughs[i]] > ave_length*1.1:
             faulty_cyc_ind += [i]
             print('Cycle ' + str(i+1)+ ' has abnormal charging/discharging voltage range. Skipped for capacitance calculation') 
-            
+        
         else:
             if cap_method is 1 or cap_method is False:
                 try:

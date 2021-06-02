@@ -4,7 +4,7 @@ from .utilities import*
 ###y in mA, voltage in V, scan rate in mv/s!!!
 #first cycle and last cycle are omitted as long as they are incomplete
 
-def CV_calc(x, y, m1, m2, scan_r, int_method = False):
+def CV_calc(x, y, m1, m2, scan_r, int_method = False, calc_method = False):
     """
         Calculate the gravimetric capacitance from every cycle of CV scans and output a list of calculated capacitance (F g^-1) for all cycles.
         
@@ -36,6 +36,11 @@ def CV_calc(x, y, m1, m2, scan_r, int_method = False):
             int_method = 2 (Integration using the trapezoidal rule, discharging curve only)
             int_method = 202 (Integration using the trapezoidal rule, charging and discharging)
             
+        calc_method : :class:`int`, optional
+            The method which determines whether capacitance or capacity (enclosed area divided by mass) is being calculated
+            calc_method = 1 (capacitance is calculated)
+            calc_method = 2 (capacity is calculated by dividng the enclosed area by )
+            
         Return 
         ------
         A list of gravimetric capacitance calculated from each CV cycle.
@@ -49,9 +54,19 @@ def CV_calc(x, y, m1, m2, scan_r, int_method = False):
     else:
         pass
     
+    if calc_method is 2 and int_method is 1: 
+        print('Capacity calculation requires the entire enclosed area. int_method is changed to 102')
+        int_method = 102
+    elif calc_method is 2 and int_method is 2: 
+        print('Capacity calculation requires the entire enclosed area. int_method is changed to 202')
+        int_method = 202
+    else:
+        pass
+    
     y = array(y)
     cycles = Load_cycle(x,y)
     potential_r = (max(x)-min(x))
+    #print('potential range: ', potential_r)
     x_pos, y_pos, x_neg, y_neg, cycle_n = Pn_slice(cycles[0], cycles[1], cycles[2])
     print(cycle_n, ' CV cycles are being analysed using integration method', int_method)
     
@@ -62,7 +77,7 @@ def CV_calc(x, y, m1, m2, scan_r, int_method = False):
             pox1, poy1, pox2, poy2 = Pos_split(x_pos[i], y_pos[i])
             nex1, ney1, nex2, ney2 = Neg_split(x_neg[i], y_neg[i])
             a = Simps_area(pox1, poy1, nex2, ney2)
-            area_ls += [-a*2]
+            area_ls += [-a]
 
     elif int_method is 102:
         for i in range(cycle_n):
@@ -70,14 +85,14 @@ def CV_calc(x, y, m1, m2, scan_r, int_method = False):
             nex1, ney1, nex2, ney2 = Neg_split(x_neg[i], y_neg[i])
             a2 = Simps_area2(pox1, poy1, pox2, poy2)
             a1 = Simps_area2(nex1, ney1, nex2, ney2)
-            area_ls += [a2-a1]
+            area_ls += [(a2-a1)/2]
  
     elif int_method is 2:
         for i in range(cycle_n):
             pox1, poy1, pox2, poy2 = Pos_split(x_pos[i], y_pos[i])
             nex1, ney1, nex2, ney2 = Neg_split(x_neg[i], y_neg[i])
             a, sta1 = Trapz_area(pox1, poy1, nex2, ney2)
-            area_ls += [-a*2]
+            area_ls += [-a]
             sta += sta1
             
         if sta != 0:
@@ -93,7 +108,7 @@ def CV_calc(x, y, m1, m2, scan_r, int_method = False):
             nex1, ney1, nex2, ney2 = Neg_split(x_neg[i], y_neg[i])
             a2, sta2 = Trapz_area2(pox1, poy1, pox2, poy2)
             a1, sta1 = Trapz_area2(nex1, ney1, nex2, ney2)
-            area_ls += [a2-a1]
+            area_ls += [(a2-a1)/2]
             sta += sta2 + sta1
             
         if sta != 0:
@@ -107,7 +122,11 @@ def CV_calc(x, y, m1, m2, scan_r, int_method = False):
         method = int(input('''Integration method has to be either 1 (Simpson's, discharging only), 102 (Simpson's, charging and discharging), 2 (trapezoidal, discharging only), or 202 (trapezoidal, charging and discharging)'''))
         CV_analysis(x,y,method = method)
 
-    if m1 is False or m2 is False:
+    if calc_method is 2: 
+        print('Capacity is returned')
+        CV_ls = [round(CV_capacity(i, m1, m2), 1) for i in area_ls]
+        
+    elif m1 is False or m2 is False:
         print('Non-gravimetric capacitance is returned.')
         CV_ls = [round(CV_non_grav(i, scan_r, potential_r), 1) for i in area_ls]
     

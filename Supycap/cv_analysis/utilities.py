@@ -9,13 +9,12 @@ from numpy import*
 #the scan rate needs to end with '_mvs'
 def Read_scan_r(filename):
     for i in range(len(filename)-2):
-        if filename[i:i+2] == 'mvs':
+        if filename[i:i+3] == 'mvs' or filename[i:i+3] == 'mVs':
             k = i-2
-            while filename[k] != '_' and filename[k] != '/' and filename[k] != '\\' and k >= 0:
+            while filename[k] != '_' and filename[k] != '/' and filename[k] != '\\' and filename[k] != ' ' and k >= 0:
                 k -= 1
             return float(filename[k+1:i-1])
-        else:
-            return False
+    return False
 
 
 def Pos_split(x, y):
@@ -152,4 +151,7 @@ def CV_cap_cal(Integrated, m1, m2, scan_r, potential_r):
 
 #calculation for non-gravimetric capacitance
 def CV_non_grav(Integrated, scan_r, potential_r):
-    return 1000 * Integrated / (scan_r*potential_r)
+    return Integrated / (scan_r*potential_r)
+
+def CV_capacity(Integrated, m1, m2):
+    return Integrated * (m1 + m2) / ((m1*m2)*2)
