@@ -939,7 +939,7 @@ This function supports electrochemical data in either txt or csv format. In a tx
 
 10. <b>calc_method : <i>int, optional</i></b> <br>
    The method which determines whether capacitance or capacity (enclosed area divided by mass) is being calculated.
-        calc_method = 1 (capacitance is calculated)
+        calc_method = 1 (capacitance is calculated) <br>
         calc_method = 2 (capacity is calculated by dividng the enclosed area by )
 
 
@@ -959,7 +959,7 @@ Method  |  Description  |
 
 
 #### Returns 
-<b>out: <i>[list of calculated gravimetric capacitance]</i></b>
+<b>out: <i>[list of calculated gravimetric capacitance]</i> </b>
 
 
 ### Examples 
