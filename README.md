@@ -33,7 +33,6 @@ For <b>CC</b> analysis, the capacitance is calculated via linear fitting the sec
 
 <p align="center">
 <img src="https://render.githubusercontent.com/render/math?math=C_g=%20\frac{m_1%2Bm_2}{m_1%20m_2}%20\frac{I}{\frac{dV}%20{dt}}">
-</center>
 </p>
 
 <i>where <img src="https://render.githubusercontent.com/render/math?math=m_1"> is the mass of one of the two electrodes in the electrochemical cell and <img src="https://render.githubusercontent.com/render/math?math=m_2"> is the mass of the other, both in g; I is the current in A under which the CC anaysis is conducted; <img src="https://render.githubusercontent.com/render/math?math=\frac{dV}%20{dt}"> is the discharge slope, which is the change of voltage (V) with respect to time (s). </i>
